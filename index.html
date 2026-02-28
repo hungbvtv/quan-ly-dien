@@ -20,7 +20,7 @@
         body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 15px; margin: 0; }
         .container { background: white; max-width: 1250px; margin: auto; padding: 25px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; }
         
-        /* Thanh điều khiển - Giữ nguyên tên nút đầy đủ không cắt bớt */
+        /* Thanh điều khiển - Giữ nguyên tên nút đầy đủ */
         .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 15px; border-radius: 5px; align-items: center; }
         .btn { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; white-space: nowrap; }
         .btn-add { background: #28a745; }
@@ -38,19 +38,19 @@
         .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* Bảng tối ưu tỉ lệ 38% cho Tên hộ (đã tăng 3%) */
+        /* Bảng tối ưu tỉ lệ 45% cho Tên hộ */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
-        th, td { border: 1px solid #333; padding: 10px 4px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
-        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+        th, td { border: 1px solid #333; padding: 10px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
+        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 10px; }
         .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
         
-        /* Cấu hình chiều rộng các cột mới */
-        .col-stt { width: 45px; font-weight: bold; }
-        .col-name { width: 38%; text-align: left !important; padding-left: 10px !important; } /* Tăng đúng 3% thành 38% */
-        .col-num { width: 8%; } 
-        .col-price { width: 8.5%; background: #fffde7; }
-        .col-tien { width: 10%; }
-        .col-final { width: 13.5%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
+        /* Cấu hình chiều rộng các cột: Tăng Tên hộ lên 45% */
+        .col-stt { width: 35px; font-weight: bold; }
+        .col-name { width: 45%; text-align: left !important; padding-left: 8px !important; } /* Rộng tối đa 45% */
+        .col-num { width: 7%; } /* Bóp nhỏ các cột số điện */
+        .col-price { width: 7%; background: #fffde7; }
+        .col-tien { width: 8%; }
+        .col-final { width: 12%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
 
         .delete-active .col-stt { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
         .delete-active .col-stt::after { content: " ✖"; font-size: 10px; }
@@ -62,11 +62,11 @@
         input:disabled { color: #000; cursor: default; opacity: 1; }
         
         .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 15px !important; height: 40px; }
-        .loss-summary { background: #fff3cd; color: #856404; font-size: 14px; }
+        .loss-summary { background: #fff3cd; color: #856404; font-size: 13px; }
         .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 18px; border-top: 2px solid #333; }
         .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; }
 
-        /* Ghi chú cách tính đầy đủ giữ nguyên */
+        /* Ghi chú cách tính đầy đủ */
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
         .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
@@ -77,7 +77,7 @@
 
         @media screen and (max-width: 800px) {
             .container { padding: 10px; }
-            th { font-size: 9px; padding: 4px 1px; }
+            th { font-size: 8px; padding: 4px 1px; }
             td { font-size: 12px; }
             .title-header { font-size: 18px; }
         }
@@ -204,12 +204,12 @@
         const row = tbody.insertRow();
         row.className = 'data-row';
         row.innerHTML = `
-            <td class="col-stt" onclick="handleRowAction(this)">${tbody.rows.length}</td>
+            <td class="col-stt">${tbody.rows.length}</td>
             <td class="col-name"><input type="text" class="name" value="${data.name}" placeholder="Tên hộ..."></td>
             <td class="col-num"><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
-            <td class="col-price"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td class="col-num"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
             <td class="col-tien"><span class="base-money">0</span></td>
             <td class="col-tien"><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0</span></td>
