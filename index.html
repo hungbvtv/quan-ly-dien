@@ -1,3 +1,4 @@
+--- START OF FILE index.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -11,7 +12,6 @@
     <style>
         * { box-sizing: border-box; }
         
-        /* 1. NỀN LẤP LÁNH TOÀN DIỆN */
         body { 
             font-family: "Times New Roman", Times, serif; 
             margin: 0; 
@@ -25,6 +25,7 @@
             transition: background 0.3s;
         }
 
+        /* Nền lấp lánh */
         body::before, body::after {
             content: "";
             position: fixed;
@@ -46,7 +47,7 @@
             to { background-position: 0 -300px; }
         }
 
-        /* 2. VIỀN 7 MÀU CHẠY XUNG QUANH APP */
+        /* Viền 7 màu app */
         .rainbow-wrapper {
             position: relative;
             max-width: 1200px;
@@ -65,15 +66,11 @@
             position: absolute;
             width: 250%;
             height: 250%;
-            background: conic-gradient(
-                #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000
-            );
+            background: conic-gradient(#ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000);
             animation: rotateRainbow 4s linear infinite;
         }
 
-        @keyframes rotateRainbow {
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes rotateRainbow { 100% { transform: rotate(360deg); } }
 
         .container { 
             background: rgba(255, 255, 255, 0.94); 
@@ -84,13 +81,13 @@
             position: relative;
             z-index: 1;
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Hỗ trợ iPhone */
+            -webkit-backdrop-filter: blur(10px);
         }
         
         .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.7); padding: 12px; border-radius: 8px; align-items: center; }
-        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; transition: 0.2s; font-size: 13px; }
+        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; }
         
-        /* 4. VIỀN 7 MÀU CHO TẤT CẢ CÁC Ô */
+        /* Viền 7 màu cho TẤT CẢ các ô */
         table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 10px; table-layout: fixed; min-width: 1050px; background: transparent; }
 
         th, td { 
@@ -98,7 +95,7 @@
             padding: 8px 2px; 
             text-align: center; 
             font-size: 14px;
-            background: rgba(255, 255, 255, 0.82) !important;
+            background: rgba(255, 255, 255, 0.85) !important;
             border: 2.5px solid;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
             animation: rainbowBorder 3s linear infinite;
@@ -119,7 +116,7 @@
         .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: rgba(227, 242, 253, 0.8) !important; }
 
         input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; font-family: inherit; }
-        input:disabled { color: #000; cursor: default; }
+        input:disabled { color: #000; opacity: 1; }
 
         .footer-info { text-align: left; font-weight: bold; background: rgba(255, 255, 255, 0.7) !important; }
         .loss-summary { background: rgba(255, 243, 205, 0.8) !important; color: #856404; font-size: 14px; }
@@ -129,25 +126,18 @@
 
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: rgba(250, 250, 250, 0.7); border-radius: 5px; line-height: 1.8; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
-        .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
 
-        /* CHẾ ĐỘ TẮT HIỆU ỨNG (NORMAL MODE) */
+        /* Chế độ tắt hiệu ứng */
         body.no-effects { background: #f0f2f5; }
-        body.no-effects::before, body.no-effects::after { display: none; }
+        body.no-effects::before, body.no-effects::after, .no-effects .rainbow-wrapper::before { display: none; }
         .no-effects .rainbow-wrapper { padding: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 8px; }
-        .no-effects .rainbow-wrapper::before { display: none; }
-        .no-effects .container { background: white; backdrop-filter: none; -webkit-backdrop-filter: none; border: 1px solid #ccc; }
+        .no-effects .container { background: white; backdrop-filter: none; border: 1px solid #ccc; }
         .no-effects th, .no-effects td { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; background: white !important; }
-        .no-effects .col-kwh { background: #e8f5e9 !important; }
-        .no-effects .col-price { background: #fffde7 !important; }
-        .no-effects .col-final { background: #e3f2fd !important; }
 
-        /* CSS FIX RIÊNG KHI CHỤP ẢNH TRÊN IPHONE */
+        /* CSS Khi chụp ảnh */
         .hide-for-capture { display: none !important; }
-        .is-capturing { background: white !important; border: none !important; overflow: visible !important; width: 1150px !important; }
-        .is-capturing th, .is-capturing td { border: 1px solid #333 !important; border-image: none !important; animation: none !important; filter: none !important; background: white !important; }
-        .is-capturing-wrapper::before { display: none !important; }
-        .is-capturing .container { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: white !important; padding: 15px !important; }
+        .is-capturing { background: white !important; width: 1150px !important; }
+        .is-capturing th, .is-capturing td { border: 1px solid #333 !important; border-image: none !important; animation: none !important; filter: none !important; }
     </style>
 </head>
 <body id="mainBody">
@@ -213,8 +203,9 @@
             <h3>Ghi chú cách tính toán:</h3>
             <p>• <b>Số kí tiêu thụ(kWh):</b> Số ĐH tháng này trừ Số ĐH tháng trước.</p>
             <p>• <b>Tiền điện:</b> Số kí tiêu thụ × Giá điện.</p>
-            <p>• <b>Số điện thất thoát:</b> Điện tổng tiêu thụ - Tổng điện tất cả các hộ.</p>
-            <p>• <b>Tiền điện thất thoát (từng hộ):</b> Chia theo tỉ lệ số kí tiêu thụ.</p>
+            <p>• <b>Số điện thất thoát:</b> Điện tổng tiêu thụ trong tháng trừ Tổng điện tất cả các hộ trong tháng để ra số điện thất thoát.</p>
+            <p>• <b>Tiền điện thất thoát (từng hộ):</b> Được chia theo tỉ lệ số kí kiêu thụ(số kí tiêu thụ ít chịu ít,số kí tiêu thụ nhiều chịu nhiều).</p>
+            <p class="formula-line">&nbsp;&nbsp; (Số điện thất thoát × 2.400đ).</p>
             <p>• <b>TIỀN PHẢI NỘP:</b> Tiền điện + Tiền điện thất thoát.</p>
         </div>
     </div>
@@ -343,66 +334,39 @@
     }
 
     async function exportToPNG() {
-        const wrapper = document.getElementById('rainbowWrapper');
         const area = document.getElementById('captureArea');
-        const controls = document.querySelectorAll('.controls');
+        const controls = document.querySelector('.controls');
         
-        // Bước 1: Chuẩn bị giao diện để iPhone không bị lag/lỗi
-        controls.forEach(el => el.style.display = 'none');
+        // Tạm ẩn control và hiệu ứng để Safari iPhone không bị lỗi tràn bộ nhớ
+        controls.classList.add('hide-for-capture');
         area.classList.add('is-capturing');
-        wrapper.classList.add('is-capturing-wrapper');
-        
-        // Bước 2: Cuộn lên đầu trang để chụp đúng vị trí
         window.scrollTo(0,0);
 
         try {
             const canvas = await html2canvas(area, {
-                scale: 2, // Giảm xuống 2 để iPhone cũ vẫn chạy được
-                backgroundColor: "#ffffff",
+                scale: 2,
                 useCORS: true,
-                allowTaint: true,
-                logging: false,
-                width: 1150,
-                // Fix riêng cho iOS: Loại bỏ các filter/blur trong quá trình render
+                backgroundColor: "#ffffff",
                 onclone: (clonedDoc) => {
-                    const clonedArea = clonedDoc.getElementById('captureArea');
-                    clonedArea.style.backdropFilter = 'none';
-                    clonedArea.style.webkitBackdropFilter = 'none';
-                    const cells = clonedArea.querySelectorAll('th, td');
-                    cells.forEach(c => {
+                    const el = clonedDoc.getElementById('captureArea');
+                    el.style.backdropFilter = 'none';
+                    el.style.webkitBackdropFilter = 'none';
+                    // Ép viền đen khi xuất để iPhone vẽ được canvas
+                    el.querySelectorAll('th, td').forEach(c => {
                         c.style.border = '1px solid #333';
                         c.style.animation = 'none';
-                        c.style.filter = 'none';
                     });
                 }
             });
-
-            // Bước 3: Xuất file
-            const dataUrl = canvas.toDataURL("image/png");
             const link = document.createElement('a');
-            link.download = `So_Dien_${monthInput.value}.png`;
-            link.href = dataUrl;
-            document.body.appendChild(link);
+            link.download = `Dien_${monthInput.value}.png`;
+            link.href = canvas.toDataURL("image/png");
             link.click();
-            document.body.removeChild(link);
-            
-            // Thông báo cho người dùng iOS
-            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                alert("Ảnh đã được tạo! Nếu không thấy tải về, hãy nhấn giữ vào ảnh và chọn 'Lưu hình ảnh'.");
-                const newImg = new Image();
-                newImg.src = dataUrl;
-                newImg.style.width = "100%";
-                const win = window.open("");
-                win.document.write("<h3>Nhấn giữ ảnh để lưu:</h3>");
-                win.document.write(newImg.outerHTML);
-            }
         } catch (e) {
-            alert("Lỗi chụp ảnh: " + e.message);
+            alert("Lỗi xuất ảnh!");
         } finally {
-            // Khôi phục giao diện
-            controls.forEach(el => el.style.display = 'flex');
+            controls.classList.remove('hide-for-capture');
             area.classList.remove('is-capturing');
-            wrapper.classList.remove('is-capturing-wrapper');
         }
     }
 
@@ -424,7 +388,7 @@
             footerMonthLabel: document.getElementById('footerMonthLabel').value
         };
         localStorage.setItem('electricDB_v3', JSON.stringify(db));
-        if (!silent) alert('Đã lưu dữ liệu!');
+        if (!silent) alert('Đã lưu!');
     }
 
     function toggleLock() {
@@ -457,7 +421,7 @@
 
     function handleRowAction(cell) {
         if(document.getElementById('captureArea').classList.contains('delete-active')) {
-            if(confirm("Xóa dòng này?")) { cell.parentElement.remove(); updateTotals(); }
+            if(confirm("Xóa hộ này?")) { cell.parentElement.remove(); updateTotals(); }
         }
     }
 
@@ -479,8 +443,8 @@
                 db = JSON.parse(ev.target.result);
                 localStorage.setItem('electricDB_v3', JSON.stringify(db));
                 init();
-                alert("Đã nhập dữ liệu thành công!");
-            } catch(err) { alert("Lỗi: File không hợp lệ!"); }
+                alert("Đã nhập thành công!");
+            } catch(err) { alert("Lỗi file!"); }
             finally { e.target.value = ''; }
         };
         reader.readAsText(e.target.files[0]);
