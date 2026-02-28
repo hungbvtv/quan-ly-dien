@@ -16,11 +16,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 15px; margin: 0; }
         .container { background: white; max-width: 1250px; margin: auto; padding: 25px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; }
         
-        /* Thanh điều khiển - Giữ nguyên nút đầy đủ tên */
+        /* Thanh điều khiển - Giữ nguyên nút đầy đủ */
         .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 15px; border-radius: 5px; align-items: center; }
         .btn { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; white-space: nowrap; }
         .btn-add { background: #28a745; }
@@ -38,15 +38,15 @@
         .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* BẢNG HỖ TRỢ CO GIÃN CỘT */
+        /* BẢNG TỐI ƯU CO GIÃN CỘT */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
         th, td { border: 1px solid #333; padding: 10px 4px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; position: relative; }
-        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 10px; user-select: none; }
+        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 10px; user-select: none; touch-action: none; }
         
-        /* Vùng nắm kéo dãn có chấm đỏ */
-        .resizer { width: 20px; height: 100%; position: absolute; right: -10px; top: 0; cursor: col-resize; z-index: 10; display: flex; align-items: center; justify-content: center; }
-        .resizer::after { content: ""; width: 6px; height: 6px; background: red; border-radius: 50%; opacity: 0.8; box-shadow: 0 0 4px rgba(255,0,0,0.5); }
-        .resizer:active::after { transform: scale(1.5); opacity: 1; }
+        /* Vùng nắm kéo dãn - iPhone Friendly */
+        .resizer { width: 30px; height: 100%; position: absolute; right: -15px; top: 0; cursor: col-resize; z-index: 100; display: flex; align-items: center; justify-content: center; touch-action: none; }
+        .resizer::after { content: ""; width: 8px; height: 8px; background: red; border-radius: 50%; opacity: 0.8; box-shadow: 0 0 5px rgba(255,0,0,0.6); }
+        .resizer:active::after { background: #00ff00; transform: scale(1.5); }
 
         .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
         
@@ -58,9 +58,6 @@
         .col-tien { width: 10%; }
         .col-final { width: 12%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
 
-        .delete-active .col-stt { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
-        .delete-active .col-stt::after { content: " ✖"; font-size: 10px; }
-
         input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
         input.name { text-align: left; font-weight: bold; white-space: normal; line-height: 1.2; }
         input.error { color: red; font-weight: bold; }
@@ -71,7 +68,6 @@
         .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 18px; border-top: 2px solid #333; }
         .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; }
 
-        /* Ghi chú cách tính đầy đủ 100% */
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
         .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
@@ -170,7 +166,7 @@
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
-    // CHỨC NĂNG CO GIÃN CỘT CHO DIỆN THOẠI (iOS/Android)
+    // CHỨC NĂNG CO GIÃN CỘT FIX CHO iPHONE (Safari)
     function initResizers() {
         const table = document.getElementById('mainTable');
         const ths = table.querySelectorAll('th');
@@ -190,6 +186,7 @@
             };
 
             const onEnd = () => {
+                document.body.style.overflow = ''; // Mở lại cuộn trang
                 document.removeEventListener('mousemove', onMove);
                 document.removeEventListener('mouseup', onEnd);
                 document.removeEventListener('touchmove', onMove);
@@ -197,12 +194,16 @@
             };
 
             const onStart = (e) => {
+                // Khóa cuộn trang trên iPhone khi đang kéo
+                document.body.style.overflow = 'hidden'; 
                 startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
                 startWidth = th.offsetWidth;
+                
                 document.addEventListener('mousemove', onMove);
                 document.addEventListener('mouseup', onEnd);
                 document.addEventListener('touchmove', onMove, { passive: false });
                 document.addEventListener('touchend', onEnd);
+
                 if (e.cancelable) e.preventDefault();
             };
 
@@ -425,7 +426,7 @@
     }
 
     init();
-    initResizers(); // Khởi tạo co dãn cột
+    initResizers();
 </script>
 </body>
 </html>
