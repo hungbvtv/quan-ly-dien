@@ -18,9 +18,9 @@
     <style>
         * { box-sizing: border-box; }
         body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 10px; margin: 0; }
-        .container { background: white; max-width: 1200px; margin: auto; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; }
+        .container { background: white; max-width: 1250px; margin: auto; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; overflow-x: auto; }
         
-        /* Thanh điều khiển - Giữ nguyên tên nút đầy đủ */
+        /* Thanh điều khiển - Nút đầy đủ tên */
         .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 12px; border-radius: 5px; align-items: center; }
         .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; white-space: nowrap; }
         .btn-add { background: #28a745; }
@@ -34,39 +34,33 @@
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        .status-badge { padding: 5px 10px; border-radius: 4px; font-size: 13px; font-weight: bold; }
-        .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        /* BẢNG TỐI ƯU CÂN ĐỐI CHO IPHONE */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
+        /* Bảng tối ưu cân đối kích cỡ các cột */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; min-width: 1000px; }
         th, td { border: 1px solid #333; padding: 10px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
-        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 9px; }
-        .title-header { font-size: 22px; font-weight: bold; padding: 12px !important; background: #fff !important; color: #0054a5; }
+        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 11px; height: 50px; }
+        .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
         
-        /* ĐỊNH DẠNG CỘT MỚI */
-        .col-stt { width: 40px; font-weight: bold; font-size: 15px; } /* To STT lên */
-        .col-name { width: auto; text-align: left !important; padding-left: 8px !important; } 
-        .col-num { width: 45px; } 
-        .col-price { width: 52px; background: #fffde7; } 
-        .col-tien { width: 68px; } 
-        .col-final { width: 88px; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
+        /* Tỉ lệ chia đều và cân đối 9 cột */
+        .col-stt { width: 3.5%; }
+        .col-name { width: 18%; text-align: left !important; padding-left: 10px !important; } 
+        .col-sd { width: 8.5%; }
+        .col-kwh { width: 7.5%; background: #e8f5e9; }
+        .col-price { width: 10%; background: #fffde7; }
+        .col-money { width: 11.5%; }
+        .col-loss { width: 15%; background: #fff4e5 !important; }
+        .col-final { width: 17.5%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 16px; }
 
-        .delete-active .col-stt { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
-        .delete-active .col-stt::after { content: " ✖"; font-size: 10px; }
-
-        /* Chữ tên hộ bé lại 1 chút cho đỡ hụt */
         input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
-        input.name { text-align: left; font-weight: bold; font-size: 13.5px; white-space: normal; } 
+        input.name { text-align: left; font-weight: bold; white-space: normal; } 
         input.error { color: red; font-weight: bold; }
         input:disabled { color: #000; cursor: default; opacity: 1; }
         
-        .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 10px !important; height: 40px; }
-        .loss-summary { background: #fff3cd; color: #856404; font-size: 13px; }
-        .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 18px; border-top: 2px solid #333; }
-        .date-footer { margin-top: 15px; text-align: right; font-style: italic; font-weight: bold; }
+        .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 10px !important; height: 45px; }
+        .loss-summary { background: #fff3cd; color: #856404; font-size: 14px; }
+        .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 19px; border-top: 2px solid #333; }
+        .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; }
 
-        /* Ghi chú đầy đủ 100% */
+        /* Ghi chú đầy đủ */
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
         .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
@@ -77,8 +71,6 @@
 
         @media screen and (max-width: 800px) {
             .container { padding: 10px; }
-            th { font-size: 7px; padding: 4px 1px; }
-            td { font-size: 12px; }
             .title-header { font-size: 18px; }
         }
     </style>
@@ -91,7 +83,7 @@
             <strong>Tháng: </strong>
             <input type="month" id="currentMonth" onchange="changeMonth()" style="width: 140px; border: 1px solid #ccc; background: white; padding: 4px;">
         </div>
-        <div id="statusArea"><span class="status-badge status-open">Đang Mở</span></div>
+        <div id="statusArea"><span class="status-badge" style="padding: 5px 10px; border-radius: 4px; font-size: 13px; font-weight: bold; background: #d4edda; color: #155724; border: 1px solid #c3e6cb;">Đang Mở</span></div>
         <button class="btn btn-lock-toggle" id="lockBtn" onclick="toggleLock()"><span id="lockBtnText">Khóa Chỉnh Sửa</span></button>
         <button class="btn btn-add" onclick="addRow()">+ Thêm Hộ</button>
         <button class="btn btn-delete-mode" id="deleteModeBtn" onclick="toggleDeleteMode()">Chế Độ Xóa</button>
@@ -109,13 +101,13 @@
             <tr>
                 <th class="col-stt">STT</th>
                 <th class="col-name">Tên hộ</th>
-                <th class="col-num">SĐ trước</th>
-                <th class="col-num">SĐ sau</th>
-                <th class="col-num" style="background: #e8f5e9;">Số kí</th>
-                <th class="col-price">Giá điện</th>
-                <th class="col-tien">Tiền điện</th>
-                <th class="col-tien" style="background: #fff4e5;">Thất thoát</th>
-                <th class="col-final">TỔNG CỘNG</th>
+                <th class="col-sd">SĐ trước</th>
+                <th class="col-sd">SĐ sau</th>
+                <th class="col-kwh">Số kí</th>
+                <th class="col-price">Giá điện(vnđ)</th>
+                <th class="col-money">Tiền điện(vnđ)</th>
+                <th class="col-loss">Tiền điện thất thoát(vnđ)</th>
+                <th class="col-final">TIỀN PHẢI NỘP(vnđ)</th>
             </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -123,7 +115,7 @@
             <tr>
                 <td colspan="9" class="footer-info">
                     Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width: 40px; border-bottom: 1px dotted #333;"> : 
-                    <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 110px; border-bottom: 1px dotted #333; text-align: left; font-weight: bold; font-size: 16px;"> (Kwh)
+                    <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 120px; border-bottom: 1px dotted #333; text-align: left; font-weight: bold; font-size: 16px;"> (Kwh)
                 </td>
             </tr>
             <tr class="loss-summary">
@@ -156,7 +148,7 @@
         <p>• <b>Số điện thất thoát:</b> Điện tổng tiêu thụ - Tổng điện tất cả các hộ.</p>
         <p>• <b>Tiền điện thất thoát (từng hộ):</b> Được chia theo tỉ lệ sử dụng.</p>
         <p class="formula-line">&nbsp;&nbsp; (Số điện thất thoát × 2.400đ).</p>
-        <p>• <b>TỔNG CỘNG:</b> Tiền điện + Tiền điện thất thoát (Làm tròn đến hàng nghìn).</p>
+        <p>• <b>TIỀN PHẢI NỘP:</b> Tiền điện + Tiền điện thất thoát (Làm tròn đến hàng nghìn).</p>
     </div>
 </div>
 
@@ -206,13 +198,13 @@
         row.innerHTML = `
             <td class="col-stt" onclick="handleRowAction(this)">${tbody.rows.length}</td>
             <td class="col-name"><input type="text" class="name" value="${data.name}" placeholder="Tên hộ..."></td>
-            <td class="col-num"><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
-            <td class="col-num"><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
-            <td class="col-num"><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
-            <td class="col-num"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
-            <td class="col-tien"><span class="base-money">0</span></td>
-            <td class="col-tien"><span class="loss-share">0</span></td>
-            <td class="col-final"><span class="final-total">0</span></td>
+            <td><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
+            <td><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
+            <td><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
+            <td><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td><span class="base-money">0</span></td>
+            <td><span class="loss-share">0</span></td>
+            <td><span class="final-total">0</span></td>
         `;
     }
 
@@ -306,12 +298,12 @@
         if (isLocked) {
             body.classList.add('mode-locked');
             lockBtnText.innerText = "Mở Khóa Chỉnh Sửa";
-            statusArea.innerHTML = '<span class="status-badge status-locked">Đã Khóa</span>';
+            statusArea.innerHTML = '<span class="status-badge" style="padding: 5px 10px; border-radius: 4px; font-size: 13px; font-weight: bold; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">Đã Khóa</span>';
             allInputs.forEach(i => i.disabled = true);
         } else {
             body.classList.remove('mode-locked');
             lockBtnText.innerText = "Khóa Chỉnh Sửa";
-            statusArea.innerHTML = '<span class="status-badge status-open">Đang Mở</span>';
+            statusArea.innerHTML = '<span class="status-badge" style="padding: 5px 10px; border-radius: 4px; font-size: 13px; font-weight: bold; background: #d4edda; color: #155724; border: 1px solid #c3e6cb;">Đang Mở</span>';
             allInputs.forEach(i => i.disabled = false);
         }
     }
