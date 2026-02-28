@@ -38,25 +38,25 @@
         .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* Bảng tối ưu tỉ lệ 60% cho Tên hộ - RỘNG NHẤT CÓ THỂ */
+        /* Bảng tối ưu tỉ lệ 58% cho Tên hộ */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
         th, td { border: 1px solid #333; padding: 10px 1px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
         th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 8px; }
         .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
         
-        /* CẤU HÌNH ĐỘ RỘNG SIÊU RỘNG CHO TÊN HỘ */
-        .col-stt { width: 30px; font-weight: bold; }
-        .col-name { width: 60%; text-align: left !important; padding-left: 8px !important; } /* TÊN HỘ CHIẾM 60% */
-        .col-num { width: 4.5%; } /* Bóp nhỏ tối đa các cột số */
+        /* CẤU HÌNH ĐỘ RỘNG CỘT - Tên hộ 58% */
+        .col-stt { width: 32px; font-weight: bold; }
+        .col-name { width: 58%; text-align: left !important; padding-left: 8px !important; } /* Tên hộ rộng 58% */
+        .col-num { width: 4.5%; } /* SĐ trước, sau, số kí */
         .col-price { width: 5.5%; background: #fffde7; }
         .col-tien { width: 6.5%; } 
-        .col-final { width: 8%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
+        .col-final { width: 10%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
 
         .delete-active .col-stt { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
         .delete-active .col-stt::after { content: " ✖"; font-size: 10px; }
 
         input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
-        input.name { text-align: left; font-weight: bold; }
+        input.name { text-align: left; font-weight: bold; white-space: normal; }
         input:focus { background: #fff9c4; border-radius: 2px; }
         input.error { color: red; font-weight: bold; }
         input:disabled { color: #000; cursor: default; opacity: 1; }
@@ -66,7 +66,7 @@
         .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 18px; border-top: 2px solid #333; }
         .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; }
 
-        /* Ghi chú cách tính đầy đủ */
+        /* Ghi chú cách tính đầy đủ 100% */
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
         .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
@@ -175,7 +175,7 @@
         let monthData = db[currentMonth];
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ ĐIỆN - THÁNG " + currentMonth.split('-')[1] + "/" + currentMonth.split('-')[0];
+        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + currentMonth.split('-')[1] + "/" + currentMonth.split('-')[0];
 
         if (monthData && monthData.rows && monthData.rows.length > 0) {
             monthData.rows.forEach(item => addRow(item));
@@ -209,7 +209,7 @@
             <td class="col-num"><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
-            <td class="col-price"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td class="col-num"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
             <td class="col-tien"><span class="base-money">0</span></td>
             <td class="col-tien"><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0</span></td>
