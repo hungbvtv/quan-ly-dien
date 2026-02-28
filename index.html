@@ -17,12 +17,12 @@
     
     <style>
         * { box-sizing: border-box; }
-        body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 15px; margin: 0; }
-        .container { background: white; max-width: 1250px; margin: auto; padding: 25px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; }
+        body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 10px; margin: 0; }
+        .container { background: white; max-width: 1200px; margin: auto; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; }
         
-        /* Thanh điều khiển - Giữ nguyên tên nút đầy đủ không viết tắt */
-        .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 15px; border-radius: 5px; align-items: center; }
-        .btn { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; white-space: nowrap; }
+        /* Thanh điều khiển - Giữ nguyên tên nút đầy đủ */
+        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 12px; border-radius: 5px; align-items: center; }
+        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; white-space: nowrap; }
         .btn-add { background: #28a745; }
         .btn-save { background: #007bff; }
         .btn-excel { background: #217346; }
@@ -38,35 +38,34 @@
         .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* Bảng tối ưu: Hẹp STT - Rộng Tên hộ (52%) */
+        /* BẢNG TỐI ƯU SIÊU RỘNG TÊN HỘ */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
-        th, td { border: 1px solid #333; padding: 10px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
+        th, td { border: 1px solid #333; padding: 8px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
         th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 9px; }
-        .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
+        .title-header { font-size: 22px; font-weight: bold; padding: 12px !important; background: #fff !important; color: #0054a5; }
         
-        /* CẤU HÌNH CHIỀU RỘNG CỘT - FIX LỖI iPHONE */
-        .col-stt { width: 25px; font-weight: bold; } /* Hẹp tối đa */
-        .col-name { width: 52%; text-align: left !important; padding-left: 8px !important; } /* Rộng 52% */
-        .col-num { width: 6%; } 
-        .col-price { width: 7%; background: #fffde7; }
-        .col-tien { width: 7.5%; }
-        .col-final { width: 11%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
+        /* CỐ ĐỊNH PIXEL ĐỂ ÉP IPHONE PHẢI HIỆN RỘNG TÊN HỘ */
+        .col-stt { width: 28px; font-weight: bold; }
+        .col-name { width: auto; text-align: left !important; padding-left: 8px !important; } /* Tự động dãn rộng nhất */
+        .col-num { width: 42px; } /* SĐ trước, SĐ sau, Số kí */
+        .col-price { width: 50px; background: #fffde7; } /* Giá điện */
+        .col-tien { width: 65px; } /* Tiền điện, Thất thoát */
+        .col-final { width: 85px; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
 
         .delete-active .col-stt { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
         .delete-active .col-stt::after { content: " ✖"; font-size: 10px; }
 
-        input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
-        input.name { text-align: left; font-weight: bold; white-space: normal; line-height: 1.2; } /* Tự động xuống dòng */
-        input:focus { background: #fff9c4; border-radius: 2px; }
+        input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; min-width: 0; }
+        input.name { text-align: left; font-weight: bold; white-space: normal; } 
         input.error { color: red; font-weight: bold; }
         input:disabled { color: #000; cursor: default; opacity: 1; }
         
-        .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 15px !important; height: 40px; }
+        .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 10px !important; height: 40px; }
         .loss-summary { background: #fff3cd; color: #856404; font-size: 13px; }
         .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 18px; border-top: 2px solid #333; }
-        .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; }
+        .date-footer { margin-top: 15px; text-align: right; font-style: italic; font-weight: bold; }
 
-        /* Ghi chú cách tính đầy đủ 100% */
+        /* Ghi chú đầy đủ */
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
         .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
@@ -123,7 +122,7 @@
             <tr>
                 <td colspan="9" class="footer-info">
                     Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width: 40px; border-bottom: 1px dotted #333;"> : 
-                    <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 120px; border-bottom: 1px dotted #333; text-align: left; font-weight: bold; font-size: 16px;"> (Kwh)
+                    <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 110px; border-bottom: 1px dotted #333; text-align: left; font-weight: bold; font-size: 16px;"> (Kwh)
                 </td>
             </tr>
             <tr class="loss-summary">
@@ -209,7 +208,7 @@
             <td class="col-num"><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
-            <td class="col-num"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td class="col-price"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
             <td class="col-tien"><span class="base-money">0</span></td>
             <td class="col-tien"><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0</span></td>
