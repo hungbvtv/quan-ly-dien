@@ -2,27 +2,33 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Điện - Tổng kết Tiền tháng</title>
-    <!-- Thư viện hỗ trợ xuất ảnh và Excel -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quản lý Điện - EVN</title>
+    
+    <!-- Cấu hình Icon cho Điện thoại -->
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Quản Lý Điện">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         * { box-sizing: border-box; }
-        body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 20px; margin: 0; }
-        .container { background: white; max-width: 1150px; margin: auto; padding: 30px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; overflow: hidden; }
+        body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 10px; margin: 0; }
+        .container { background: white; max-width: 1150px; margin: auto; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; }
         
-        /* Thanh điều khiển */
-        .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 15px; border-radius: 5px; align-items: center; }
-        .btn { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .controls { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; background: #e9ecef; padding: 12px; border-radius: 5px; align-items: center; }
+        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; }
         .btn-add { background: #28a745; }
         .btn-save { background: #007bff; }
         .btn-excel { background: #217346; }
         .btn-export { background: #17a2b8; }
         .btn-import { background: #ffc107; color: black; }
         .btn-lock-toggle { background: #6f42c1; } 
-        .btn-lock-toggle.is-locked { background: #e84393; } 
         .btn-delete-mode { background: #6c757d; }
         .btn-delete-mode.active { background: #dc3545; animation: pulse 1.5s infinite; }
 
@@ -32,43 +38,40 @@
         .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* Bảng */
+        /* Bảng tối ưu độ rộng */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
-        th, td { border: 1px solid #333; padding: 10px 5px; text-align: center; overflow: hidden; word-wrap: break-word; }
-        th { background: #f8f9fa; font-size: 14px; text-transform: uppercase; font-weight: bold; }
-        .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; }
+        th, td { border: 1px solid #333; padding: 8px 4px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
+        th { background: #f8f9fa; text-transform: uppercase; font-weight: bold; }
+        .title-header { font-size: 22px; font-weight: bold; padding: 12px !important; background: #fff !important; color: #0054a5; }
         
-        .col-stt { width: 50px; font-weight: bold; transition: 0.3s; }
+        /* Cố định chiều rộng các cột để ưu tiên Tên Hộ */
+        .col-stt { width: 40px; font-weight: bold; }
+        .col-name { width: 28%; text-align: left; padding-left: 8px; } /* Mở rộng tối đa cho tên hộ */
+        .col-num { width: 9%; }
+        .col-price { width: 9%; background: #fffde7; }
+        .col-final { width: 15%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; }
+
         .delete-active .col-stt { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
         .delete-active .col-stt::after { content: " ✖"; font-size: 10px; }
 
-        .col-name { width: 18%; }
-        .col-usage { background: #e8f5e9; font-weight: bold; }
-        .col-price { background: #fffde7; }
-        .col-loss { background: #fff4e5 !important; } 
-        .col-final { background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 16px; }
-
-        input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 5px 0; }
+        input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
+        input.name { text-align: left; font-weight: 500; } /* Tên hộ căn lề trái cho dễ đọc */
         input:focus { background: #fff9c4; border-radius: 2px; }
         input.error { color: red; font-weight: bold; }
         input:disabled { color: #000; cursor: default; opacity: 1; }
         
-        .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 15px !important; height: 40px; }
-        .loss-summary { background: #fff3cd; color: #856404; font-size: 14px; }
-        .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 17px; border-top: 2px solid #333; }
-        .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; }
-
-        /* Ghi chú */
-        .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; }
-        .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
+        .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 10px !important; height: 38px; }
+        .loss-summary { background: #fff3cd; color: #856404; font-size: 13px; }
+        .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 16px; border-top: 2px solid #333; }
+        .date-footer { margin-top: 15px; text-align: right; font-style: italic; font-weight: bold; font-size: 14px; }
 
         .hide-for-capture { display: none !important; }
         .mode-locked .btn-add, .mode-locked .btn-save, .mode-locked .btn-delete-mode { display: none !important; }
 
         @media print {
-            .controls, .calculation-guide { display: none !important; }
+            .controls { display: none !important; }
             body { background: white; padding: 0; }
-            .container { box-shadow: none; max-width: 100%; width: 100%; padding: 10px; }
+            .container { box-shadow: none; max-width: 100%; width: 100%; padding: 5px; }
         }
     </style>
 </head>
@@ -77,34 +80,33 @@
 <div class="container" id="captureArea">
     <div class="controls">
         <div>
-            <strong>Tháng: </strong>
-            <input type="month" id="currentMonth" onchange="changeMonth()" style="width: 140px; border: 1px solid #ccc; background: white; padding: 4px;">
+            <input type="month" id="currentMonth" onchange="changeMonth()" style="width: 140px; border: 1px solid #ccc; background: white; padding: 5px; border-radius: 4px;">
         </div>
-        <div id="statusArea"><span class="status-badge status-open">Đang Mở</span></div>
-        <button class="btn btn-lock-toggle" id="lockBtn" onclick="toggleLock()"><span id="lockBtnText">Khóa Chỉnh Sửa</span></button>
+        <div id="statusArea"><span class="status-badge status-open">ĐANG MỞ</span></div>
+        <button class="btn btn-lock-toggle" id="lockBtn" onclick="toggleLock()"><span id="lockBtnText">Khóa Số</span></button>
         <button class="btn btn-add" onclick="addRow()">+ Thêm Hộ</button>
-        <button class="btn btn-delete-mode" id="deleteModeBtn" onclick="toggleDeleteMode()">Chế Độ Xóa</button>
-        <button class="btn btn-save" onclick="saveToLocal()">Lưu Dữ Liệu</button>
-        <button class="btn btn-excel" onclick="exportToExcel()">Xuất Excel</button>
-        <button class="btn btn-export" onclick="exportData()">Backup Hệ Thống</button>
-        <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Nhập File Backup</button>
+        <button class="btn btn-delete-mode" id="deleteModeBtn" onclick="toggleDeleteMode()">Xóa</button>
+        <button class="btn btn-save" onclick="saveToLocal()">Lưu</button>
+        <button class="btn btn-excel" onclick="exportToExcel()">Excel</button>
+        <button class="btn btn-export" onclick="exportData()">Backup</button>
+        <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Nhập</button>
         <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
-        <button class="btn btn-export" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (PNG)</button>
+        <button class="btn btn-export" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh</button>
     </div>
 
     <table id="mainTable">
         <thead>
-            <tr><th colspan="9" id="titleMonth" class="title-header">Sổ Quản Lý Mua Bán Điện</th></tr>
+            <tr><th colspan="9" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
             <tr>
                 <th class="col-stt">STT</th>
                 <th class="col-name">Tên hộ</th>
-                <th width="10%">SĐ trước</th>
-                <th width="10%">SĐ sau</th>
-                <th class="col-usage" width="9%">Số kí</th>
-                <th class="col-price" width="10%">Giá điện</th>
-                <th width="12%">Tiền gốc</th>
-                <th class="col-loss" width="14%">Tiền Thất thoát</th>
-                <th class="col-final" width="15%">TỔNG CỘNG</th>
+                <th class="col-num">SĐ trước</th>
+                <th class="col-num">SĐ sau</th>
+                <th class="col-num" style="background: #e8f5e9;">Số kí</th>
+                <th class="col-price">Giá (đ)</th>
+                <th class="col-num">Tiền gốc</th>
+                <th class="col-num" style="background: #fff4e5;">Thất thoát</th>
+                <th class="col-final">TỔNG CỘNG</th>
             </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -112,7 +114,7 @@
             <tr>
                 <td colspan="9" class="footer-info">
                     Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width: 40px; border-bottom: 1px dotted #333;"> : 
-                    <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 120px; border-bottom: 1px dotted #333; text-align: left; font-weight: bold; font-size: 16px;"> (Kwh)
+                    <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 110px; border-bottom: 1px dotted #333; text-align: left; font-weight: bold; font-size: 16px;"> (Kwh)
                 </td>
             </tr>
             <tr class="loss-summary">
@@ -125,8 +127,8 @@
                 <td colspan="6" class="footer-info">Tiền thất thoát (x 2.400đ): <span id="lblLossMoney">0</span> đ</td>
             </tr>
             <tr class="grand-total-row">
-                <td colspan="9" class="footer-info" style="text-align: center; text-transform: uppercase; font-size: 18px; padding: 15px !important;">
-                    Tổng tiền phải thu (Gốc + Thất thoát): <span id="lblGrandTotal">0</span> VNĐ
+                <td colspan="9" class="footer-info" style="text-align: center; text-transform: uppercase; font-size: 18px; padding: 12px !important;">
+                    TỔNG THU: <span id="lblGrandTotal">0</span> VNĐ
                 </td>
             </tr>
         </tfoot>
@@ -137,56 +139,33 @@
         Tháng <input type="text" id="footerMonth" style="width:30px; border-bottom: 1px solid #333;"> 
         Năm <input type="text" id="footerYear" style="width:50px; border-bottom: 1px solid #333;">
     </div>
-
-    <div class="calculation-guide">
-        <h3>Ghi chú:</h3>
-        <p>• <b>Số kí (kWh):</b> Số ĐH sau - Số ĐH trước.</p>
-        <p>• <b>Tiền điện:</b> Số kí × Giá điện.</p>
-        <p>• <b>Số điện thất thoát:</b> Điện tổng tiêu thụ - Tổng điện tất cả các hộ.</p>
-        <p>• <b>Tiền điện thất thoát (từng hộ):</b> Được chia theo tỉ lệ sử dụng.</p>
-        <p class="formula-line">&nbsp;&nbsp; (Số điện thất thoát × 2.400đ).</p>
-        <p>• <b>TIỀN PHẢI NỘP:</b> Tiền điện + Tiền điện thất thoát.</p>
-    </div>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('electricDB_v3')) || {};
     const monthInput = document.getElementById('currentMonth');
-
-    // Tự động chọn tháng hiện tại nếu lần đầu mở
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
     function init() {
         const currentMonth = monthInput.value;
-        
-        // 1. Tìm tháng trước đó để lấy số cũ
         const dateParts = currentMonth.split('-');
         const prevDate = new Date(dateParts[0], dateParts[1] - 2, 1);
         const prevMonthKey = prevDate.getFullYear() + '-' + String(prevDate.getMonth() + 1).padStart(2, '0');
         const prevMonthData = db[prevMonthKey];
 
-        // 2. Lấy dữ liệu tháng hiện tại
         let monthData = db[currentMonth];
-        
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + currentMonth.split('-')[1] + "/" + currentMonth.split('-')[0];
+        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ ĐIỆN - THÁNG " + currentMonth.split('-')[1] + "/" + currentMonth.split('-')[0];
 
         if (monthData && monthData.rows && monthData.rows.length > 0) {
-            // Nếu đã có dữ liệu lưu rồi thì hiển thị
             monthData.rows.forEach(item => addRow(item));
         } else if (prevMonthData && prevMonthData.rows) {
-            // Nếu tháng này chưa có dữ liệu, tự động kế thừa từ tháng trước
             prevMonthData.rows.forEach(oldRow => {
-                addRow({
-                    name: oldRow.name,
-                    before: oldRow.after, // Số sau tháng trước là Số trước tháng này
-                    after: 0,
-                    price: oldRow.price
-                });
+                addRow({ name: oldRow.name, before: oldRow.after, after: 0, price: oldRow.price });
             });
         } else {
-            addRow(); // Mới hoàn toàn
+            addRow();
         }
 
         document.getElementById('tongDHThang').value = (monthData && monthData.tongDH) ? monthData.tongDH : 0;
@@ -207,19 +186,19 @@
         row.className = 'data-row';
         row.innerHTML = `
             <td class="col-stt" onclick="handleRowAction(this)">${tbody.rows.length}</td>
-            <td><input type="text" class="name" value="${data.name}" placeholder="Tên hộ..."></td>
+            <td class="col-name"><input type="text" class="name" value="${data.name}" placeholder="Tên hộ..."></td>
             <td><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
             <td><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
-            <td class="col-usage"><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
+            <td><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
             <td class="col-price"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
             <td><span class="base-money">0</span></td>
-            <td class="col-loss"><span class="loss-share">0</span></td>
+            <td><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0</span></td>
         `;
     }
 
     function updateTotals() {
-        let totalKwhHộ = 0;
+        let totalKwhHo = 0;
         let totalBaseMoney = 0;
         const rows = document.querySelectorAll('.data-row');
 
@@ -229,23 +208,19 @@
             const after = parseFloat(row.querySelector('.after').value) || 0;
             const price = parseFloat(row.querySelector('.price').value) || 0;
             
-            // Cảnh báo nếu nhập số sau nhỏ hơn số trước
             if (after > 0 && after < before) { row.querySelector('.after').classList.add('error'); } 
             else { row.querySelector('.after').classList.remove('error'); }
 
             const usage = Math.max(0, after - before);
             const baseMoney = usage * price;
-
             row.querySelector('.usage').value = usage;
             row.querySelector('.base-money').innerText = Math.round(baseMoney).toLocaleString('vi-VN');
             row.dataset.usage = usage;
             row.dataset.baseMoney = baseMoney;
-
-            totalKwhHộ += usage;
+            totalKwhHo += usage;
             totalBaseMoney += baseMoney;
         });
 
-        // Tính điện năng tiêu thụ tổng (Số mới - Số cũ tháng trước)
         const currentMonth = monthInput.value;
         const dateParts = currentMonth.split('-');
         const prevDate = new Date(dateParts[0], dateParts[1] - 2, 1);
@@ -255,22 +230,19 @@
         const prevTotalMeter = (db[prevMonthKey] && db[prevMonthKey].tongDH) ? parseFloat(db[prevMonthKey].tongDH) : 0;
         
         let mainConsumption = Math.max(0, currentTotalMeter - prevTotalMeter);
-        let lossKwh = Math.max(0, mainConsumption - totalKwhHộ);
+        let lossKwh = Math.max(0, mainConsumption - totalKwhHo);
         let totalLossMoney = lossKwh * 2400;
 
         rows.forEach(row => {
             const usage = parseFloat(row.dataset.usage) || 0;
             const baseMoney = parseFloat(row.dataset.baseMoney) || 0;
-            let share = totalKwhHộ > 0 ? (usage / totalKwhHộ) * totalLossMoney : 0;
-            
-            // TỔNG CỘNG = Tiền gốc + Tiền thất thoát, sau đó làm tròn đến 1000đ
+            let share = totalKwhHo > 0 ? (usage / totalKwhHo) * totalLossMoney : 0;
             let finalRounded = Math.round((baseMoney + share) / 1000) * 1000;
-
             row.querySelector('.loss-share').innerText = Math.round(share).toLocaleString('vi-VN');
             row.querySelector('.final-total').innerText = finalRounded.toLocaleString('vi-VN');
         });
 
-        document.getElementById('lblTotalKwh').innerText = totalKwhHộ.toLocaleString('vi-VN');
+        document.getElementById('lblTotalKwh').innerText = totalKwhHo.toLocaleString('vi-VN');
         document.getElementById('lblTotalBaseMoney').innerText = Math.round(totalBaseMoney).toLocaleString('vi-VN');
         document.getElementById('lblMainConsumption').innerText = mainConsumption.toLocaleString('vi-VN');
         document.getElementById('lblLossKwh').innerText = lossKwh.toLocaleString('vi-VN');
@@ -296,7 +268,7 @@
             footerMonthLabel: document.getElementById('footerMonthLabel').value
         };
         localStorage.setItem('electricDB_v3', JSON.stringify(db));
-        if (!silent) alert('Đã lưu dữ liệu thành công vào máy!');
+        if (!silent) alert('Đã lưu!');
     }
 
     function toggleLock() {
@@ -312,16 +284,15 @@
         const lockBtnText = document.getElementById('lockBtnText');
         const statusArea = document.getElementById('statusArea');
         const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
-
         if (isLocked) {
             body.classList.add('mode-locked');
-            lockBtnText.innerText = "Mở Khóa Chỉnh Sửa";
-            statusArea.innerHTML = '<span class="status-badge status-locked">Đã Khóa</span>';
+            lockBtnText.innerText = "Mở Khóa";
+            statusArea.innerHTML = '<span class="status-badge status-locked">ĐÃ KHÓA</span>';
             allInputs.forEach(i => i.disabled = true);
         } else {
             body.classList.remove('mode-locked');
-            lockBtnText.innerText = "Khóa Chỉnh Sửa";
-            statusArea.innerHTML = '<span class="status-badge status-open">Đang Mở</span>';
+            lockBtnText.innerText = "Khóa Số";
+            statusArea.innerHTML = '<span class="status-badge status-open">ĐANG MỞ</span>';
             allInputs.forEach(i => i.disabled = false);
         }
     }
@@ -331,15 +302,12 @@
         const container = document.getElementById('captureArea');
         btn.classList.toggle('active');
         container.classList.toggle('delete-active');
-        btn.innerText = btn.classList.contains('active') ? "Đang Xóa (Bấm STT)" : "Chế Độ Xóa";
+        btn.innerText = btn.classList.contains('active') ? "Xóa hàng" : "Xóa";
     }
 
     function handleRowAction(cell) {
         if(document.getElementById('captureArea').classList.contains('delete-active')) {
-            if(confirm("Bạn muốn xóa dòng này?")) {
-                cell.parentElement.remove();
-                updateTotals();
-            }
+            if(confirm("Xóa dòng này?")) { cell.parentElement.remove(); updateTotals(); }
         }
     }
 
@@ -347,36 +315,23 @@
 
     async function exportToPNG() {
         const area = document.getElementById('captureArea');
-        document.querySelectorAll('.controls, .calculation-guide').forEach(el => el.classList.add('hide-for-capture'));
+        document.querySelectorAll('.controls').forEach(el => el.classList.add('hide-for-capture'));
         try {
             const canvas = await html2canvas(area, { scale: 2, backgroundColor: "#ffffff" });
             const link = document.createElement('a');
-            link.download = `Dien_Thang_${monthInput.value}.png`;
+            link.download = `Dien_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
-        } catch (e) { alert("Lỗi xuất ảnh!"); } 
-        finally { document.querySelectorAll('.controls, .calculation-guide').forEach(el => el.classList.remove('hide-for-capture')); }
+        } catch (e) { alert("Lỗi!"); } 
+        finally { document.querySelectorAll('.controls').forEach(el => el.classList.remove('hide-for-capture')); }
     }
 
     function exportToExcel() {
-        const data = [
-            ["SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + monthInput.value],
-            ["STT", "Tên hộ", "SĐ trước", "SĐ sau", "Số kí", "Giá điện", "Tiền gốc", "Thất thoát", "TỔNG CỘNG"]
-        ];
+        const data = [ ["SỔ ĐIỆN - THÁNG " + monthInput.value], ["STT", "Tên hộ", "SĐ trước", "SĐ sau", "Số kí", "Giá", "Tiền gốc", "Thất thoát", "TỔNG THU"] ];
         document.querySelectorAll('.data-row').forEach(row => {
-            data.push([
-                row.cells[0].innerText,
-                row.querySelector('.name').value,
-                row.querySelector('.before').value,
-                row.querySelector('.after').value,
-                row.querySelector('.usage').value,
-                row.querySelector('.price').value,
-                row.querySelector('.base-money').innerText,
-                row.querySelector('.loss-share').innerText,
-                row.querySelector('.final-total').innerText
-            ]);
+            data.push([ row.cells[0].innerText, row.querySelector('.name').value, row.querySelector('.before').value, row.querySelector('.after').value, row.querySelector('.usage').value, row.querySelector('.price').value, row.querySelector('.base-money').innerText, row.querySelector('.loss-share').innerText, row.querySelector('.final-total').innerText ]);
         });
-        const ws = XLSX.utils.aoa_to_sheet(data);
+        const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Dien");
         XLSX.writeFile(wb, `Dien_${monthInput.value}.xlsx`);
@@ -387,7 +342,7 @@
         const blob = new Blob([JSON.stringify(db)], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `backup_quan_ly_dien.json`;
+        a.download = `backup_dien.json`;
         a.click();
     }
 
@@ -398,15 +353,13 @@
                 db = JSON.parse(ev.target.result);
                 localStorage.setItem('electricDB_v3', JSON.stringify(db));
                 init();
-                alert("Đã nhập dữ liệu thành công!");
-            } catch(err) { alert("File không hợp lệ!"); }
+                alert("Đã nhập dữ liệu!");
+            } catch(err) { alert("Lỗi file!"); }
         };
         reader.readAsText(e.target.files[0]);
     }
 
-    // Chạy khởi tạo lần đầu
     init();
 </script>
 </body>
-
 </html>
