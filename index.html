@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quản lý Điện - EVN Pro (Fix iPhone Drag)</title>
+    <title>Quản lý Điện - EVN Pro (Fix iPhone Resizer)</title>
     
-    <!-- Cấu hình Icon/App -->
+    <!-- Cấu hình App điện thoại -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="manifest" href="manifest.json">
@@ -18,9 +18,8 @@
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 15px; margin: 0; }
-        .container { background: white; max-width: 1250px; margin: auto; padding: 25px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; }
+        .container { background: white; max-width: 1250px; margin: auto; padding: 25px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; overflow-x: auto; }
         
-        /* Thanh điều khiển - Giữ nguyên nút đầy đủ tên */
         .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 15px; border-radius: 5px; align-items: center; }
         .btn { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; white-space: nowrap; }
         .btn-add { background: #28a745; }
@@ -38,12 +37,18 @@
         .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* BẢNG HỖ TRỢ CO GIÃN CỘT - iPhone Friendly */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
+        /* BẢNG TỐI ƯU CO GIÃN CHO IPHONE */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            table-layout: fixed; /* Bắt buộc để resizer hoạt động */
+            border: 1.5px solid #000; 
+        }
         th, td { border: 1px solid #333; padding: 10px 4px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; position: relative; }
-        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 10px; user-select: none; }
+        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 10px; user-select: none; touch-action: none; }
         
-        /* Vùng Resizer: Tăng diện tích chạm lên 40px để iPhone dễ nhận diện */
+        /* Vùng kéo dãn - Đã fix cực nhạy cho iPhone */
         .resizer { 
             width: 40px; 
             height: 100%; 
@@ -55,9 +60,8 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            touch-action: none; /* Khóa cuộn trang khi chạm vào đây */
+            touch-action: none; 
         }
-        /* Chấm đỏ hiển thị */
         .resizer::after { 
             content: ""; 
             width: 10px; 
@@ -67,18 +71,10 @@
             opacity: 0.8; 
             box-shadow: 0 0 6px rgba(255,0,0,0.6); 
         }
-        .resizer:active::after { background: #00ff00; transform: scale(1.5); }
+        .resizer:active::after { background: #00ff00; transform: scale(1.6); opacity: 1; }
 
         .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
         
-        /* Độ rộng mặc định ban đầu */
-        .col-stt { width: 45px; }
-        .col-name { width: 38%; text-align: left !important; padding-left: 10px !important; } 
-        .col-num { width: 8.5%; } 
-        .col-price { width: 8.5%; background: #fffde7; }
-        .col-tien { width: 10%; }
-        .col-final { width: 12%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
-
         input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
         input.name { text-align: left; font-weight: bold; white-space: normal; line-height: 1.2; }
         input.error { color: red; font-weight: bold; }
@@ -129,15 +125,15 @@
         <thead>
             <tr><th colspan="9" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
             <tr>
-                <th class="col-stt">STT<div class="resizer"></div></th>
-                <th class="col-name">Tên hộ<div class="resizer"></div></th>
-                <th class="col-num">SĐ trước<div class="resizer"></div></th>
-                <th class="col-num">SĐ sau<div class="resizer"></div></th>
-                <th class="col-num" style="background: #e8f5e9;">Số kí<div class="resizer"></div></th>
-                <th class="col-price">Giá điện<div class="resizer"></div></th>
-                <th class="col-tien">Tiền điện<div class="resizer"></div></th>
-                <th class="col-tien" style="background: #fff4e5;">Thất thoát<div class="resizer"></div></th>
-                <th class="col-final">TỔNG CỘNG<div class="resizer"></div></th>
+                <th style="width: 50px;">STT<div class="resizer"></div></th>
+                <th style="width: 300px;">Tên hộ<div class="resizer"></div></th>
+                <th style="width: 80px;">SĐ trước<div class="resizer"></div></th>
+                <th style="width: 80px;">SĐ sau<div class="resizer"></div></th>
+                <th style="width: 70px; background: #e8f5e9;">Số kí<div class="resizer"></div></th>
+                <th style="width: 80px;">Giá điện<div class="resizer"></div></th>
+                <th style="width: 90px;">Tiền điện<div class="resizer"></div></th>
+                <th style="width: 90px; background: #fff4e5;">Thất thoát<div class="resizer"></div></th>
+                <th style="width: 120px;">TỔNG CỘNG<div class="resizer"></div></th>
             </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -187,21 +183,18 @@
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
-    // CHỨC NĂNG CO GIÃN CỘT SỬ DỤNG POINTER EVENTS (SIÊU MƯỢT CHO iPHONE)
+    // CHỨC NĂNG CO GIÃN CỘT: pointerdown -> setPointerCapture (Fix iPhone Drag)
     function initResizers() {
-        const table = document.getElementById('mainTable');
-        const ths = table.querySelectorAll('th');
+        const resizers = document.querySelectorAll('.resizer');
         
-        ths.forEach(th => {
-            const resizer = th.querySelector('.resizer');
-            if (!resizer) return;
-            
+        resizers.forEach(resizer => {
+            const th = resizer.parentElement;
             let startX, startWidth;
 
             const onPointerMove = (e) => {
                 const newWidth = startWidth + (e.clientX - startX);
-                if (newWidth > 35) {
-                    th.style.width = `${newWidth}px`;
+                if (newWidth > 30) {
+                    th.style.width = newWidth + 'px';
                 }
             };
 
@@ -209,13 +202,17 @@
                 resizer.releasePointerCapture(e.pointerId);
                 resizer.removeEventListener('pointermove', onPointerMove);
                 resizer.removeEventListener('pointerup', onPointerUp);
+                document.body.style.overflow = ''; // Mở lại cuộn trang
             };
 
             resizer.addEventListener('pointerdown', (e) => {
                 startX = e.clientX;
                 startWidth = th.offsetWidth;
                 
-                // Chiếm quyền điều khiển con trỏ (Quan trọng cho iPhone)
+                // Khóa iPhone không cho cuộn trang khi đang kéo
+                document.body.style.overflow = 'hidden';
+                
+                // Ép iPhone phải đi theo con trỏ này
                 resizer.setPointerCapture(e.pointerId);
                 
                 resizer.addEventListener('pointermove', onPointerMove);
@@ -265,15 +262,15 @@
         const row = tbody.insertRow();
         row.className = 'data-row';
         row.innerHTML = `
-            <td class="col-stt" onclick="handleRowAction(this)">${tbody.rows.length}</td>
-            <td class="col-name"><input type="text" class="name" value="${data.name}" placeholder="Tên hộ..."></td>
-            <td class="col-num"><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
-            <td class="col-num"><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
-            <td class="col-num"><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
-            <td class="col-num"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
-            <td class="col-tien"><span class="base-money">0</span></td>
-            <td class="col-tien"><span class="loss-share">0</span></td>
-            <td class="col-final"><span class="final-total">0</span></td>
+            <td>${tbody.rows.length}</td>
+            <td><input type="text" class="name" value="${data.name}" placeholder="Tên hộ..."></td>
+            <td><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
+            <td><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
+            <td><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
+            <td><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td><span class="base-money">0</span></td>
+            <td><span class="loss-share">0</span></td>
+            <td><span class="final-total">0</span></td>
         `;
     }
 
@@ -395,7 +392,7 @@
 
     async function exportToPNG() {
         const area = document.getElementById('captureArea');
-        document.querySelectorAll('.controls').forEach(el => el.classList.add('hide-for-capture'));
+        document.querySelectorAll('.controls, .resizer').forEach(el => el.classList.add('hide-for-capture'));
         try {
             const canvas = await html2canvas(area, { scale: 2, backgroundColor: "#ffffff" });
             const link = document.createElement('a');
@@ -403,7 +400,7 @@
             link.href = canvas.toDataURL("image/png");
             link.click();
         } catch (e) { alert("Lỗi xuất ảnh!"); } 
-        finally { document.querySelectorAll('.controls').forEach(el => el.classList.remove('hide-for-capture')); }
+        finally { document.querySelectorAll('.controls, .resizer').forEach(el => el.classList.remove('hide-for-capture')); }
     }
 
     function exportToExcel() {
@@ -440,7 +437,7 @@
     }
 
     init();
-    initResizers();
+    initResizers(); // Khởi chạy tính năng co dãn
 </script>
 </body>
 </html>
