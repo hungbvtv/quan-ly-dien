@@ -18,9 +18,9 @@
     <style>
         * { box-sizing: border-box; }
         body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 10px; margin: 0; }
-        .container { background: white; max-width: 1250px; margin: auto; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; overflow-x: auto; }
+        .container { background: white; max-width: 1150px; margin: auto; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; overflow-x: auto; }
         
-        /* Thanh điều khiển - Nút đầy đủ tên */
+        /* Thanh điều khiển */
         .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 12px; border-radius: 5px; align-items: center; }
         .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; white-space: nowrap; }
         .btn-add { background: #28a745; }
@@ -34,33 +34,33 @@
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* Bảng tối ưu cân đối kích cỡ các cột */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; min-width: 1000px; }
-        th, td { border: 1px solid #333; padding: 10px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
-        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 11px; height: 50px; }
+        /* Bảng cân đối kích cỡ 9 cột như yêu cầu */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; min-width: 1050px; }
+        th, td { border: 1px solid #333; padding: 8px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
+        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 10.5px; height: 55px; vertical-align: middle; }
         .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
         
-        /* Tỉ lệ chia đều và cân đối 9 cột */
-        .col-stt { width: 3.5%; }
+        /* Tỉ lệ cột cân đối để không bị che chữ */
+        .col-stt { width: 35px; }
         .col-name { width: 18%; text-align: left !important; padding-left: 10px !important; } 
         .col-sd { width: 8.5%; }
-        .col-kwh { width: 7.5%; background: #e8f5e9; }
+        .col-kwh { width: 7%; background: #e8f5e9; }
         .col-price { width: 10%; background: #fffde7; }
         .col-money { width: 11.5%; }
         .col-loss { width: 15%; background: #fff4e5 !important; }
-        .col-final { width: 17.5%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 16px; }
+        .col-final { width: 18%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 16px; }
 
         input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
-        input.name { text-align: left; font-weight: bold; white-space: normal; } 
+        input.name { text-align: left; font-weight: bold; font-size: 14px; white-space: normal; } 
         input.error { color: red; font-weight: bold; }
         input:disabled { color: #000; cursor: default; opacity: 1; }
         
         .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 10px !important; height: 45px; }
         .loss-summary { background: #fff3cd; color: #856404; font-size: 14px; }
         .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 19px; border-top: 2px solid #333; }
-        .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; }
+        .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; font-size: 15px; }
 
-        /* Ghi chú đầy đủ */
+        /* Ghi chú cách tính đầy đủ */
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
         .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
@@ -68,6 +68,9 @@
 
         .hide-for-capture { display: none !important; }
         .mode-locked .btn-add, .mode-locked .btn-save, .mode-locked .btn-delete-mode { display: none !important; }
+
+        /* Style tạm thời khi chụp ảnh để không bị hụt */
+        .is-capturing { width: 1150px !important; max-width: none !important; overflow: visible !important; }
 
         @media screen and (max-width: 800px) {
             .container { padding: 10px; }
@@ -326,15 +329,36 @@
 
     async function exportToPNG() {
         const area = document.getElementById('captureArea');
+        
+        // 1. Ẩn các nút bấm và chuẩn bị chụp
         document.querySelectorAll('.controls').forEach(el => el.classList.add('hide-for-capture'));
+        
+        // 2. Ép bảng hiện đầy đủ 100% kích thước thật (Chống hụt trên điện thoại)
+        area.classList.add('is-capturing');
+        
+        // Cuộn về đầu trang để tránh lỗi vị trí chụp
+        window.scrollTo(0,0);
+
         try {
-            const canvas = await html2canvas(area, { scale: 2, backgroundColor: "#ffffff" });
+            const canvas = await html2canvas(area, { 
+                scale: 2, 
+                backgroundColor: "#ffffff",
+                useCORS: true,
+                width: 1150, // Ép chiều rộng ảnh xuất ra đúng chuẩn bảng đầy đủ
+                windowWidth: 1150 // Ép trình duyệt "nhìn" bảng ở độ rộng này
+            });
             const link = document.createElement('a');
             link.download = `Quan_Ly_Dien_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
-        } catch (e) { alert("Lỗi xuất ảnh!"); } 
-        finally { document.querySelectorAll('.controls').forEach(el => el.classList.remove('hide-for-capture')); }
+        } catch (e) { 
+            alert("Lỗi xuất ảnh!"); 
+            console.error(e);
+        } finally { 
+            // 3. Trả lại giao diện bình thường
+            area.classList.remove('is-capturing');
+            document.querySelectorAll('.controls').forEach(el => el.classList.remove('hide-for-capture')); 
+        }
     }
 
     function exportToExcel() {
