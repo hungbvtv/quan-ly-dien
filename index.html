@@ -1,3 +1,4 @@
+--- START OF FILE index.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -184,11 +185,6 @@
         
         applyLockUI(monthData ? monthData.locked : false);
         updateTotals();
-        
-        const d = new Date();
-        document.getElementById('footerDay').value = d.getDate();
-        document.getElementById('footerMonth').value = d.getMonth() + 1;
-        document.getElementById('footerYear').value = d.getFullYear();
     }
 
     function addRow(data = {name: '', before: 0, after: 0, price: 3000}) {
@@ -365,7 +361,7 @@
 
     function exportData() {
         saveToLocal(true);
-        const blob = new Blob([JSON.stringify(db)], {type: 'application/json'});
+        const blob = new Blob([JSON.stringify(db, null, 2)], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = `backup_quan_ly_dien.json`;
@@ -373,16 +369,31 @@
     }
 
     function importData(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
         const reader = new FileReader();
         reader.onload = function(ev) {
             try {
-                db = JSON.parse(ev.target.result);
+                // Thử parse JSON trước để kiểm tra tính hợp lệ
+                const importedData = JSON.parse(ev.target.result);
+                
+                // Nếu parse thành công, mới gán vào DB và lưu
+                db = importedData;
                 localStorage.setItem('electricDB_v3', JSON.stringify(db));
+                
+                // Sau đó mới gọi init() để vẽ giao diện
                 init();
                 alert("Đã nhập dữ liệu thành công!");
-            } catch(err) { alert("Lỗi file không hợp lệ!"); }
+            } catch(err) { 
+                console.error("Lỗi nhập file:", err);
+                alert("Lỗi: File không hợp lệ hoặc cấu trúc file bị hỏng!"); 
+            } finally {
+                // Xóa giá trị input file để có thể chọn lại file cùng tên nếu cần
+                e.target.value = '';
+            }
         };
-        reader.readAsText(e.target.files[0]);
+        reader.readAsText(file);
     }
 
     init();
