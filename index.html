@@ -61,9 +61,9 @@
         .footer-info { text-align: left; font-weight: bold; background: #fafafa; padding-left: 10px !important; height: 45px; }
         .loss-summary { background: #fff3cd; color: #856404; font-size: 14px; }
         
-        /* Dòng tổng tiền - Màu xanh nhạt */
-        .grand-total-row { background: #e7f1ff !important; border-top: 2px solid #333; }
-        .grand-total-row td { background: #e7f1ff !important; }
+        /* Dòng tổng tiền */
+        .grand-total-row { background: #fff !important; border-top: 2px solid #333; }
+        .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; } /* CHỮ MÀU XANH */
         #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 20px; }
         
         .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; font-size: 15px; }
@@ -137,8 +137,8 @@
                 <td colspan="6" class="footer-info">Tiền thất thoát (x 2.400đ): <span id="lblLossMoney">0</span> đ</td>
             </tr>
             <tr class="grand-total-row">
-                <td colspan="9" class="footer-info" style="text-align: center; font-size: 18px; padding: 15px !important;">
-                    Tổng tiền của tháng (Gốc + Thất thoát): <span id="lblGrandTotal">0đ</span>
+                <td colspan="9" class="footer-info" style="text-align: center; font-size: 18px; padding: 15px !important; background: #fff !important;">
+                    <span class="grand-total-label">Tổng tiền của tháng (Gốc + Thất thoát):</span> <span id="lblGrandTotal">0đ</span>
                 </td>
             </tr>
         </tfoot>
@@ -384,7 +384,7 @@
             } catch(err) { 
                 alert("Lỗi: File không hợp lệ!"); 
             } finally {
-                e.target.value = '';
+                e.target.value = ''; // Reset để có thể nhập lại file đó
             }
         };
         reader.readAsText(file);
