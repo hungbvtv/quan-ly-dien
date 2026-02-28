@@ -17,11 +17,52 @@
     
     <style>
         * { box-sizing: border-box; }
-        body { font-family: "Times New Roman", Times, serif; background: #f0f2f5; padding: 10px; margin: 0; }
-        .container { background: white; max-width: 1150px; margin: auto; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 8px; width: 100%; overflow-x: auto; }
+        
+        /* Hiệu ứng nền lấp lánh */
+        body { 
+            font-family: "Times New Roman", Times, serif; 
+            margin: 0; 
+            padding: 10px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Tạo các đốm sáng lấp lánh */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle, #fff 1px, transparent 1px),
+                radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+            background-size: 50px 50px, 100px 100px;
+            animation: stars 10s linear infinite;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        @keyframes stars {
+            from { background-position: 0 0; }
+            to { background-position: 100px 200px; }
+        }
+
+        .container { 
+            background: rgba(255, 255, 255, 0.95); 
+            max-width: 1150px; 
+            margin: auto; 
+            padding: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            border-radius: 12px; 
+            width: 100%; 
+            overflow-x: auto;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
         
         /* Thanh điều khiển */
-        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #e9ecef; padding: 12px; border-radius: 5px; align-items: center; }
+        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.8); padding: 12px; border-radius: 8px; align-items: center; }
         .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; font-size: 13px; white-space: nowrap; }
         .btn-add { background: #28a745; }
         .btn-save { background: #007bff; }
@@ -34,8 +75,8 @@
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* Bảng cân đối kích cỡ 9 cột */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; min-width: 1050px; }
+        /* Bảng */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; min-width: 1050px; background: #fff; }
         th, td { border: 1px solid #333; padding: 8px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
         th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 10.5px; height: 55px; vertical-align: middle; }
         .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
@@ -49,7 +90,6 @@
         .col-money { width: 11.5%; }
         .col-loss { width: 15%; background: #fff4e5 !important; }
         
-        /* Màu đỏ cho cột TIỀN PHẢI NỘP */
         .col-final { width: 18%; background: #e3f2fd !important; font-weight: bold; color: #ff0000 !important; font-size: 17px; }
         .final-total { color: #ff0000 !important; }
 
@@ -63,20 +103,16 @@
         
         /* Dòng tổng tiền */
         .grand-total-row { background: #fff !important; border-top: 2px solid #333; }
-        .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; } /* CHỮ MÀU XANH */
+        .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; }
         #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 20px; }
         
-        .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; font-size: 15px; }
-
-        /* Ghi chú cách tính */
-        .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.8; text-align: left; }
+        .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: rgba(250, 250, 250, 0.8); border-radius: 5px; line-height: 1.8; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
-        .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
-        .formula-line { font-weight: bold; color: #000; }
 
         .hide-for-capture { display: none !important; }
         .mode-locked .btn-add, .mode-locked .btn-save, .mode-locked .btn-delete-mode { display: none !important; }
-        .is-capturing { width: 1150px !important; max-width: none !important; overflow: visible !important; }
+        .is-capturing { width: 1150px !important; max-width: none !important; overflow: visible !important; background: white !important; }
+        .is-capturing::before { display: none; } /* Tắt hiệu ứng khi chụp ảnh để ảnh sạch */
 
         @media screen and (max-width: 800px) {
             .container { padding: 10px; }
@@ -103,7 +139,8 @@
         <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
         <button class="btn btn-export" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (PNG)</button>
     </div>
- <table id="mainTable">
+
+    <table id="mainTable">
         <thead>
             <tr><th colspan="9" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
             <tr>
@@ -133,22 +170,23 @@
             </tr>
             <tr class="loss-summary">
                 <td colspan="3" class="footer-info">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
-                <td colspan="6" class="footer-info">Số kí điện thất thoát x 2.400đ: <span id="lblLossMoney">0</span> đ</td>
+                <td colspan="6" class="footer-info">Tiền thất thoát (x 2.400đ): <span id="lblLossMoney">0</span> đ</td>
             </tr>
             <tr class="grand-total-row">
                 <td colspan="9" class="footer-info" style="text-align: center; font-size: 18px; padding: 15px !important; background: #fff !important;">
-                    <span class="grand-total-label">Tổng tiền của tháng (tiền điện + Thất thoát):</span> <span id="lblGrandTotal">0đ</span>
+                    <span class="grand-total-label">Tổng tiền của tháng (Gốc + Thất thoát):</span> <span id="lblGrandTotal">0đ</span>
                 </td>
             </tr>
         </tfoot>
     </table>
- <div class="calculation-guide">
+
+    <div class="calculation-guide">
         <h3>Ghi chú cách tính toán:</h3>
         <p>• <b>Số kí tiêu thụ(kWh):</b> Số ĐH tháng này trừ Số ĐH tháng trước.</p>
         <p>• <b>Tiền điện:</b> Số kí tiêu thụ × Giá điện.</p>
         <p>• <b>Số điện thất thoát:</b> Điện tổng tiêu thụ trong tháng trừ Tổng điện tất cả các hộ trong tháng để ra số điện thất thoát.</p>
         <p>• <b>Tiền điện thất thoát (từng hộ):</b> Được chia theo tỉ lệ số kí kiêu thụ(số kí tiêu thụ ít chịu ít,số kí tiêu thụ nhiều chịu nhiều).</p>
-        <p class="formula-line">&nbsp;&nbsp; (Số kí điện thất thoát × 2.400đ).</p>
+        <p class="formula-line">&nbsp;&nbsp; (Số điện thất thoát × 2.400đ).</p>
         <p>• <b>TIỀN PHẢI NỘP:</b> Tiền điện + Tiền điện thất thoát.</p>
     </div>
 </div>
@@ -382,7 +420,7 @@
             } catch(err) { 
                 alert("Lỗi: File không hợp lệ!"); 
             } finally {
-                e.target.value = ''; // Reset để có thể nhập lại file đó
+                e.target.value = '';
             }
         };
         reader.readAsText(file);
