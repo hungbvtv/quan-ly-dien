@@ -38,25 +38,26 @@
         .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* BẢNG TỐI ƯU SIÊU RỘNG TÊN HỘ */
+        /* BẢNG TỐI ƯU CÂN ĐỐI CHO IPHONE */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
-        th, td { border: 1px solid #333; padding: 8px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
+        th, td { border: 1px solid #333; padding: 10px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
         th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 9px; }
         .title-header { font-size: 22px; font-weight: bold; padding: 12px !important; background: #fff !important; color: #0054a5; }
         
-        /* CỐ ĐỊNH PIXEL ĐỂ ÉP IPHONE PHẢI HIỆN RỘNG TÊN HỘ */
-        .col-stt { width: 28px; font-weight: bold; }
-        .col-name { width: auto; text-align: left !important; padding-left: 8px !important; } /* Tự động dãn rộng nhất */
-        .col-num { width: 42px; } /* SĐ trước, SĐ sau, Số kí */
-        .col-price { width: 50px; background: #fffde7; } /* Giá điện */
-        .col-tien { width: 65px; } /* Tiền điện, Thất thoát */
-        .col-final { width: 85px; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
+        /* ĐỊNH DẠNG CỘT MỚI */
+        .col-stt { width: 40px; font-weight: bold; font-size: 15px; } /* To STT lên */
+        .col-name { width: auto; text-align: left !important; padding-left: 8px !important; } 
+        .col-num { width: 45px; } 
+        .col-price { width: 52px; background: #fffde7; } 
+        .col-tien { width: 68px; } 
+        .col-final { width: 88px; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
 
         .delete-active .col-stt { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
         .delete-active .col-stt::after { content: " ✖"; font-size: 10px; }
 
-        input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; min-width: 0; }
-        input.name { text-align: left; font-weight: bold; white-space: normal; } 
+        /* Chữ tên hộ bé lại 1 chút cho đỡ hụt */
+        input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
+        input.name { text-align: left; font-weight: bold; font-size: 13.5px; white-space: normal; } 
         input.error { color: red; font-weight: bold; }
         input:disabled { color: #000; cursor: default; opacity: 1; }
         
@@ -65,7 +66,7 @@
         .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 18px; border-top: 2px solid #333; }
         .date-footer { margin-top: 15px; text-align: right; font-style: italic; font-weight: bold; }
 
-        /* Ghi chú đầy đủ */
+        /* Ghi chú đầy đủ 100% */
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
         .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
@@ -208,7 +209,7 @@
             <td class="col-num"><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
-            <td class="col-price"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td class="col-num"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
             <td class="col-tien"><span class="base-money">0</span></td>
             <td class="col-tien"><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0</span></td>
