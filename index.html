@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quản lý Điện - EVN Pro</title>
     
-    <!-- Cấu hình Icon/App -->
+    <!-- Cấu hình Icon/App cho điện thoại -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <link rel="manifest" href="manifest.json">
@@ -38,25 +38,25 @@
         .status-open { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-locked { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* Bảng tối ưu tỉ lệ 51% cho Tên hộ */
+        /* Bảng tối ưu độ rộng để không bị che tên */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1.5px solid #000; }
         th, td { border: 1px solid #333; padding: 10px 2px; text-align: center; overflow: hidden; word-wrap: break-word; font-size: 14px; }
-        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 9px; }
+        th { background: #f8f9fa; font-weight: bold; text-transform: uppercase; font-size: 10px; }
         .title-header { font-size: 24px; font-weight: bold; padding: 15px !important; background: #fff !important; color: #0054a5; }
         
-        /* Cấu hình chiều rộng các cột: Tên hộ chiếm 51% */
+        /* Cấu hình chiều rộng các cột mới (Fix lỗi Hương toàn) */
         .col-stt { width: 35px; font-weight: bold; }
-        .col-name { width: 51%; text-align: left !important; padding-left: 8px !important; } /* Tăng lên 55% */
-        .col-num { width: 6%; } 
-        .col-price { width: 6.5%; background: #fffde7; }
-        .col-tien { width: 7%; }
-        .col-final { width: 10.5%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
+        .col-name { width: 40%; text-align: left !important; padding-left: 8px !important; } /* Tăng diện tích tên hộ */
+        .col-num { width: 8%; } 
+        .col-price { width: 8.5%; background: #fffde7; }
+        .col-tien { width: 9%; }
+        .col-final { width: 13%; background: #e3f2fd !important; font-weight: bold; color: #d32f2f; font-size: 15px; }
 
         .delete-active .col-stt { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
         .delete-active .col-stt::after { content: " ✖"; font-size: 10px; }
 
         input { width: 100%; border: none; text-align: center; font-size: 15px; font-family: inherit; outline: none; background: transparent; padding: 4px 0; }
-        input.name { text-align: left; font-weight: bold; }
+        input.name { text-align: left; font-weight: bold; white-space: normal; line-height: 1.2; } /* Cho phép xuống dòng nếu tên dài */
         input:focus { background: #fff9c4; border-radius: 2px; }
         input.error { color: red; font-weight: bold; }
         input:disabled { color: #000; cursor: default; opacity: 1; }
@@ -66,7 +66,7 @@
         .grand-total-row { background: #d1ecf1; color: #0c5460; font-size: 18px; border-top: 2px solid #333; }
         .date-footer { margin-top: 20px; text-align: right; font-style: italic; font-weight: bold; }
 
-        /* Ghi chú cách tính đầy đủ 100% */
+        /* Ghi chú cách tính đầy đủ */
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: #fafafa; border-radius: 5px; line-height: 1.6; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
         .calculation-guide p { margin: 5px 0; font-size: 15px; color: #2c3e50; }
@@ -175,7 +175,7 @@
         let monthData = db[currentMonth];
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + currentMonth.split('-')[1] + "/" + currentMonth.split('-')[0];
+        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ ĐIỆN - THÁNG " + currentMonth.split('-')[1] + "/" + currentMonth.split('-')[0];
 
         if (monthData && monthData.rows && monthData.rows.length > 0) {
             monthData.rows.forEach(item => addRow(item));
@@ -204,12 +204,12 @@
         const row = tbody.insertRow();
         row.className = 'data-row';
         row.innerHTML = `
-            <td class="col-stt">${tbody.rows.length}</td>
+            <td class="col-stt" onclick="handleRowAction(this)">${tbody.rows.length}</td>
             <td class="col-name"><input type="text" class="name" value="${data.name}" placeholder="Tên hộ..."></td>
             <td class="col-num"><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
             <td class="col-num"><input type="number" class="usage readonly" value="0" readonly tabindex="-1"></td>
-            <td class="col-num"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td class="col-price"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
             <td class="col-tien"><span class="base-money">0</span></td>
             <td class="col-tien"><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0</span></td>
@@ -382,6 +382,3 @@
 </script>
 </body>
 </html>
-
-
-
