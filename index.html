@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điện - EVN Pro (Full Rainbow Text)</title>
+    <title>Điện - EVN Pro (Full Rainbow App)</title>
     
+    <!-- KẾT NỐI ICON VÀ MANIFEST -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#0054a5">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
@@ -191,11 +200,11 @@
         .hide-for-capture { display: none !important; }
         .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; overflow: visible !important; position: relative !important; }
         
-        /* FIX CHO IPHONE: Giữ viền khi chụp ảnh */
+        /* FIX CHO IPHONE: Giữ viền rực rỡ khi chụp ảnh */
         .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { 
             border: 2.5px solid !important;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1 !important;
-            animation: none !important; 
+            animation: none !important;
         }
     </style>
 </head>
@@ -267,7 +276,7 @@
             <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
             <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
             <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
-            <p class="rainbow-text">• Số điện kí thất thoát trong tháng: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện tất cả các hộ dùng trong tháng cộng lại để ra số kí thất thoát.</p><br>
+            <p class="rainbow-text">• Số điện thất thoát trong tháng: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện tất cả các hộ trong tháng.</p><br>
             <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
             <p class="rainbow-text">•Công thức thất thoát: (Số kí thất thoát x 2.400đ)</p>
         </div>
@@ -411,12 +420,13 @@
                 useCORS: true,
                 backgroundColor: "#ffffff",
                 onclone: (clonedDoc) => {
-                    // FIX CHO IPHONE: Bỏ làm mờ và đổi màu chữ gradient thành xanh đậm để không bị lỗi
+                    // FIX IPHONE: Bỏ làm mờ nền khi chụp để tránh trắng xóa
                     const clonedArea = clonedDoc.getElementById('captureArea');
                     clonedArea.style.backdropFilter = "none";
                     clonedArea.style.webkitBackdropFilter = "none";
                     clonedArea.style.background = "white";
 
+                    // FIX IPHONE: Đổi chữ gradient thành xanh đậm để không bị lỗi ô vuông
                     const rainbowTexts = clonedDoc.querySelectorAll('.rainbow-text');
                     rainbowTexts.forEach(t => {
                         t.style.webkitTextFillColor = '#0054a5';
