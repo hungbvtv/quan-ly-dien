@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điện - EVN Pro (iPhone Capture Fix)</title>
+    <title>Điện - EVN Pro (iPhone Safe Mode)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             font-family: "Times New Roman", Times, serif; 
@@ -16,98 +16,74 @@
             min-height: 100vh;
             background: #0b0f1a; 
             display: flex; justify-content: center;
-            overflow-x: hidden;
         }
 
-        /* Nền lấp lánh */
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)), 
-                              radial-gradient(2px 2px at 150px 150px, #fff, rgba(0,0,0,0));
-            background-size: 300px 300px; animation: sparkleMove 5s linear infinite;
-            z-index: -1; opacity: 0.5;
-        }
-        @keyframes sparkleMove { from { background-position: 0 0; } to { background-position: 0 -300px; } }
-
+        /* Viền 7 màu bên ngoài */
         .rainbow-wrapper {
-            position: relative; max-width: 1200px; width: 100%; padding: 5px; 
-            border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
-            box-shadow: 0 0 30px rgba(0, 191, 255, 0.3);
-        }
-
-        .rainbow-wrapper::before {
-            content: ''; position: absolute; width: 250%; height: 250%;
+            position: relative; max-width: 1200px; width: 100%; padding: 4px; 
+            border-radius: 12px; overflow: hidden;
             background: conic-gradient(#ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000);
-            animation: rotateRainbow 4s linear infinite;
         }
-        @keyframes rotateRainbow { 100% { transform: rotate(360deg); } }
 
         .container { 
-            background: rgba(255, 255, 255, 0.95); 
-            width: 100%; padding: 20px; border-radius: 10px; 
+            background: #ffffff; /* Bỏ blur để tránh trắng xóa trên iPhone */
+            width: 100%; padding: 15px; border-radius: 8px; 
             position: relative; z-index: 1;
-            backdrop-filter: blur(10px); /* Gây lỗi trắng xóa trên iPhone khi chụp */
         }
         
-        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #f8f9fa; padding: 12px; border-radius: 8px; }
-        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; }
+        .controls { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .btn { padding: 10px 15px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; color: white; font-size: 13px; }
         
-        table { width: 100%; border-collapse: separate; border-spacing: 2px; table-layout: fixed; min-width: 1100px; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 1000px; }
 
         th, td { 
-            padding: 8px 2px; text-align: center; font-size: 14px;
-            background: white !important;
-            border: 2px solid;
-            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
-            animation: rainbowBorder 3s linear infinite;
-        }
-        @keyframes rainbowBorder { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-
-        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; }
-        .title-header { font-size: 26px; font-weight: bold; color: #0054a5; padding: 15px !important; }
-
-        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: #e3f2fd !important; }
-        input { width: 100%; border: none; text-align: center; font-size: 15px; background: transparent; font-family: inherit; }
-
-        .footer-info { text-align: left; font-weight: bold; }
-        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 24px; }
-
-        /* --- PHẦN GHI CHÚ CHỮ 7 MÀU --- */
-        .calculation-guide { 
-            margin-top: 30px; padding: 20px; background: white; 
-            border: 3px solid; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
+            padding: 8px 4px; text-align: center; border: 1.5px solid #333; font-size: 14px;
         }
 
+        th { background: #f1f3f5 !important; font-weight: bold; color: #0054a5; }
+        .title-header { font-size: 24px; font-weight: bold; color: #0054a5; border: none !important; padding-bottom: 20px !important; }
+
+        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 16px; background: #fff9f9 !important; }
+        input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; font-family: inherit; }
+
+        .footer-info { text-align: left; font-weight: bold; padding: 10px; }
+        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 22px; }
+
+        /* --- CHỮ 7 MÀU (CHỈ HIỆN TRÊN MÀN HÌNH) --- */
         .rainbow-text {
-            display: inline-block; font-weight: bold;
-            background: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            font-weight: bold;
+            background: linear-gradient(to right, #ff0000, #ff7f00, #b2b600, #00ff00, #0000ff, #4b0082, #8b00ff);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-size: 400% 400%;
-            animation: moveGradient 5s linear infinite;
+            display: inline-block;
         }
-        @keyframes moveGradient { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
-        /* Lớp đặc biệt khi chụp ảnh */
-        .is-capturing { width: 1150px !important; max-width: none !important; backdrop-filter: none !important; }
-        .is-capturing th, .is-capturing td { border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; }
+        .calculation-guide { 
+            margin-top: 25px; padding: 15px; border: 2px dashed #0054a5; border-radius: 8px;
+        }
+
+        /* --- ĐIỀU CHỈNH ĐẶC BIỆT KHI XUẤT ẢNH --- */
+        .is-capturing { width: 1100px !important; }
         .is-capturing .rainbow-text { 
-            background: none !important; 
-            -webkit-text-fill-color: #0054a5 !important; /* Chuyển thành màu xanh khi chụp để không bị trắng xóa */
+            /* Khi chụp ảnh, ép chữ thành màu xanh đậm để iPhone không bị lỗi trắng xóa */
+            -webkit-text-fill-color: #0054a5 !important; 
             color: #0054a5 !important;
+            background: none !important;
         }
         .hide-for-capture { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="rainbow-wrapper" id="rainbowWrapper">
+<div class="rainbow-wrapper">
     <div class="container" id="captureArea">
+        <!-- Khu vực điều khiển -->
         <div class="controls hide-for-capture">
-            <strong>Tháng: </strong><input type="month" id="currentMonth" onchange="init()" style="width: 140px; border: 1px solid #ccc;">
+            <strong>Tháng: </strong> <input type="month" id="currentMonth" onchange="init()" style="width: 150px; border: 1px solid #ccc; padding: 5px;">
             <button class="btn" onclick="addRow()" style="background: #28a745;">+ Thêm Hộ</button>
-            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu</button>
-            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">XUẤT ẢNH (IPHONE)</button>
+            <button class="btn" onclick="saveData()" style="background: #007bff;">Lưu Máy</button>
+            <button class="btn" onclick="exportToPNG()" style="background: #dc3545;">XUẤT ẢNH (FIX IPHONE)</button>
         </div>
 
         <table id="mainTable">
@@ -128,37 +104,37 @@
             <tbody id="tableBody"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="9" class="footer-info" style="padding: 15px !important; text-align: center;">
-                        <span style="color:#0054a5">TỔNG TIỀN PHẢI THU TRONG THÁNG:</span> <span id="lblGrandTotal">0đ</span>
+                    <td colspan="9" class="footer-info" style="text-align: center; border-top: 2px solid #333;">
+                        <span style="font-size: 18px; color:#0054a5">TỔNG TIỀN PHẢI THU:</span> 
+                        <span id="lblGrandTotal">0đ</span>
                     </td>
                 </tr>
             </tfoot>
         </table>
 
         <div class="calculation-guide">
-            <h3 style="color:#0054a5; margin-top:0">GHI CHÚ CÁCH TÍNH TOÁN:</h3>
-            <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
-            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
-            <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
-            <p class="rainbow-text">• Số điện thất thoát: ĐH Tổng - Tổng ĐH các hộ.</p><br>
-            <p class="rainbow-text">• Thất thoát từng hộ: Được chia theo tỉ lệ dùng nhiều chịu nhiều.</p>
+            <h4 style="color:#0054a5; margin: 0 0 10px 0;">HƯỚNG DẪN TÍNH:</h4>
+            <div class="rainbow-text">• Số kí = Số ĐH này - Số ĐH trước.</div><br>
+            <div class="rainbow-text">• Tiền điện = Số kí x Giá điện (2.400đ).</div><br>
+            <div class="rainbow-text">• TIỀN PHẢI NỘP = Tiền điện + Tiền thất thoát.</div><br>
+            <div class="rainbow-text">• Tiền thất thoát: Được chia đều theo tỉ lệ sử dụng của mỗi hộ.</div>
         </div>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('electricDB_v3')) || {};
+    let db = JSON.parse(localStorage.getItem('electric_safe_v1')) || {};
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
     function init() {
         const cur = monthInput.value;
-        const monthData = db[cur];
+        const data = db[cur] || { rows: [{name:'', before:0, after:0, price:2400}] };
         document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + cur.split('-')[1] + "/" + cur.split('-')[0];
+        
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        if (monthData && monthData.rows) monthData.rows.forEach(item => addRow(item));
-        else addRow();
+        data.rows.forEach((item, idx) => addRow(item));
         updateTotals();
     }
 
@@ -180,69 +156,22 @@
     }
 
     function updateTotals() {
-        let totalKwhHo = 0, totalBaseMoney = 0;
-        const rows = document.querySelectorAll('.data-row');
-        rows.forEach(row => {
+        let grandTotal = 0;
+        document.querySelectorAll('.data-row').forEach(row => {
             const b = parseFloat(row.querySelector('.before').value) || 0;
             const a = parseFloat(row.querySelector('.after').value) || 0;
             const p = parseFloat(row.querySelector('.price').value) || 0;
             const u = Math.max(0, a - b);
-            const bm = u * p;
+            const money = u * p;
             row.querySelector('.usage').value = u;
-            row.querySelector('.base-money').innerText = Math.round(bm).toLocaleString();
-            totalKwhHo += u; totalBaseMoney += bm;
-            row.dataset.u = u; row.dataset.bm = bm;
+            row.querySelector('.base-money').innerText = Math.round(money).toLocaleString();
+            row.querySelector('.final-total').innerText = Math.round(money).toLocaleString() + "đ";
+            grandTotal += money;
         });
-        
-        // Giả định thất thoát cố định để demo, bạn có thể thêm ô nhập điện tổng nếu cần
-        let totalLossMoney = 0; 
-        rows.forEach(row => {
-            const u = parseFloat(row.dataset.u) || 0;
-            const bm = parseFloat(row.dataset.bm) || 0;
-            row.querySelector('.final-total').innerText = Math.round(bm).toLocaleString() + "đ";
-        });
-        document.getElementById('lblGrandTotal').innerText = Math.round(totalBaseMoney).toLocaleString() + "đ";
+        document.getElementById('lblGrandTotal').innerText = Math.round(grandTotal).toLocaleString() + "đ";
     }
 
-    async function exportToPNG() {
-        const area = document.getElementById('captureArea');
-        // Bước quan trọng: Ép kiểu hiển thị để iPhone không bị lỗi
-        area.classList.add('is-capturing');
-        window.scrollTo(0,0);
-
-        try {
-            const canvas = await html2canvas(area, {
-                scale: 3, // Tăng độ nét
-                useCORS: true,
-                backgroundColor: "#ffffff",
-                logging: false,
-                onclone: (clonedDoc) => {
-                    // Xử lý bản sao để đảm bảo chữ không bị trắng
-                    const rTexts = clonedDoc.querySelectorAll('.rainbow-text');
-                    rTexts.forEach(t => {
-                        t.style.webkitTextFillColor = '#0054a5';
-                        t.style.color = '#0054a5';
-                        t.style.background = 'none';
-                    });
-                    const container = clonedDoc.getElementById('captureArea');
-                    container.style.backdropFilter = 'none';
-                    container.style.webkitBackdropFilter = 'none';
-                }
-            });
-            
-            const link = document.createElement('a');
-            link.download = `So_Dien_${monthInput.value}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        } catch (e) {
-            alert("Lỗi xuất ảnh trên iPhone! Hãy thử chụp ảnh màn hình.");
-        } finally {
-            area.classList.remove('is-capturing');
-        }
-    }
-
-    function saveToLocal() {
-        const cur = monthInput.value;
+    function saveData() {
         const rows = [];
         document.querySelectorAll('.data-row').forEach(row => {
             rows.push({
@@ -252,9 +181,43 @@
                 price: row.querySelector('.price').value
             });
         });
-        db[cur] = { rows };
-        localStorage.setItem('electricDB_v3', JSON.stringify(db));
-        alert('Đã lưu!');
+        db[monthInput.value] = { rows };
+        localStorage.setItem('electric_safe_v1', JSON.stringify(db));
+        alert('Đã lưu dữ liệu thành công!');
+    }
+
+    async function exportToPNG() {
+        const area = document.getElementById('captureArea');
+        area.classList.add('is-capturing');
+        
+        // Cuộn lên đầu để tránh lỗi vị trí trên Safari
+        window.scrollTo(0,0);
+
+        try {
+            const canvas = await html2canvas(area, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                onclone: (clonedDoc) => {
+                    // Xử lý triệt để chữ 7 màu trong bản sao trước khi chụp
+                    const elements = clonedDoc.querySelectorAll('.rainbow-text');
+                    elements.forEach(el => {
+                        el.style.webkitTextFillColor = '#0054a5';
+                        el.style.color = '#0054a5';
+                        el.style.background = 'none';
+                    });
+                }
+            });
+            
+            const link = document.createElement('a');
+            link.download = `Dien_Thang_${monthInput.value}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        } catch (e) {
+            alert("Lỗi: iPhone không hỗ trợ xuất ảnh trực tiếp từ trình duyệt này. Hãy chụp màn hình!");
+        } finally {
+            area.classList.remove('is-capturing');
+        }
     }
 
     init();
