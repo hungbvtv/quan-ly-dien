@@ -3,191 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điện - EVN Pro (Full Rainbow Export)</title>
+    <title>Điện - EVN Pro (Full Rainbow Text)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         * { box-sizing: border-box; }
         
         body { 
             font-family: "Times New Roman", Times, serif; 
-            margin: 0; padding: 20px 10px;
+            margin: 0; 
+            padding: 20px 10px;
             min-height: 100vh;
             background: #0b0f1a; 
-            display: flex; justify-content: center;
+            position: relative;
+            display: flex;
+            justify-content: center;
             overflow-x: hidden;
+            transition: background 0.3s;
         }
 
-        /* Nền lấp lánh */
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)), 
-                              radial-gradient(2px 2px at 150px 150px, #fff, rgba(0,0,0,0));
-            background-size: 300px 300px; animation: sparkleMove 5s linear infinite;
-            z-index: -1; opacity: 0.5;
+        /* Hiệu ứng nền lấp lánh */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 150px 150px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 260px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 250px 50px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 100px 400px, #fff, rgba(0,0,0,0));
+            background-size: 300px 300px;
+            animation: sparkleMove 5s linear infinite;
+            opacity: 0.7;
+            z-index: -1;
         }
-        @keyframes sparkleMove { from { background-position: 0 0; } to { background-position: 0 -300px; } }
 
+        @keyframes sparkleMove {
+            from { background-position: 0 0; }
+            to { background-position: 0 -300px; }
+        }
+
+        /* Viền 7 màu app */
         .rainbow-wrapper {
-            position: relative; max-width: 1200px; width: 100%; padding: 5px; 
-            border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
-            box-shadow: 0 0 30px rgba(0, 191, 255, 0.3);
+            position: relative;
+            max-width: 1200px;
+            width: 100%;
+            padding: 5px; 
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 50px rgba(0, 191, 255, 0.4);
         }
 
         .rainbow-wrapper::before {
-            content: ''; position: absolute; width: 250%; height: 250%;
+            content: '';
+            position: absolute;
+            width: 250%;
+            height: 250%;
             background: conic-gradient(#ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000);
             animation: rotateRainbow 4s linear infinite;
         }
+
         @keyframes rotateRainbow { 100% { transform: rotate(360deg); } }
 
         .container { 
-            background: rgba(255, 255, 255, 0.96); 
-            width: 100%; padding: 20px; border-radius: 10px; 
-            position: relative; z-index: 1;
+            background: rgba(255, 255, 255, 0.94); 
+            width: 100%;
+            padding: 20px; 
+            border-radius: 10px; 
+            overflow-x: auto;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
         
-        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #f8f9fa; padding: 12px; border-radius: 8px; }
-        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; }
+        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.7); padding: 12px; border-radius: 8px; align-items: center; }
+        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
         
-        table { width: 100%; border-collapse: separate; border-spacing: 2px; table-layout: fixed; min-width: 1100px; }
+        /* Viền 7 màu cho TẤT CẢ các ô bảng */
+        table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 10px; table-layout: fixed; min-width: 1100px; background: transparent; }
 
         th, td { 
-            padding: 8px 2px; text-align: center; font-size: 14px;
-            background: white !important;
+            position: relative;
+            padding: 8px 2px; 
+            text-align: center; 
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.85) !important;
             border: 2.5px solid;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
+            animation: rainbowBorder 3s linear infinite;
         }
 
-        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; color: #0054a5; }
-        .title-header { font-size: 28px; font-weight: bold; color: #0054a5; padding: 15px !important; border: none !important; }
+        @keyframes rainbowBorder {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
 
-        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: #e3f2fd !important; }
-        input { width: 100%; border: none; text-align: center; font-size: 15px; background: transparent; font-family: inherit; font-weight: inherit; }
+        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; font-size: 11px; height: 55px; vertical-align: middle; }
+        .title-header { font-size: 26px; font-weight: bold; color: #0054a5; background: white !important; padding: 15px !important; }
 
-        .footer-info { text-align: left; font-weight: bold; }
-        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 26px; }
+        .col-stt { width: 35px; }
+        .col-name { width: 18%; text-align: left !important; padding-left: 10px !important; font-weight: bold; }
+        .col-kwh { background: rgba(232, 245, 233, 0.7) !important; }
+        .col-price { background: rgba(255, 253, 231, 0.7) !important; }
+        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: rgba(227, 242, 253, 0.8) !important; }
 
-        /* --- PHẦN GHI CHÚ: FIX ĐỂ XUẤT ẢNH CÓ HIỆU ỨNG --- */
+        input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; font-family: inherit; }
+        input:disabled { color: #000; opacity: 1; }
+
+        .footer-info { text-align: left; font-weight: bold; background: rgba(255, 255, 255, 0.7) !important; }
+        .loss-summary { background: rgba(255, 243, 205, 0.8) !important; color: #856404; font-size: 14px; }
+        
+        .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; }
+        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 24px; }
+
+        /* --- PHẦN GHI CHÚ VỚI CHỮ 7 MÀU --- */
         .calculation-guide { 
-            margin-top: 30px; padding: 25px; background: white; 
+            margin-top: 30px; 
+            padding: 20px; 
+            background: rgba(255, 255, 255, 0.95); 
+            line-height: 1.8; 
+            text-align: left; 
             border: 3.5px solid;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            animation: rainbowBorder 3s linear infinite;
         }
 
-        .guide-title {
-            font-size: 20px; font-weight: bold; color: #0054a5;
-            margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;
+        .calculation-guide h3 { 
+            margin-top: 0; 
+            font-size: 20px; 
+            color: #0054a5; 
             text-transform: uppercase;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 15px;
         }
 
-        /* Hiệu ứng chữ 7 màu cực mạnh để html2canvas nhận diện */
+        /* Hiệu ứng chữ 7 màu chuyển động */
         .rainbow-text {
-            display: block;
+            display: inline-block;
             font-weight: bold;
-            font-size: 17px;
-            margin-bottom: 12px;
-            background: linear-gradient(to right, #ff0000, #ff7f00, #d4d400, #00aa00, #0000ff, #4b0082, #8b00ff);
+            background: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent; /* Fallback cho capture */
+            background-size: 400% 400%;
+            animation: moveGradient 5s linear infinite;
         }
 
-        /* Khi chụp ảnh: Đảm bảo viền và chữ vẫn rực rỡ */
-        .is-capturing { width: 1150px !important; max-width: none !important; }
-        .is-capturing .rainbow-text {
-            /* Ép trình duyệt render màu khi chụp */
-            -webkit-background-clip: text !important;
-            background-clip: text !important;
-            background: linear-gradient(to right, #ff0000, #e67e22, #f1c40f, #2ecc71, #3498db, #9b59b6, #e74c3c) !important;
-            -webkit-text-fill-color: transparent !important;
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
+        /* -----------------------------------------------------------
+           CHẾ ĐỘ TẮT HIỆU ỨNG (NORMAL MODE)
+        ----------------------------------------------------------- */
+        body.no-effects { background: #f0f2f5 !important; }
+        body.no-effects::before, body.no-effects::after { display: none !important; }
+        
+        .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; border-radius: 8px !important; }
+        .no-effects .rainbow-wrapper::before { display: none !important; }
+        .no-effects .container { background: white !important; backdrop-filter: none !important; border: 1px solid #ccc !important; }
+        
+        .no-effects th, .no-effects td { 
+            border: 1px solid #333 !important; 
+            animation: none !important; 
+            filter: none !important; 
+            border-image: none !important; 
+            background: white !important; 
+        }
+
+        /* Trả về chữ bình thường khi tắt hiệu ứng */
+        .no-effects .calculation-guide { border: 1px dashed #666 !important; animation: none !important; border-image: none !important; }
+        .no-effects .rainbow-text {
+            background: none !important;
+            -webkit-background-clip: initial !important;
+            -webkit-text-fill-color: initial !important;
+            color: #333 !important;
+        }
+
+        /* Khi chụp ảnh */
         .hide-for-capture { display: none !important; }
+        .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; overflow: visible !important; position: relative !important; }
+        
+        /* FIX CHO IPHONE: Giữ viền khi chụp ảnh */
+        .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { 
+            border: 2.5px solid !important;
+            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1 !important;
+            animation: none !important; 
+        }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
 <div class="rainbow-wrapper" id="rainbowWrapper">
     <div class="container" id="captureArea">
-        <!-- Khu vực nút điều khiển -->
-        <div class="controls hide-for-capture">
-            <strong>Tháng: </strong><input type="month" id="currentMonth" onchange="init()" style="width: 140px; border: 1px solid #ccc; padding: 5px;">
+        <div class="controls">
+            <div><strong>Tháng: </strong><input type="month" id="currentMonth" onchange="changeMonth()" style="width: 140px; border: 1px solid #ccc; padding: 4px; background: white;"></div>
+            <div id="statusArea"></div>
+            
+            <button class="btn" id="toggleEffectsBtn" onclick="toggleEffects()" style="background: #fd7e14;">Tắt Hiệu Ứng</button>
+            <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa Sổ</span></button>
             <button class="btn" onclick="addRow()" style="background: #28a745;">+ Thêm Hộ</button>
+            <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;">Chế Độ Xóa</button>
             <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ Liệu</button>
-            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">XUẤT ẢNH (BẢN PRO)</button>
+            <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup</button>
+            
+            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">
+                Nhập File
+                <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+            </label>
+
+            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (PNG)</button>
         </div>
 
-        <!-- Bảng chính -->
         <table id="mainTable">
             <thead>
                 <tr><th colspan="9" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
                 <tr>
-                    <th style="width:40px">STT</th>
-                    <th style="width:180px">Tên hộ</th>
-                    <th>SĐ trước</th>
-                    <th>SĐ này</th>
-                    <th>Số kí</th>
-                    <th>Giá</th>
-                    <th>Tiền điện</th>
-                    <th>Thất thoát</th>
-                    <th class="col-final">PHẢI NỘP</th>
+                    <th class="col-stt">STT</th>
+                    <th class="col-name">Tên hộ</th>
+                    <th>SĐ tháng trước(kWh)</th>
+                    <th>SĐ tháng này(kWh)</th>
+                    <th class="col-kwh">Số kí tiêu thụ(kWh)</th>
+                    <th class="col-price">Giá điện(vnđ)</th>
+                    <th>Tiền điện(vnđ)</th>
+                    <th>Tiền điện thất thoát(vnđ)</th>
+                    <th class="col-final">TIỀN PHẢI NỘP(vnđ)</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="9" class="footer-info" style="padding: 20px !important; text-align: center;">
-                        <span style="font-size: 18px; color:#0054a5; text-transform: uppercase;">Tổng tiền của tháng (Gốc + Thất thoát):</span> 
-                        <span id="lblGrandTotal">0đ</span>
+                    <td colspan="9" class="footer-info">
+                        Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width: 40px; border-bottom: 1px dotted #333;"> : 
+                        <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 120px; border-bottom: 1px dotted #333; font-weight: bold; font-size: 16px;"> (Kwh)
+                    </td>
+                </tr>
+                <tr class="loss-summary">
+                    <td colspan="3" class="footer-info">Tổng điện các hộ trong tháng: <span id="lblTotalKwh">0</span> Kwh</td>
+                    <td colspan="3" class="footer-info">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span> Kwh</td>
+                    <td colspan="3" class="footer-info">Số điện thất thoát trong tháng: <span id="lblLossKwh">0</span> Kwh</td>
+                </tr>
+                <tr class="loss-summary">
+                    <td colspan="3" class="footer-info">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
+                    <td colspan="6" class="footer-info">Tiền điện thất thoát (x 2.400đ): <span id="lblLossMoney">0</span> đ</td>
+                </tr>
+                <tr>
+                    <td colspan="9" class="footer-info" style="text-align: center; font-size: 18px; padding: 15px !important; background: rgba(255,255,255,0.8) !important;">
+                        <span class="grand-total-label">Tổng tiền của tháng (tiền điện + tiền Thất thoát):</span> <span id="lblGrandTotal">0đ</span>
                     </td>
                 </tr>
             </tfoot>
         </table>
 
-        <!-- PHẦN GHI CHÚ CÓ HIỆU ỨNG 7 MÀU -->
         <div class="calculation-guide">
-            <div class="guide-title">Ghi chú cách tính toán:</div>
-            <span class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</span>
-            <span class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện.</span>
-            <span class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</span>
-            <span class="rainbow-text">• Số điện thất thoát trong tháng: Điện tổng tiêu thụ trừ cho Tổng điện các hộ.</span>
-            <span class="rainbow-text">• Tiền điện thất thoát (từng hộ): Chia theo tỉ lệ số kí sử dụng (Dùng nhiều chịu nhiều).</span>
-            <span class="rainbow-text">(Số kí thất thoát x 2.400đ)</span>
+            <h3>Ghi chú cách tính toán:</h3>
+            <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
+            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
+            <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
+            <p class="rainbow-text">• Số điện thất thoát trong tháng: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện tất cả các hộ trong tháng.</p><br>
+            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
+            <p class="rainbow-text">•Công thức thất thoát: (Số kí thất thoát x 2.400đ)</p>
         </div>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('electric_pro_v3')) || {};
+    let db = JSON.parse(localStorage.getItem('electricDB_v3')) || {};
+    let effectsEnabled = localStorage.getItem('effectsEnabled') !== 'false';
+
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
+    function toggleEffects() {
+        effectsEnabled = !effectsEnabled;
+        localStorage.setItem('effectsEnabled', effectsEnabled);
+        applyEffectsUI();
+    }
+
+    function applyEffectsUI() {
+        const body = document.body;
+        const btn = document.getElementById('toggleEffectsBtn');
+        if (effectsEnabled) {
+            body.classList.remove('no-effects');
+            btn.innerText = "Tắt Hiệu Ứng";
+            btn.style.background = "#fd7e14";
+        } else {
+            body.classList.add('no-effects');
+            btn.innerText = "Bật Hiệu Ứng";
+            btn.style.background = "#20c997";
+        }
+    }
+
     function init() {
-        const cur = monthInput.value;
-        const data = db[cur] || { rows: [{name:'', before:0, after:0, price:2400}] };
-        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + cur.split('-')[1] + "/" + cur.split('-')[0];
-        
+        applyEffectsUI();
+        const currentMonth = monthInput.value;
+        const dateParts = currentMonth.split('-');
+        const prevDate = new Date(dateParts[0], dateParts[1] - 2, 1);
+        const prevMonthKey = prevDate.getFullYear() + '-' + String(prevDate.getMonth() + 1).padStart(2, '0');
+        const prevMonthData = db[prevMonthKey];
+
+        let monthData = db[currentMonth];
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        data.rows.forEach(item => addRow(item));
+        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + currentMonth.split('-')[1] + "/" + currentMonth.split('-')[0];
+
+        if (monthData && monthData.rows && monthData.rows.length > 0) {
+            monthData.rows.forEach(item => addRow(item));
+        } else if (prevMonthData && prevMonthData.rows) {
+            prevMonthData.rows.forEach(oldRow => {
+                addRow({ name: oldRow.name, before: oldRow.after, after: 0, price: oldRow.price });
+            });
+        } else {
+            addRow();
+        }
+
+        document.getElementById('tongDHThang').value = (monthData && monthData.tongDH) ? monthData.tongDH : 0;
+        document.getElementById('footerMonthLabel').value = (monthData && monthData.footerMonthLabel) ? monthData.footerMonthLabel : currentMonth.split('-')[1];
+        
+        applyLockUI(monthData ? monthData.locked : false);
         updateTotals();
     }
 
-    function addRow(data = {name: '', before: 0, after: 0, price: 2400}) {
+    function addRow(data = {name: '', before: 0, after: 0, price: 3000}) {
         const tbody = document.getElementById('tableBody');
         const row = tbody.insertRow();
         row.className = 'data-row';
         row.innerHTML = `
-            <td>${tbody.rows.length}</td>
-            <td style="text-align:left; padding-left:10px; font-weight:bold;"><input type="text" value="${data.name}" placeholder="Tên hộ..."></td>
+            <td class="col-stt" onclick="handleRowAction(this)">${tbody.rows.length}</td>
+            <td class="col-name"><input type="text" value="${data.name}" placeholder="Tên hộ..."></td>
             <td><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
             <td><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
-            <td><input type="number" class="usage" readonly></td>
-            <td><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td class="col-kwh"><input type="number" class="usage" value="0" readonly tabindex="-1"></td>
+            <td class="col-price"><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
             <td><span class="base-money">0</span></td>
             <td><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0đ</span></td>
@@ -195,24 +349,60 @@
     }
 
     function updateTotals() {
-        let grandTotal = 0;
-        document.querySelectorAll('.data-row').forEach(row => {
-            const b = parseFloat(row.querySelector('.before').value) || 0;
-            const a = parseFloat(row.querySelector('.after').value) || 0;
-            const p = parseFloat(row.querySelector('.price').value) || 0;
-            const u = Math.max(0, a - b);
-            const m = u * p;
-            row.querySelector('.usage').value = u;
-            row.querySelector('.base-money').innerText = Math.round(m).toLocaleString();
-            row.querySelector('.final-total').innerText = Math.round(m).toLocaleString() + "đ";
-            grandTotal += m;
+        let totalKwhHo = 0;
+        let totalBaseMoney = 0;
+        const rows = document.querySelectorAll('.data-row');
+
+        rows.forEach((row, index) => {
+            row.cells[0].innerText = index + 1;
+            const before = parseFloat(row.querySelector('.before').value) || 0;
+            const after = parseFloat(row.querySelector('.after').value) || 0;
+            const price = parseFloat(row.querySelector('.price').value) || 0;
+            const usage = Math.max(0, after - before);
+            const baseMoney = usage * price;
+            row.querySelector('.usage').value = usage;
+            row.querySelector('.base-money').innerText = Math.round(baseMoney).toLocaleString('vi-VN');
+            row.dataset.usage = usage;
+            row.dataset.baseMoney = baseMoney;
+            totalKwhHo += usage;
+            totalBaseMoney += baseMoney;
         });
-        document.getElementById('lblGrandTotal').innerText = Math.round(grandTotal).toLocaleString() + "đ";
+
+        const currentMonth = monthInput.value;
+        const dateParts = currentMonth.split('-');
+        const prevDate = new Date(dateParts[0], dateParts[1] - 2, 1);
+        const prevMonthKey = prevDate.getFullYear() + '-' + String(prevDate.getMonth() + 1).padStart(2, '0');
+        const currentTotalMeter = parseFloat(document.getElementById('tongDHThang').value) || 0;
+        const prevTotalMeter = (db[prevMonthKey] && db[prevMonthKey].tongDH) ? parseFloat(db[prevMonthKey].tongDH) : 0;
+        
+        let mainConsumption = Math.max(0, currentTotalMeter - prevTotalMeter);
+        let lossKwh = Math.max(0, mainConsumption - totalKwhHo);
+        let totalLossMoney = lossKwh * 2400;
+
+        rows.forEach(row => {
+            const usage = parseFloat(row.dataset.usage) || 0;
+            const baseMoney = parseFloat(row.dataset.baseMoney) || 0;
+            let share = totalKwhHo > 0 ? (usage / totalKwhHo) * totalLossMoney : 0;
+            let finalRounded = Math.round((baseMoney + share) / 1000) * 1000;
+            row.querySelector('.loss-share').innerText = Math.round(share).toLocaleString('vi-VN');
+            row.querySelector('.final-total').innerText = finalRounded.toLocaleString('vi-VN') + "đ";
+        });
+
+        document.getElementById('lblTotalKwh').innerText = totalKwhHo.toLocaleString('vi-VN');
+        document.getElementById('lblTotalBaseMoney').innerText = Math.round(totalBaseMoney).toLocaleString('vi-VN');
+        document.getElementById('lblMainConsumption').innerText = mainConsumption.toLocaleString('vi-VN');
+        document.getElementById('lblLossKwh').innerText = lossKwh.toLocaleString('vi-VN');
+        document.getElementById('lblLossMoney').innerText = Math.round(totalLossMoney).toLocaleString('vi-VN');
+        document.getElementById('lblGrandTotal').innerText = Math.round(totalBaseMoney + totalLossMoney).toLocaleString('vi-VN') + "đ";
     }
 
     async function exportToPNG() {
         const area = document.getElementById('captureArea');
+        const controls = document.querySelector('.controls');
+        
+        controls.classList.add('hide-for-capture');
         area.classList.add('is-capturing');
+        
         window.scrollTo(0,0);
 
         try {
@@ -220,39 +410,119 @@
                 scale: 2,
                 useCORS: true,
                 backgroundColor: "#ffffff",
-                logging: false,
                 onclone: (clonedDoc) => {
-                    // Đảm bảo phần ghi chú có viền rực rỡ trong bản clone
-                    const guide = clonedDoc.querySelector('.calculation-guide');
-                    guide.style.borderImage = "linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1";
+                    // FIX CHO IPHONE: Bỏ làm mờ và đổi màu chữ gradient thành xanh đậm để không bị lỗi
+                    const clonedArea = clonedDoc.getElementById('captureArea');
+                    clonedArea.style.backdropFilter = "none";
+                    clonedArea.style.webkitBackdropFilter = "none";
+                    clonedArea.style.background = "white";
+
+                    const rainbowTexts = clonedDoc.querySelectorAll('.rainbow-text');
+                    rainbowTexts.forEach(t => {
+                        t.style.webkitTextFillColor = '#0054a5';
+                        t.style.background = 'none';
+                        t.style.color = '#0054a5';
+                    });
                 }
             });
-            
+
             const link = document.createElement('a');
-            link.download = `So_Dien_EVN_Pro_${monthInput.value}.png`;
+            link.download = `So_Dien_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
         } catch (e) {
-            alert("Lỗi xuất ảnh! Vui lòng thử lại.");
+            alert("Lỗi xuất ảnh!");
         } finally {
+            controls.classList.remove('hide-for-capture');
             area.classList.remove('is-capturing');
         }
     }
 
-    function saveToLocal() {
-        const cur = monthInput.value;
+    function saveToLocal(silent = false) {
+        const currentMonth = monthInput.value;
         const rows = [];
         document.querySelectorAll('.data-row').forEach(row => {
             rows.push({
-                name: row.querySelector('input[type="text"]').value,
+                name: row.cells[1].querySelector('input').value,
                 before: row.querySelector('.before').value,
                 after: row.querySelector('.after').value,
                 price: row.querySelector('.price').value
             });
         });
-        db[cur] = { rows };
-        localStorage.setItem('electric_pro_v3', JSON.stringify(db));
-        alert('Đã lưu dữ liệu!');
+        db[currentMonth] = {
+            locked: db[currentMonth]?.locked || false,
+            rows: rows,
+            tongDH: document.getElementById('tongDHThang').value,
+            footerMonthLabel: document.getElementById('footerMonthLabel').value
+        };
+        localStorage.setItem('electricDB_v3', JSON.stringify(db));
+        if (!silent) alert('Đã lưu dữ liệu!');
+    }
+
+    function toggleLock() {
+        const m = monthInput.value;
+        if (!db[m]) saveToLocal(true);
+        db[m].locked = !db[m].locked;
+        localStorage.setItem('electricDB_v3', JSON.stringify(db));
+        init();
+    }
+
+    function applyLockUI(isLocked) {
+        const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
+        if (isLocked) {
+            document.getElementById('lockBtnText').innerText = "Mở Khóa";
+            document.getElementById('statusArea').innerHTML = '<span style="color:red; font-weight:bold;">[ĐÃ KHÓA]</span>';
+            allInputs.forEach(i => i.disabled = true);
+        } else {
+            document.getElementById('lockBtnText').innerText = "Khóa Sổ";
+            document.getElementById('statusArea').innerHTML = '<span style="color:green; font-weight:bold;">[ĐANG MỞ]</span>';
+            allInputs.forEach(i => i.disabled = false);
+        }
+    }
+
+    function toggleDeleteMode() {
+        const btn = document.getElementById('deleteModeBtn');
+        btn.classList.toggle('active');
+        document.getElementById('captureArea').classList.toggle('delete-active');
+        btn.innerText = btn.classList.contains('active') ? "Xóa (Bấm STT)" : "Chế Độ Xóa";
+    }
+
+    function handleRowAction(cell) {
+        if(document.getElementById('captureArea').classList.contains('delete-active')) {
+            if(confirm("Xóa hộ này?")) { cell.parentElement.remove(); updateTotals(); }
+        }
+    }
+
+    function changeMonth() { init(); }
+
+    function exportData() {
+        saveToLocal(true);
+        const blob = new Blob([JSON.stringify(db, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `backup_dien.json`;
+        a.click();
+    }
+
+    function importData(e) {
+        const fileInput = e.target;
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            try {
+                const imported = JSON.parse(ev.target.result);
+                db = imported;
+                localStorage.setItem('electricDB_v3', JSON.stringify(db));
+                init();
+                alert("Đã nhập thành công!");
+            } catch(err) { 
+                alert("Lỗi file không hợp lệ!"); 
+            }
+            fileInput.value = ''; 
+        };
+        reader.readAsText(file);
     }
 
     init();
