@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Điện - EVN Pro (Full Rainbow App)</title>
     
-    <!-- KẾT NỐI FILE MANIFEST VÀ ICON (QUAN TRỌNG) -->
+    <!-- KẾT NỐI FILE MANIFEST VÀ ICON -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
@@ -408,38 +408,64 @@
         const area = document.getElementById('captureArea');
         const controls = document.querySelector('.controls');
         
+        // 1. Tạm ẩn nút bấm
         controls.classList.add('hide-for-capture');
         area.classList.add('is-capturing');
         
+        // Cuộn lên đầu để tránh lỗi render Safari
         window.scrollTo(0,0);
 
         try {
+            // 2. Cấu hình html2canvas tối ưu cho iPhone
             const canvas = await html2canvas(area, {
                 scale: 2,
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: "#ffffff",
+                scrollX: 0,
+                scrollY: -window.scrollY,
                 onclone: (clonedDoc) => {
+                    // FIX IPHONE 1: Gỡ bỏ backdrop-filter vì nó làm trắng xóa ảnh trên Safari
                     const clonedArea = clonedDoc.getElementById('captureArea');
                     clonedArea.style.backdropFilter = "none";
                     clonedArea.style.webkitBackdropFilter = "none";
                     clonedArea.style.background = "white";
+                    clonedArea.style.boxShadow = "none";
 
+                    // FIX IPHONE 2: Chuyển rainbow-text thành màu xanh đậm cố định khi chụp
+                    // Trình duyệt Safari không hỗ trợ capture background-clip: text hiệu quả
                     const rainbowTexts = clonedDoc.querySelectorAll('.rainbow-text');
                     rainbowTexts.forEach(t => {
-                        t.style.webkitTextFillColor = '#0054a5';
-                        t.style.background = 'none';
-                        t.style.color = '#0054a5';
+                        t.style.background = "none";
+                        t.style.webkitTextFillColor = "#0054a5";
+                        t.style.color = "#0054a5";
+                        t.style.animation = "none";
+                    });
+
+                    // FIX IPHONE 3: Ép các viền bảng giữ nguyên màu tĩnh (không xoay)
+                    const allAnimated = clonedDoc.querySelectorAll('*');
+                    allAnimated.forEach(el => {
+                        el.style.animation = 'none';
                     });
                 }
             });
 
+            // 3. Xử lý tải ảnh
+            const imgData = canvas.toDataURL("image/png");
+            
+            // Cách tải ảnh tương thích iPhone
             const link = document.createElement('a');
+            link.href = imgData;
             link.download = `So_Dien_${monthInput.value}.png`;
-            link.href = canvas.toDataURL("image/png");
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
+
         } catch (e) {
-            alert("Lỗi xuất ảnh!");
+            console.error("Lỗi:", e);
+            alert("Lỗi xuất ảnh! Hãy thử chụp ảnh màn hình thủ công.");
         } finally {
+            // 4. Hiện lại nút bấm
             controls.classList.remove('hide-for-capture');
             area.classList.remove('is-capturing');
         }
