@@ -84,7 +84,7 @@
         }
         
         .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.7); padding: 12px; border-radius: 8px; align-items: center; }
-        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; }
+        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
         
         /* Viền 7 màu cho TẤT CẢ các ô */
         table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 10px; table-layout: fixed; min-width: 1100px; background: transparent; }
@@ -126,14 +126,7 @@
         .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: rgba(250, 250, 250, 0.7); border-radius: 5px; line-height: 1.8; text-align: left; }
         .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
 
-        /* Normal Mode */
-        body.no-effects { background: #f0f2f5; }
-        body.no-effects::before, body.no-effects::after, .no-effects .rainbow-wrapper::before { display: none; }
-        .no-effects .rainbow-wrapper { padding: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 8px; }
-        .no-effects .container { background: white; backdrop-filter: none; border: 1px solid #ccc; }
-        .no-effects th, .no-effects td { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; background: white !important; }
-
-        /* Khi chụp ảnh - CSS ĐẶC BIỆT ĐỂ KHÔNG BỊ HỤT */
+        /* Chế độ chụp ảnh */
         .hide-for-capture { display: none !important; }
         .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; overflow: visible !important; position: relative !important; }
         .is-capturing th, .is-capturing td { border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; filter: none !important; background: white !important; }
@@ -155,8 +148,13 @@
             <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;">Chế Độ Xóa</button>
             <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ Liệu</button>
             <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup</button>
-            <button class="btn" style="background: #ffc107; color: #000;" onclick="document.getElementById('importFile').click()">Nhập File</button>
-            <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+            
+            <!-- FIX NÚT NHẬP FILE CHO ĐIỆN THOẠI -->
+            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">
+                Nhập File
+                <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+            </label>
+
             <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (PNG)</button>
         </div>
 
@@ -203,10 +201,10 @@
         <div class="calculation-guide">
             <h3>Ghi chú cách tính toán:</h3>
             <p>• <b>Số kí tiêu thụ(kWh):</b> Số ĐH tháng này trừ Số ĐH tháng trước.</p>
-            <p>• <b>Tiền điện:</b> Số kí tiêu thụ × Giá điện(2400đ).</p>
+            <p>• <b>Tiền điện:</b> Số kí tiêu thụ × Giá điện.</p>
             <p>• <b>TIỀN PHẢI NỘP:</b> Tiền điện + Tiền điện thất thoát.</p>
             <p>• <b>Số điện thất thoát:</b> Điện tổng tiêu thụ - Tổng điện tất cả các hộ.</p>
-            <p>• <b>Tiền điện thất thoát (từng hộ):</b> được chia theo số kí tiêu thụ(số kí tiêu thụ ít chịu,số kí tiêu thụ nhiều chịu nhiều.</p>
+            <p>• <b>Tiền điện thất thoát (từng hộ):</b> Được chia theo tỉ lệ số kí tiêu thụ (số kí tiêu thụ ít chịu ít, số kí tiêu thụ nhiều chịu nhiều).</p>
             <p> (số kí thất thoát x 2400đ)</p>
         </div>
     </div>
@@ -339,34 +337,26 @@
         const area = document.getElementById('captureArea');
         const controls = document.querySelector('.controls');
         
-        // Bước 1: Chuẩn bị chụp (Ẩn control và ép width để iPhone không bị hụt)
         controls.classList.add('hide-for-capture');
         area.classList.add('is-capturing');
         wrapper.classList.add('is-capturing-wrapper');
         
-        // Bước 2: Cuộn về đầu để tránh lệch canvas
         window.scrollTo(0,0);
 
         try {
-            // Tính toán chiều cao thực tế chính xác của toàn bộ nội dung
             const actualHeight = area.scrollHeight;
-
             const canvas = await html2canvas(area, {
                 scale: 2,
                 useCORS: true,
                 backgroundColor: "#ffffff",
                 width: 1150,
                 height: actualHeight,
-                scrollY: -window.scrollY, // Fix lỗi lệch vị trí trên iOS
-                scrollX: 0,
+                scrollY: -window.scrollY,
                 onclone: (clonedDoc) => {
                     const clonedArea = clonedDoc.getElementById('captureArea');
                     clonedArea.style.backdropFilter = 'none';
                     clonedArea.style.webkitBackdropFilter = 'none';
                     clonedArea.style.width = '1150px';
-                    clonedArea.style.height = actualHeight + 'px';
-                    
-                    // Xóa các hiệu ứng động gây crash Safari
                     const allCells = clonedArea.querySelectorAll('th, td');
                     allCells.forEach(cell => {
                         cell.style.border = '1px solid #333';
@@ -377,16 +367,14 @@
                 }
             });
 
-            // Bước 3: Tự động tải về
             const link = document.createElement('a');
             link.download = `So_Dien_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
 
         } catch (e) {
-            alert("Lỗi xuất ảnh: Vui lòng thử lại!");
+            alert("Lỗi xuất ảnh!");
         } finally {
-            // Bước 4: Khôi phục giao diện lấp lánh
             controls.classList.remove('hide-for-capture');
             area.classList.remove('is-capturing');
             wrapper.classList.remove('is-capturing-wrapper');
@@ -411,7 +399,7 @@
             footerMonthLabel: document.getElementById('footerMonthLabel').value
         };
         localStorage.setItem('electricDB_v3', JSON.stringify(db));
-        if (!silent) alert('Đã lưu!');
+        if (!silent) alert('Đã lưu dữ liệu!');
     }
 
     function toggleLock() {
@@ -460,17 +448,24 @@
     }
 
     function importData(e) {
+        const fileInput = e.target;
+        const file = fileInput.files[0];
+        if (!file) return;
+
         const reader = new FileReader();
         reader.onload = function(ev) {
             try {
-                db = JSON.parse(ev.target.result);
+                const imported = JSON.parse(ev.target.result);
+                db = imported;
                 localStorage.setItem('electricDB_v3', JSON.stringify(db));
                 init();
                 alert("Đã nhập thành công!");
-            } catch(err) { alert("Lỗi file!"); }
-            finally { e.target.value = ''; }
+            } catch(err) { 
+                alert("Lỗi file không hợp lệ!"); 
+            }
+            fileInput.value = ''; // Reset input để có thể chọn lại cùng 1 file
         };
-        reader.readAsText(e.target.files[0]);
+        reader.readAsText(file);
     }
 
     init();
