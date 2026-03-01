@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Điện - EVN Pro (Full Rainbow App)</title>
     
-    <!-- KẾT NỐI ICON VÀ MANIFEST -->
+    <!-- KẾT NỐI FILE MANIFEST VÀ ICON (QUAN TRỌNG) -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
-    <meta name="theme-color" content="#0054a5">
+    <meta name="theme-color" content="#0b0f1a">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -204,7 +203,7 @@
         .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { 
             border: 2.5px solid !important;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1 !important;
-            animation: none !important;
+            animation: none !important; 
         }
     </style>
 </head>
@@ -420,13 +419,11 @@
                 useCORS: true,
                 backgroundColor: "#ffffff",
                 onclone: (clonedDoc) => {
-                    // FIX IPHONE: Bỏ làm mờ nền khi chụp để tránh trắng xóa
                     const clonedArea = clonedDoc.getElementById('captureArea');
                     clonedArea.style.backdropFilter = "none";
                     clonedArea.style.webkitBackdropFilter = "none";
                     clonedArea.style.background = "white";
 
-                    // FIX IPHONE: Đổi chữ gradient thành xanh đậm để không bị lỗi ô vuông
                     const rainbowTexts = clonedDoc.querySelectorAll('.rainbow-text');
                     rainbowTexts.forEach(t => {
                         t.style.webkitTextFillColor = '#0054a5';
