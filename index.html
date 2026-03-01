@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Điện - EVN Pro (Full Rainbow App)</title>
     
-    <!-- KẾT NỐI FILE MANIFEST VÀ ICON (QUAN TRỌNG) -->
+    <!-- KẾT NỐI FILE MANIFEST VÀ ICON -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
@@ -126,10 +126,19 @@
         input:disabled { color: #000; opacity: 1; }
 
         .footer-info { text-align: left; font-weight: bold; background: rgba(255, 255, 255, 0.7) !important; }
-        .loss-summary { background: rgba(255, 243, 205, 0.8) !important; color: #856404; font-size: 14px; }
         
-        .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; }
-        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 24px; }
+        /* FIX: Cho các ô tóm tắt thất thoát to bằng nhau */
+        .loss-summary td { 
+            background: rgba(255, 243, 205, 0.8) !important; 
+            color: #856404; 
+            font-size: 16px; /* Chữ to hơn */
+            font-weight: bold;
+            height: 50px;
+            vertical-align: middle;
+        }
+        
+        .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; font-size: 18px; }
+        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 28px; }
 
         /* --- PHẦN GHI CHÚ VỚI CHỮ 7 MÀU --- */
         .calculation-guide { 
@@ -152,7 +161,6 @@
             margin-bottom: 15px;
         }
 
-        /* Hiệu ứng chữ 7 màu chuyển động */
         .rainbow-text {
             display: inline-block;
             font-weight: bold;
@@ -169,37 +177,19 @@
         }
 
         /* -----------------------------------------------------------
-           CHẾ ĐỘ TẮT HIỆU ỨNG (NORMAL MODE)
+           CHẾ ĐỘ TẮT HIỆU ỨNG
         ----------------------------------------------------------- */
         body.no-effects { background: #f0f2f5 !important; }
         body.no-effects::before, body.no-effects::after { display: none !important; }
-        
         .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; border-radius: 8px !important; }
         .no-effects .rainbow-wrapper::before { display: none !important; }
         .no-effects .container { background: white !important; backdrop-filter: none !important; border: 1px solid #ccc !important; }
-        
-        .no-effects th, .no-effects td { 
-            border: 1px solid #333 !important; 
-            animation: none !important; 
-            filter: none !important; 
-            border-image: none !important; 
-            background: white !important; 
-        }
-
-        /* Trả về chữ bình thường khi tắt hiệu ứng */
-        .no-effects .calculation-guide { border: 1px dashed #666 !important; animation: none !important; border-image: none !important; }
-        .no-effects .rainbow-text {
-            background: none !important;
-            -webkit-background-clip: initial !important;
-            -webkit-text-fill-color: initial !important;
-            color: #333 !important;
-        }
+        .no-effects th, .no-effects td { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; background: white !important; }
+        .no-effects .rainbow-text { background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; color: #333 !important; }
 
         /* Khi chụp ảnh */
         .hide-for-capture { display: none !important; }
         .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; overflow: visible !important; position: relative !important; }
-        
-        /* FIX CHO IPHONE: Giữ viền rực rỡ khi chụp ảnh */
         .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { 
             border: 2.5px solid !important;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1 !important;
@@ -253,18 +243,21 @@
                         <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 120px; border-bottom: 1px dotted #333; font-weight: bold; font-size: 16px;"> (Kwh)
                     </td>
                 </tr>
+                <!-- Hàng 3 cột bằng nhau -->
                 <tr class="loss-summary">
-                    <td colspan="3" class="footer-info">Tổng điện các hộ trong tháng: <span id="lblTotalKwh">0</span> Kwh</td>
-                    <td colspan="3" class="footer-info">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span> Kwh</td>
-                    <td colspan="3" class="footer-info">Số điện thất thoát trong tháng: <span id="lblLossKwh">0</span> Kwh</td>
+                    <td colspan="3">Tổng điện các hộ: <span id="lblTotalKwh">0</span> Kwh</td>
+                    <td colspan="3">Điện tổng tiêu thụ: <span id="lblMainConsumption">0</span> Kwh</td>
+                    <td colspan="3">Số điện thất thoát: <span id="lblLossKwh">0</span> Kwh</td>
                 </tr>
+                <!-- Hàng 2 cột bằng nhau -->
                 <tr class="loss-summary">
-                    <td colspan="3" class="footer-info">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
-                    <td colspan="6" class="footer-info">Tiền điện thất thoát (x 2.400đ): <span id="lblLossMoney">0</span> đ</td>
+                    <td colspan="4">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
+                    <td colspan="5">Tiền điện thất thoát (x 2.400đ): <span id="lblLossMoney">0</span> đ</td>
                 </tr>
                 <tr>
-                    <td colspan="9" class="footer-info" style="text-align: center; font-size: 18px; padding: 15px !important; background: rgba(255,255,255,0.8) !important;">
-                        <span class="grand-total-label">Tổng tiền của tháng (tiền điện + tiền Thất thoát):</span> <span id="lblGrandTotal">0đ</span>
+                    <td colspan="9" class="footer-info" style="text-align: center; font-size: 18px; padding: 20px !important; background: rgba(255,255,255,0.8) !important;">
+                        <span class="grand-total-label">TỔNG TIỀN CỦA THÁNG (GỐC + THẤT THOÁT):</span> <br>
+                        <span id="lblGrandTotal">0đ</span>
                     </td>
                 </tr>
             </tfoot>
@@ -275,7 +268,7 @@
             <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
             <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
             <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
-            <p class="rainbow-text">• Số kí điện thất thoát trong tháng: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện tất cả các hộ dùng trong tháng để ra số kí thất thoát.</p><br>
+            <p class="rainbow-text">• Số kí điện thất thoát trong tháng: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện các hộ dùng trong tháng để ra số kí thất thoát.</p><br>
             <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
             <p class="rainbow-text">•Công thức thất thoát: (Số kí thất thoát x 2.400đ)</p>
         </div>
@@ -407,10 +400,8 @@
     async function exportToPNG() {
         const area = document.getElementById('captureArea');
         const controls = document.querySelector('.controls');
-        
         controls.classList.add('hide-for-capture');
         area.classList.add('is-capturing');
-        
         window.scrollTo(0,0);
 
         try {
@@ -432,7 +423,6 @@
                     });
                 }
             });
-
             const link = document.createElement('a');
             link.download = `So_Dien_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
