@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điện - EVN Pro (Full Rainbow)</title>
+    <title>Điện - EVN Pro</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -171,7 +171,7 @@
                     <th class="col-kwh">Số kí(kWh)</th>
                     <th class="col-price">Giá điện(vnđ)</th>
                     <th>Tiền điện(vnđ)</th>
-                    <th>Thất thoát(vnđ)</th>
+                    <th>Tiền điện thất thoát(vnđ)</th>
                     <th class="col-final">TIỀN PHẢI NỘP(vnđ)</th>
                 </tr>
             </thead>
@@ -203,10 +203,11 @@
         <div class="calculation-guide">
             <h3>Ghi chú cách tính toán:</h3>
             <p>• <b>Số kí tiêu thụ(kWh):</b> Số ĐH tháng này trừ Số ĐH tháng trước.</p>
-            <p>• <b>Tiền điện:</b> Số kí tiêu thụ × Giá điện.</p>
-            <p>• <b>Số điện thất thoát:</b> Điện tổng tiêu thụ - Tổng điện tất cả các hộ.</p>
-            <p>• <b>Tiền điện thất thoát (từng hộ):</b> Chia theo tỉ lệ số kí tiêu thụ.</p>
+            <p>• <b>Tiền điện:</b> Số kí tiêu thụ × Giá điện(2400đ).</p>
             <p>• <b>TIỀN PHẢI NỘP:</b> Tiền điện + Tiền điện thất thoát.</p>
+            <p>• <b>Số điện thất thoát:</b> Điện tổng tiêu thụ - Tổng điện tất cả các hộ.</p>
+            <p>• <b>Tiền điện thất thoát (từng hộ):</b> được chia theo số kí tiêu thụ(số kí tiêu thụ ít chịu,số kí tiêu thụ nhiều chịu nhiều.</p>
+            <p> (số kí thất thoát x 2400đ)</p>
         </div>
     </div>
 </div>
