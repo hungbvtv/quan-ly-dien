@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Điện - EVN Pro (Full Rainbow App)</title>
     
-    <!-- KẾT NỐI FILE MANIFEST VÀ ICON -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
@@ -32,7 +31,6 @@
             transition: background 0.3s;
         }
 
-        /* Hiệu ứng nền lấp lánh */
         body::before, body::after {
             content: "";
             position: fixed;
@@ -54,7 +52,6 @@
             to { background-position: 0 -300px; }
         }
 
-        /* Viền 7 màu app */
         .rainbow-wrapper {
             position: relative;
             max-width: 1200px;
@@ -94,7 +91,6 @@
         .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.7); padding: 12px; border-radius: 8px; align-items: center; }
         .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
         
-        /* Viền 7 màu cho TẤT CẢ các ô bảng */
         table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 10px; table-layout: fixed; min-width: 1100px; background: transparent; }
 
         th, td { 
@@ -131,7 +127,6 @@
         .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; }
         #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 24px; }
 
-        /* --- PHẦN GHI CHÚ VỚI CHỮ 7 MÀU --- */
         .calculation-guide { 
             margin-top: 30px; 
             padding: 20px; 
@@ -152,7 +147,6 @@
             margin-bottom: 15px;
         }
 
-        /* Hiệu ứng chữ 7 màu chuyển động */
         .rainbow-text {
             display: inline-block;
             font-weight: bold;
@@ -168,9 +162,6 @@
             100% { background-position: 100% 50%; }
         }
 
-        /* -----------------------------------------------------------
-           CHẾ ĐỘ TẮT HIỆU ỨNG (NORMAL MODE)
-        ----------------------------------------------------------- */
         body.no-effects { background: #f0f2f5 !important; }
         body.no-effects::before, body.no-effects::after { display: none !important; }
         
@@ -186,7 +177,6 @@
             background: white !important; 
         }
 
-        /* Trả về chữ bình thường khi tắt hiệu ứng */
         .no-effects .calculation-guide { border: 1px dashed #666 !important; animation: none !important; border-image: none !important; }
         .no-effects .rainbow-text {
             background: none !important;
@@ -195,11 +185,9 @@
             color: #333 !important;
         }
 
-        /* Khi chụp ảnh */
         .hide-for-capture { display: none !important; }
         .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; overflow: visible !important; position: relative !important; }
         
-        /* FIX CHO IPHONE: Giữ viền rực rỡ khi chụp ảnh */
         .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { 
             border: 2.5px solid !important;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1 !important;
@@ -227,7 +215,7 @@
                 <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
             </label>
 
-            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (PNG)</button>
+            <button class="btn" style="background: #d63384;" onclick="exportToPNG()">XUẤT ẢNH GỬI ZALO</button>
         </div>
 
         <table id="mainTable">
@@ -254,9 +242,9 @@
                     </td>
                 </tr>
                 <tr class="loss-summary">
-                    <td colspan="3" class="footer-info">Tổng điện các hộ trong tháng: <span id="lblTotalKwh">0</span> Kwh</td>
-                    <td colspan="3" class="footer-info">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span> Kwh</td>
-                    <td colspan="3" class="footer-info">Số điện thất thoát trong tháng: <span id="lblLossKwh">0</span> Kwh</td>
+                    <td colspan="3" class="footer-info">Tổng điện các hộ: <span id="lblTotalKwh">0</span> Kwh</td>
+                    <td colspan="3" class="footer-info">Điện tổng tiêu thụ: <span id="lblMainConsumption">0</span> Kwh</td>
+                    <td colspan="3" class="footer-info">Số điện thất thoát: <span id="lblLossKwh">0</span> Kwh</td>
                 </tr>
                 <tr class="loss-summary">
                     <td colspan="3" class="footer-info">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
@@ -273,11 +261,10 @@
         <div class="calculation-guide">
             <h3>Ghi chú cách tính toán:</h3>
             <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
-            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
+            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện.</p><br>
             <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
-            <p class="rainbow-text">• Số kí điện thất thoát trong tháng: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện các hộ dùng trong tháng để ra số kí thất thoát.</p><br>
-            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
-            <p class="rainbow-text">•Công thức thất thoát: (Số kí thất thoát x 2.400đ)</p>
+            <p class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ - Tổng điện các hộ dùng.</p><br>
+            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Chia theo tỷ lệ hộ dùng nhiều chịu nhiều.</p>
         </div>
     </div>
 </div>
@@ -408,52 +395,64 @@
         const area = document.getElementById('captureArea');
         const controls = document.querySelector('.controls');
         
-        // 1. Tạm ẩn nút bấm
         controls.classList.add('hide-for-capture');
         area.classList.add('is-capturing');
-        
-        // Cuộn lên đầu để tránh lỗi render Safari
         window.scrollTo(0,0);
 
         try {
-            // 2. Cấu hình html2canvas tối ưu cho iPhone
             const canvas = await html2canvas(area, {
-                scale: 2,
+                scale: 3, // Tăng độ nét gấp 3 lần
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: "#ffffff",
-                scrollX: 0,
-                scrollY: -window.scrollY,
                 onclone: (clonedDoc) => {
-                    // FIX IPHONE 1: Gỡ bỏ backdrop-filter vì nó làm trắng xóa ảnh trên Safari
                     const clonedArea = clonedDoc.getElementById('captureArea');
                     clonedArea.style.backdropFilter = "none";
                     clonedArea.style.webkitBackdropFilter = "none";
                     clonedArea.style.background = "white";
-                    clonedArea.style.boxShadow = "none";
 
-                    // FIX IPHONE 2: Chuyển rainbow-text thành màu xanh đậm cố định khi chụp
-                    // Trình duyệt Safari không hỗ trợ capture background-clip: text hiệu quả
+                    // --- FIX CHỮ BÉ Ở FOOTER TRONG ẢNH ---
+                    const footerTds = clonedDoc.querySelectorAll('.footer-info');
+                    footerTds.forEach(td => {
+                        // Phá bỏ cấu trúc ô của bảng để chữ tự do giãn nở theo chiều dọc
+                        td.style.display = "block"; 
+                        td.style.width = "100%";
+                        td.style.fontSize = "22px"; // Phóng to tiêu đề
+                        td.style.padding = "10px 20px";
+                        td.style.borderBottom = "1px solid #ddd";
+                        td.style.textAlign = "left";
+                        
+                        // Phóng to con số bên trong
+                        const spans = td.querySelectorAll('span');
+                        spans.forEach(s => {
+                            s.style.fontSize = "30px";
+                            s.style.fontWeight = "bold";
+                            s.style.color = "#d32f2f";
+                        });
+                    });
+
+                    // Tổng tiền cuối cùng cho thật khổng lồ trong ảnh
+                    const grandLabel = clonedDoc.querySelector('.grand-total-label');
+                    if(grandLabel) grandLabel.style.fontSize = "26px";
+
+                    const grandTotal = clonedDoc.getElementById('lblGrandTotal');
+                    if(grandTotal) {
+                        grandTotal.style.fontSize = "45px"; 
+                        grandTotal.style.display = "block";
+                        grandTotal.style.marginTop = "5px";
+                    }
+                    // ------------------------------------
+
                     const rainbowTexts = clonedDoc.querySelectorAll('.rainbow-text');
                     rainbowTexts.forEach(t => {
                         t.style.background = "none";
                         t.style.webkitTextFillColor = "#0054a5";
                         t.style.color = "#0054a5";
-                        t.style.animation = "none";
-                    });
-
-                    // FIX IPHONE 3: Ép các viền bảng giữ nguyên màu tĩnh (không xoay)
-                    const allAnimated = clonedDoc.querySelectorAll('*');
-                    allAnimated.forEach(el => {
-                        el.style.animation = 'none';
                     });
                 }
             });
 
-            // 3. Xử lý tải ảnh
             const imgData = canvas.toDataURL("image/png");
-            
-            // Cách tải ảnh tương thích iPhone
             const link = document.createElement('a');
             link.href = imgData;
             link.download = `So_Dien_${monthInput.value}.png`;
@@ -462,10 +461,8 @@
             document.body.removeChild(link);
 
         } catch (e) {
-            console.error("Lỗi:", e);
-            alert("Lỗi xuất ảnh! Hãy thử chụp ảnh màn hình thủ công.");
+            alert("Lỗi xuất ảnh!");
         } finally {
-            // 4. Hiện lại nút bấm
             controls.classList.remove('hide-for-capture');
             area.classList.remove('is-capturing');
         }
@@ -541,18 +538,14 @@
         const fileInput = e.target;
         const file = fileInput.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = function(ev) {
             try {
-                const imported = JSON.parse(ev.target.result);
-                db = imported;
+                db = JSON.parse(ev.target.result);
                 localStorage.setItem('electricDB_v3', JSON.stringify(db));
                 init();
                 alert("Đã nhập thành công!");
-            } catch(err) { 
-                alert("Lỗi file không hợp lệ!"); 
-            }
+            } catch(err) { alert("Lỗi file!"); }
             fileInput.value = ''; 
         };
         reader.readAsText(file);
