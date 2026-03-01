@@ -150,6 +150,7 @@
             font-weight: bold;
             background: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 400% 400%;
             animation: moveGradient 5s linear infinite;
@@ -178,11 +179,11 @@
             background: white !important; 
         }
 
-        /* Trả về chữ bình thường khi tắt hiệu ứng */
         .no-effects .calculation-guide { border: 1px dashed #666 !important; animation: none !important; border-image: none !important; }
         .no-effects .rainbow-text {
             background: none !important;
             -webkit-background-clip: initial !important;
+            background-clip: initial !important;
             -webkit-text-fill-color: initial !important;
             color: #333 !important;
         }
@@ -190,11 +191,20 @@
         /* Khi chụp ảnh */
         .hide-for-capture { display: none !important; }
         .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; overflow: visible !important; position: relative !important; }
+        
+        /* Đảm bảo khi chụp ảnh iPhone bắt được viền 7 màu */
         .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { 
-            border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; filter: none !important; 
+             border: 2.5px solid !important;
+             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1 !important;
         }
+
+        /* SỬA LỖI TẠI ĐÂY: Giữ chữ 7 màu khi xuất ảnh */
         .is-capturing .rainbow-text {
-            -webkit-text-fill-color: #0054a5 !important; /* Khi chụp ảnh để chữ xanh đậm cho rõ */
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-image: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff) !important;
+            animation: none !important; /* Dừng chuyển động để capture dải màu tĩnh cho nét */
         }
     </style>
 </head>
@@ -396,7 +406,6 @@
     }
 
     async function exportToPNG() {
-        const wrapper = document.getElementById('rainbowWrapper');
         const area = document.getElementById('captureArea');
         const controls = document.querySelector('.controls');
         
@@ -409,8 +418,16 @@
             const canvas = await html2canvas(area, {
                 scale: 2,
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: "#ffffff",
                 onclone: (clonedDoc) => {
+                    // Dừng animation của chữ khi chụp để iPhone bắt màu chuẩn nhất
+                    const rainbowTexts = clonedDoc.querySelectorAll('.rainbow-text');
+                    rainbowTexts.forEach(el => {
+                        el.style.animation = 'none';
+                        el.style.display = 'inline-block';
+                    });
+                    
                     const guide = clonedDoc.querySelector('.calculation-guide');
                     if(guide) guide.style.animation = 'none';
                 }
@@ -421,7 +438,8 @@
             link.href = canvas.toDataURL("image/png");
             link.click();
         } catch (e) {
-            alert("Lỗi xuất ảnh!");
+            console.error(e);
+            alert("Lỗi xuất ảnh! Hãy thử chụp màn hình nếu máy yếu.");
         } finally {
             controls.classList.remove('hide-for-capture');
             area.classList.remove('is-capturing');
