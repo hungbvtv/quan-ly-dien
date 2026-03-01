@@ -418,7 +418,7 @@
         try {
             // 2. Cấu hình html2canvas tối ưu cho iPhone
             const canvas = await html2canvas(area, {
-                scale: 3, // Tăng scale lên 3 cho nét
+                scale: 2,
                 useCORS: true,
                 allowTaint: true,
                 backgroundColor: "#ffffff",
@@ -432,33 +432,8 @@
                     clonedArea.style.background = "white";
                     clonedArea.style.boxShadow = "none";
 
-                    // --- CHỈNH SỬA PHÓNG TO CHỮ KẾT QUẢ KHI XUẤT ẢNH ---
-                    const footerInfos = clonedDoc.querySelectorAll('.footer-info');
-                    footerInfos.forEach(info => {
-                        // Biến các dòng kết quả thành khối dọc để không bị tràn chiều ngang
-                        info.style.display = "block";
-                        info.style.width = "100%";
-                        info.style.fontSize = "22px"; // Phóng to text tiêu đề
-                        info.style.padding = "10px 20px";
-                        
-                        // Tìm các con số bên trong và phóng to chúng (bằng cỡ Tổng Tiền 24px-28px)
-                        const spans = info.querySelectorAll('span');
-                        spans.forEach(s => {
-                           s.style.fontSize = "28px"; 
-                           s.style.fontWeight = "bold";
-                           s.style.color = "#d32f2f"; // Đổi màu đỏ cho dễ thấy
-                        });
-                    });
-
-                    // Tổng tiền cuối cùng cho thật khổng lồ
-                    const grandVal = clonedDoc.getElementById('lblGrandTotal');
-                    if(grandVal) {
-                        grandVal.style.fontSize = "40px";
-                        grandVal.style.display = "block";
-                    }
-                    // --------------------------------------------------
-
                     // FIX IPHONE 2: Chuyển rainbow-text thành màu xanh đậm cố định khi chụp
+                    // Trình duyệt Safari không hỗ trợ capture background-clip: text hiệu quả
                     const rainbowTexts = clonedDoc.querySelectorAll('.rainbow-text');
                     rainbowTexts.forEach(t => {
                         t.style.background = "none";
