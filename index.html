@@ -123,11 +123,31 @@
         .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; }
         #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 24px; }
 
-        .calculation-guide { margin-top: 30px; padding: 20px; border: 1px dashed #666; background: rgba(250, 250, 250, 0.7); border-radius: 5px; line-height: 1.8; text-align: left; }
-        .calculation-guide h3 { margin-top: 0; font-size: 18px; color: #333; text-decoration: underline; margin-bottom: 10px; }
+        /* PHẦN GHI CHÚ CÓ HIỆU ỨNG 7 MÀU */
+        .calculation-guide { 
+            margin-top: 30px; 
+            padding: 20px; 
+            background: rgba(255, 255, 255, 0.9); 
+            line-height: 1.8; 
+            text-align: left; 
+            /* Viền 7 màu */
+            border: 3.5px solid;
+            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
+            animation: rainbowBorder 3s linear infinite;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .calculation-guide h3 { 
+            margin-top: 0; 
+            font-size: 20px; 
+            color: #0054a5; 
+            text-transform: uppercase;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
 
         /* -----------------------------------------------------------
-           CHẾ ĐỘ TẮT HIỆU ỨNG (NORMAL MODE) - SỬ DỤNG !IMPORTANT ĐỂ ÉP PHÊ
+           CHẾ ĐỘ TẮT HIỆU ỨNG (NORMAL MODE)
         ----------------------------------------------------------- */
         body.no-effects { background: #f0f2f5 !important; }
         body.no-effects::before, body.no-effects::after { display: none !important; }
@@ -144,6 +164,15 @@
             border-image: none !important; 
             background: white !important; 
         }
+
+        /* Tắt hiệu ứng cho phần ghi chú */
+        .no-effects .calculation-guide {
+            border: 1px dashed #666 !important;
+            animation: none !important;
+            border-image: none !important;
+            background: #fafafa !important;
+        }
+
         .no-effects .col-kwh { background: #e8f5e9 !important; }
         .no-effects .col-price { background: #fffde7 !important; }
         .no-effects .col-final { background: #e3f2fd !important; }
@@ -153,6 +182,7 @@
         .hide-for-capture { display: none !important; }
         .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; overflow: visible !important; position: relative !important; }
         .is-capturing th, .is-capturing td { border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; filter: none !important; background: white !important; }
+        .is-capturing .calculation-guide { border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; }
         .is-capturing-wrapper::before { display: none !important; }
         .is-capturing .container { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; width: 1150px !important; }
     </style>
@@ -165,16 +195,13 @@
             <div><strong>Tháng: </strong><input type="month" id="currentMonth" onchange="changeMonth()" style="width: 140px; border: 1px solid #ccc; padding: 4px; background: white;"></div>
             <div id="statusArea"></div>
             
-            <!-- NÚT BẬT TẮT HIỆU ỨNG -->
             <button class="btn" id="toggleEffectsBtn" onclick="toggleEffects()" style="background: #fd7e14;">Tắt Hiệu Ứng</button>
-
             <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa Sổ</span></button>
             <button class="btn" onclick="addRow()" style="background: #28a745;">+ Thêm Hộ</button>
             <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;">Chế Độ Xóa</button>
             <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ Liệu</button>
             <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup</button>
             
-            <!-- NHẬP FILE (LABEL FIX CHO MOBILE) -->
             <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">
                 Nhập File
                 <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
@@ -229,15 +256,14 @@
             <p>• <b>Tiền điện:</b> Số kí tiêu thụ × Giá điện(2400đ).</p>
             <p>• <b>TIỀN PHẢI NỘP:</b> Tiền điện + Tiền điện thất thoát.</p>
             <p>• <b>Số điện thất thoát trong tháng:</b> Điện tổng tiêu thụ trong tháng trừ cho Tổng điện tất cả các hộ trong tháng.</p>
-            <p>• <b>Tiền điện thất thoát (từng hộ):</b> Được chia theo tỉ lệ số kí tiêu thụ (số kí tiêu thụ ít chịu ít, số kí tiêu thụ nhiều chịu nhiều).</p>
-            <p><b>(Số kí thất thoát x 2.400đ)</b></p>
+            <p>• <b>Tiền điện thất thoát (từng hộ):</b> Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p>
+            <p><b>Công thức thất thoát: (Số kí thất thoát x 2.400đ)</b></p>
         </div>
     </div>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('electricDB_v3')) || {};
-    // Đảm bảo lấy đúng giá trị Boolean
     let effectsEnabled = localStorage.getItem('effectsEnabled') !== 'false';
 
     const monthInput = document.getElementById('currentMonth');
@@ -383,7 +409,7 @@
                     clonedArea.style.backdropFilter = 'none';
                     clonedArea.style.webkitBackdropFilter = 'none';
                     clonedArea.style.width = '1150px';
-                    const allCells = clonedArea.querySelectorAll('th, td');
+                    const allCells = clonedArea.querySelectorAll('th, td, .calculation-guide');
                     allCells.forEach(cell => {
                         cell.style.border = '1px solid #333';
                         cell.style.animation = 'none';
