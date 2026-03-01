@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điện - EVN Pro (Full Rainbow)</title>
+    <title>Điện - EVN Pro (Full Rainbow Text)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -86,7 +86,7 @@
         .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.7); padding: 12px; border-radius: 8px; align-items: center; }
         .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
         
-        /* Viền 7 màu cho TẤT CẢ các ô */
+        /* Viền 7 màu cho TẤT CẢ các ô bảng */
         table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 10px; table-layout: fixed; min-width: 1100px; background: transparent; }
 
         th, td { 
@@ -123,27 +123,41 @@
         .grand-total-label { color: #0054a5; font-weight: bold; text-transform: uppercase; }
         #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 24px; }
 
-        /* PHẦN GHI CHÚ CÓ HIỆU ỨNG 7 MÀU */
+        /* --- PHẦN GHI CHÚ VỚI CHỮ 7 MÀU --- */
         .calculation-guide { 
             margin-top: 30px; 
             padding: 20px; 
-            background: rgba(255, 255, 255, 0.9); 
+            background: rgba(255, 255, 255, 0.95); 
             line-height: 1.8; 
             text-align: left; 
-            /* Viền 7 màu */
             border: 3.5px solid;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
             animation: rainbowBorder 3s linear infinite;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+
         .calculation-guide h3 { 
             margin-top: 0; 
             font-size: 20px; 
             color: #0054a5; 
             text-transform: uppercase;
             border-bottom: 2px solid #eee;
-            padding-bottom: 5px;
             margin-bottom: 15px;
+        }
+
+        /* Hiệu ứng chữ 7 màu chuyển động */
+        .rainbow-text {
+            display: inline-block;
+            font-weight: bold;
+            background: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 400% 400%;
+            animation: moveGradient 5s linear infinite;
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
         /* -----------------------------------------------------------
@@ -154,8 +168,7 @@
         
         .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; border-radius: 8px !important; }
         .no-effects .rainbow-wrapper::before { display: none !important; }
-        
-        .no-effects .container { background: white !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: 1px solid #ccc !important; }
+        .no-effects .container { background: white !important; backdrop-filter: none !important; border: 1px solid #ccc !important; }
         
         .no-effects th, .no-effects td { 
             border: 1px solid #333 !important; 
@@ -165,26 +178,24 @@
             background: white !important; 
         }
 
-        /* Tắt hiệu ứng cho phần ghi chú */
-        .no-effects .calculation-guide {
-            border: 1px dashed #666 !important;
-            animation: none !important;
-            border-image: none !important;
-            background: #fafafa !important;
+        /* Trả về chữ bình thường khi tắt hiệu ứng */
+        .no-effects .calculation-guide { border: 1px dashed #666 !important; animation: none !important; border-image: none !important; }
+        .no-effects .rainbow-text {
+            background: none !important;
+            -webkit-background-clip: initial !important;
+            -webkit-text-fill-color: initial !important;
+            color: #333 !important;
         }
-
-        .no-effects .col-kwh { background: #e8f5e9 !important; }
-        .no-effects .col-price { background: #fffde7 !important; }
-        .no-effects .col-final { background: #e3f2fd !important; }
-        .no-effects input { background: transparent !important; }
 
         /* Khi chụp ảnh */
         .hide-for-capture { display: none !important; }
         .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; overflow: visible !important; position: relative !important; }
-        .is-capturing th, .is-capturing td { border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; filter: none !important; background: white !important; }
-        .is-capturing .calculation-guide { border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; }
-        .is-capturing-wrapper::before { display: none !important; }
-        .is-capturing .container { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; width: 1150px !important; }
+        .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { 
+            border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; filter: none !important; 
+        }
+        .is-capturing .rainbow-text {
+            -webkit-text-fill-color: #0054a5 !important; /* Khi chụp ảnh để chữ xanh đậm cho rõ */
+        }
     </style>
 </head>
 <body id="mainBody">
@@ -252,12 +263,12 @@
 
         <div class="calculation-guide">
             <h3>Ghi chú cách tính toán:</h3>
-            <p>• <b>Số kí tiêu thụ(kWh):</b> Số ĐH tháng này trừ Số ĐH tháng trước.</p>
-            <p>• <b>Tiền điện:</b> Số kí tiêu thụ × Giá điện(2400đ).</p>
-            <p>• <b>TIỀN PHẢI NỘP:</b> Tiền điện + Tiền điện thất thoát.</p>
-            <p>• <b>Số điện thất thoát trong tháng:</b> Điện tổng tiêu thụ trong tháng trừ cho Tổng điện tất cả các hộ trong tháng.</p>
-            <p>• <b>Tiền điện thất thoát (từng hộ):</b> Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p>
-            <p><b>Công thức thất thoát: (Số kí thất thoát x 2.400đ)</b></p>
+            <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
+            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
+            <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
+            <p class="rainbow-text">• Số điện thất thoát trong tháng: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện tất cả các hộ trong tháng.</p><br>
+            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
+            <p class="rainbow-text" style="font-size: 1.1em; text-decoration: underline;">Công thức thất thoát: (Số kí thất thoát x 2.400đ)</p>
         </div>
     </div>
 </div>
@@ -391,31 +402,17 @@
         
         controls.classList.add('hide-for-capture');
         area.classList.add('is-capturing');
-        wrapper.classList.add('is-capturing-wrapper');
         
         window.scrollTo(0,0);
 
         try {
-            const actualHeight = area.scrollHeight;
             const canvas = await html2canvas(area, {
                 scale: 2,
                 useCORS: true,
                 backgroundColor: "#ffffff",
-                width: 1150,
-                height: actualHeight,
-                scrollY: -window.scrollY,
                 onclone: (clonedDoc) => {
-                    const clonedArea = clonedDoc.getElementById('captureArea');
-                    clonedArea.style.backdropFilter = 'none';
-                    clonedArea.style.webkitBackdropFilter = 'none';
-                    clonedArea.style.width = '1150px';
-                    const allCells = clonedArea.querySelectorAll('th, td, .calculation-guide');
-                    allCells.forEach(cell => {
-                        cell.style.border = '1px solid #333';
-                        cell.style.animation = 'none';
-                        cell.style.filter = 'none';
-                        cell.style.borderImage = 'none';
-                    });
+                    const guide = clonedDoc.querySelector('.calculation-guide');
+                    if(guide) guide.style.animation = 'none';
                 }
             });
 
@@ -423,13 +420,11 @@
             link.download = `So_Dien_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
-
         } catch (e) {
             alert("Lỗi xuất ảnh!");
         } finally {
             controls.classList.remove('hide-for-capture');
             area.classList.remove('is-capturing');
-            wrapper.classList.remove('is-capturing-wrapper');
         }
     }
 
