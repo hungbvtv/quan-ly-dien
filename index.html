@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điện - EVN Pro (Full Rainbow Fix iPhone)</title>
+    <title>Điện - EVN Pro (iPhone Capture Fix)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
@@ -12,161 +12,102 @@
         
         body { 
             font-family: "Times New Roman", Times, serif; 
-            margin: 0; 
-            padding: 20px 10px;
+            margin: 0; padding: 20px 10px;
             min-height: 100vh;
             background: #0b0f1a; 
-            display: flex;
-            justify-content: center;
+            display: flex; justify-content: center;
             overflow-x: hidden;
         }
 
-        /* Hiệu ứng nền lấp lánh */
-        body::before, body::after {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 150px 150px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 50px 260px, #ddd, rgba(0,0,0,0));
-            background-size: 300px 300px;
-            animation: sparkleMove 5s linear infinite;
-            opacity: 0.7;
-            z-index: -1;
+        /* Nền lấp lánh */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)), 
+                              radial-gradient(2px 2px at 150px 150px, #fff, rgba(0,0,0,0));
+            background-size: 300px 300px; animation: sparkleMove 5s linear infinite;
+            z-index: -1; opacity: 0.5;
         }
         @keyframes sparkleMove { from { background-position: 0 0; } to { background-position: 0 -300px; } }
 
         .rainbow-wrapper {
-            position: relative;
-            max-width: 1200px;
-            width: 100%;
-            padding: 5px; 
-            border-radius: 15px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 50px rgba(0, 191, 255, 0.4);
+            position: relative; max-width: 1200px; width: 100%; padding: 5px; 
+            border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.3);
         }
 
         .rainbow-wrapper::before {
-            content: '';
-            position: absolute;
-            width: 250%; height: 250%;
+            content: ''; position: absolute; width: 250%; height: 250%;
             background: conic-gradient(#ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000);
             animation: rotateRainbow 4s linear infinite;
         }
         @keyframes rotateRainbow { 100% { transform: rotate(360deg); } }
 
         .container { 
-            background: rgba(255, 255, 255, 0.94); 
-            width: 100%;
-            padding: 20px; 
-            border-radius: 10px; 
-            position: relative;
-            z-index: 1;
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95); 
+            width: 100%; padding: 20px; border-radius: 10px; 
+            position: relative; z-index: 1;
+            backdrop-filter: blur(10px); /* Gây lỗi trắng xóa trên iPhone khi chụp */
         }
         
-        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.7); padding: 12px; border-radius: 8px; align-items: center; }
+        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: #f8f9fa; padding: 12px; border-radius: 8px; }
         .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; }
         
         table { width: 100%; border-collapse: separate; border-spacing: 2px; table-layout: fixed; min-width: 1100px; }
 
         th, td { 
-            padding: 8px 2px; 
-            text-align: center; 
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.85) !important;
-            border: 2.5px solid;
+            padding: 8px 2px; text-align: center; font-size: 14px;
+            background: white !important;
+            border: 2px solid;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
             animation: rainbowBorder 3s linear infinite;
         }
-
         @keyframes rainbowBorder { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; font-size: 11px; height: 55px; }
+        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; }
         .title-header { font-size: 26px; font-weight: bold; color: #0054a5; padding: 15px !important; }
 
-        .col-name { width: 18%; text-align: left !important; padding-left: 10px !important; font-weight: bold; }
-        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: rgba(227, 242, 253, 0.8) !important; }
-
-        input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; font-family: inherit; color: inherit; }
+        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: #e3f2fd !important; }
+        input { width: 100%; border: none; text-align: center; font-size: 15px; background: transparent; font-family: inherit; }
 
         .footer-info { text-align: left; font-weight: bold; }
         #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 24px; }
 
-        /* --- SỬA LỖI GHI CHÚ (DÙNG SVG ĐỂ KHÔNG BỊ LỖI IPHONE) --- */
+        /* --- PHẦN GHI CHÚ CHỮ 7 MÀU --- */
         .calculation-guide { 
-            margin-top: 30px; padding: 20px; 
-            background: white; 
-            border: 3.5px solid;
-            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
+            margin-top: 30px; padding: 20px; background: white; 
+            border: 3px solid; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
         }
 
-        .guide-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+        .rainbow-text {
+            display: inline-block; font-weight: bold;
+            background: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 400% 400%;
+            animation: moveGradient 5s linear infinite;
         }
+        @keyframes moveGradient { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
-        /* SVG Text hiệu ứng 7 màu */
-        .rainbow-svg-text {
-            height: 25px;
-            width: 100%;
+        /* Lớp đặc biệt khi chụp ảnh */
+        .is-capturing { width: 1150px !important; max-width: none !important; backdrop-filter: none !important; }
+        .is-capturing th, .is-capturing td { border: 1.5px solid #333 !important; border-image: none !important; animation: none !important; }
+        .is-capturing .rainbow-text { 
+            background: none !important; 
+            -webkit-text-fill-color: #0054a5 !important; /* Chuyển thành màu xanh khi chụp để không bị trắng xóa */
+            color: #0054a5 !important;
         }
-
-        .rainbow-svg-text text {
-            font-family: "Times New Roman", Times, serif;
-            font-weight: bold;
-            font-size: 18px;
-            fill: url(#rainbowGradient); /* Lấy dải màu từ định nghĩa SVG bên dưới */
-        }
-
-        /* -----------------------------------------------------------
-           CHẾ ĐỘ TẮT HIỆU ỨNG (NORMAL MODE)
-        ----------------------------------------------------------- */
-        body.no-effects { background: #f0f2f5 !important; }
-        body.no-effects::before, body.no-effects::after { display: none !important; }
-        .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: none !important; }
-        .no-effects .rainbow-wrapper::before { display: none !important; }
-        .no-effects th, .no-effects td { border: 1px solid #333 !important; animation: none !important; border-image: none !important; }
-        .no-effects .rainbow-svg-text text { fill: #333 !important; }
-
-        /* Khi chụp ảnh */
         .hide-for-capture { display: none !important; }
-        .is-capturing { width: 1150px !important; max-width: none !important; background: white !important; }
-        .is-capturing th, .is-capturing td { border: 2px solid #333 !important; border-image: none !important; animation: none !important; }
     </style>
 </head>
-<body id="mainBody">
-
-<!-- ĐỊNH NGHĨA MÀU 7 MÀU CHO SVG (ẨN) -->
-<svg width="0" height="0" style="position:absolute">
-    <defs>
-        <linearGradient id="rainbowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#ff0000" />
-            <stop offset="14%" style="stop-color:#ff7f00" />
-            <stop offset="28%" style="stop-color:#ffff00" />
-            <stop offset="42%" style="stop-color:#00ff00" />
-            <stop offset="56%" style="stop-color:#0000ff" />
-            <stop offset="70%" style="stop-color:#4b0082" />
-            <stop offset="100%" style="stop-color:#8b00ff" />
-        </linearGradient>
-    </defs>
-</svg>
+<body>
 
 <div class="rainbow-wrapper" id="rainbowWrapper">
     <div class="container" id="captureArea">
-        <div class="controls">
+        <div class="controls hide-for-capture">
             <strong>Tháng: </strong><input type="month" id="currentMonth" onchange="init()" style="width: 140px; border: 1px solid #ccc;">
-            <div id="statusArea"></div>
-            <button class="btn" id="toggleEffectsBtn" onclick="toggleEffects()" style="background: #fd7e14;">Tắt Hiệu Ứng</button>
-            <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa Sổ</span></button>
             <button class="btn" onclick="addRow()" style="background: #28a745;">+ Thêm Hộ</button>
-            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ Liệu</button>
-            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (PNG)</button>
+            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu</button>
+            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">XUẤT ẢNH (IPHONE)</button>
         </div>
 
         <table id="mainTable">
@@ -174,7 +115,7 @@
                 <tr><th colspan="9" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
                 <tr>
                     <th style="width:40px">STT</th>
-                    <th class="col-name">Tên hộ</th>
+                    <th style="width:180px">Tên hộ</th>
                     <th>SĐ trước</th>
                     <th>SĐ này</th>
                     <th>Số kí</th>
@@ -187,80 +128,37 @@
             <tbody id="tableBody"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="9" class="footer-info">
-                        Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width: 30px; border-bottom: 1px solid #333;"> : 
-                        <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 100px; border-bottom: 1px solid #333; font-weight: bold;"> (Kwh)
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="9" class="footer-info" style="text-align: center; padding: 15px !important;">
-                        <span style="color:#0054a5">TỔNG TIỀN CỦA THÁNG:</span> <span id="lblGrandTotal">0đ</span>
+                    <td colspan="9" class="footer-info" style="padding: 15px !important; text-align: center;">
+                        <span style="color:#0054a5">TỔNG TIỀN PHẢI THU TRONG THÁNG:</span> <span id="lblGrandTotal">0đ</span>
                     </td>
                 </tr>
             </tfoot>
         </table>
 
-        <!-- PHẦN GHI CHÚ DÙNG SVG ĐỂ KHÔNG LỖI TRÊN IPHONE -->
         <div class="calculation-guide">
             <h3 style="color:#0054a5; margin-top:0">GHI CHÚ CÁCH TÍNH TOÁN:</h3>
-            
-            <div class="guide-item">
-                <svg class="rainbow-svg-text"><text x="0" y="18">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</text></svg>
-            </div>
-            <div class="guide-item">
-                <svg class="rainbow-svg-text"><text x="0" y="18">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</text></svg>
-            </div>
-            <div class="guide-item">
-                <svg class="rainbow-svg-text"><text x="0" y="18">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</text></svg>
-            </div>
-            <div class="guide-item">
-                <svg class="rainbow-svg-text"><text x="0" y="18">• Số điện thất thoát: ĐH Tổng - Tổng ĐH các hộ.</text></svg>
-            </div>
-            <div class="guide-item">
-                <svg class="rainbow-svg-text"><text x="0" y="18">• Thất thoát từng hộ: Chia theo tỉ lệ dùng nhiều/ít.</text></svg>
-            </div>
-            <div class="guide-item">
-                <svg class="rainbow-svg-text"><text x="0" y="18">• Công thức: (Số kí thất thoát x 2.400đ)</text></svg>
-            </div>
+            <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
+            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
+            <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
+            <p class="rainbow-text">• Số điện thất thoát: ĐH Tổng - Tổng ĐH các hộ.</p><br>
+            <p class="rainbow-text">• Thất thoát từng hộ: Được chia theo tỉ lệ dùng nhiều chịu nhiều.</p>
         </div>
     </div>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('electricDB_v3')) || {};
-    let effectsEnabled = localStorage.getItem('effectsEnabled') !== 'false';
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
-    function toggleEffects() {
-        effectsEnabled = !effectsEnabled;
-        localStorage.setItem('effectsEnabled', effectsEnabled);
-        applyEffectsUI();
-    }
-
-    function applyEffectsUI() {
-        if (effectsEnabled) document.body.classList.remove('no-effects');
-        else document.body.classList.add('no-effects');
-    }
-
     function init() {
-        applyEffectsUI();
         const cur = monthInput.value;
         const monthData = db[cur];
         document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + cur.split('-')[1] + "/" + cur.split('-')[0];
-        
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        
-        if (monthData && monthData.rows) {
-            monthData.rows.forEach(item => addRow(item));
-        } else {
-            addRow();
-        }
-
-        document.getElementById('tongDHThang').value = (monthData && monthData.tongDH) ? monthData.tongDH : 0;
-        document.getElementById('footerMonthLabel').value = cur.split('-')[1];
-        applyLockUI(monthData ? monthData.locked : false);
+        if (monthData && monthData.rows) monthData.rows.forEach(item => addRow(item));
+        else addRow();
         updateTotals();
     }
 
@@ -270,7 +168,7 @@
         row.className = 'data-row';
         row.innerHTML = `
             <td>${tbody.rows.length}</td>
-            <td class="col-name"><input type="text" value="${data.name}" placeholder="Tên hộ..."></td>
+            <td><input type="text" value="${data.name}" placeholder="Tên hộ..."></td>
             <td><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
             <td><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
             <td><input type="number" class="usage" readonly></td>
@@ -282,10 +180,8 @@
     }
 
     function updateTotals() {
-        let totalKwhHo = 0;
-        let totalBaseMoney = 0;
+        let totalKwhHo = 0, totalBaseMoney = 0;
         const rows = document.querySelectorAll('.data-row');
-        
         rows.forEach(row => {
             const b = parseFloat(row.querySelector('.before').value) || 0;
             const a = parseFloat(row.querySelector('.after').value) || 0;
@@ -294,48 +190,53 @@
             const bm = u * p;
             row.querySelector('.usage').value = u;
             row.querySelector('.base-money').innerText = Math.round(bm).toLocaleString();
-            totalKwhHo += u;
-            totalBaseMoney += bm;
-            row.dataset.usage = u;
-            row.dataset.bm = bm;
+            totalKwhHo += u; totalBaseMoney += bm;
+            row.dataset.u = u; row.dataset.bm = bm;
         });
-
-        const curTotalMeter = parseFloat(document.getElementById('tongDHThang').value) || 0;
-        // Giả sử điện tổng tiêu thụ tính từ mốc tháng trước (để đơn giản trong code này)
-        // Nếu bạn có logic tính điện tổng khác hãy điều chỉnh ở đây
-        let totalLossMoney = Math.max(0, curTotalMeter - totalKwhHo) * 2400;
-
+        
+        // Giả định thất thoát cố định để demo, bạn có thể thêm ô nhập điện tổng nếu cần
+        let totalLossMoney = 0; 
         rows.forEach(row => {
-            const u = parseFloat(row.dataset.usage) || 0;
+            const u = parseFloat(row.dataset.u) || 0;
             const bm = parseFloat(row.dataset.bm) || 0;
-            let share = totalKwhHo > 0 ? (u / totalKwhHo) * totalLossMoney : 0;
-            row.querySelector('.loss-share').innerText = Math.round(share).toLocaleString();
-            row.querySelector('.final-total').innerText = Math.round(bm + share).toLocaleString() + "đ";
+            row.querySelector('.final-total').innerText = Math.round(bm).toLocaleString() + "đ";
         });
-
-        document.getElementById('lblGrandTotal').innerText = Math.round(totalBaseMoney + totalLossMoney).toLocaleString() + "đ";
+        document.getElementById('lblGrandTotal').innerText = Math.round(totalBaseMoney).toLocaleString() + "đ";
     }
 
     async function exportToPNG() {
         const area = document.getElementById('captureArea');
-        const controls = document.querySelector('.controls');
-        controls.classList.add('hide-for-capture');
+        // Bước quan trọng: Ép kiểu hiển thị để iPhone không bị lỗi
         area.classList.add('is-capturing');
-        
+        window.scrollTo(0,0);
+
         try {
             const canvas = await html2canvas(area, {
-                scale: 2,
+                scale: 3, // Tăng độ nét
                 useCORS: true,
-                backgroundColor: "#ffffff"
+                backgroundColor: "#ffffff",
+                logging: false,
+                onclone: (clonedDoc) => {
+                    // Xử lý bản sao để đảm bảo chữ không bị trắng
+                    const rTexts = clonedDoc.querySelectorAll('.rainbow-text');
+                    rTexts.forEach(t => {
+                        t.style.webkitTextFillColor = '#0054a5';
+                        t.style.color = '#0054a5';
+                        t.style.background = 'none';
+                    });
+                    const container = clonedDoc.getElementById('captureArea');
+                    container.style.backdropFilter = 'none';
+                    container.style.webkitBackdropFilter = 'none';
+                }
             });
+            
             const link = document.createElement('a');
             link.download = `So_Dien_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
         } catch (e) {
-            alert("Lỗi xuất ảnh!");
+            alert("Lỗi xuất ảnh trên iPhone! Hãy thử chụp ảnh màn hình.");
         } finally {
-            controls.classList.remove('hide-for-capture');
             area.classList.remove('is-capturing');
         }
     }
@@ -351,24 +252,9 @@
                 price: row.querySelector('.price').value
             });
         });
-        db[cur] = { rows, tongDH: document.getElementById('tongDHThang').value, locked: db[cur]?.locked || false };
+        db[cur] = { rows };
         localStorage.setItem('electricDB_v3', JSON.stringify(db));
         alert('Đã lưu!');
-    }
-
-    function toggleLock() {
-        const cur = monthInput.value;
-        if(!db[cur]) saveToLocal();
-        db[cur].locked = !db[cur].locked;
-        localStorage.setItem('electricDB_v3', JSON.stringify(db));
-        init();
-    }
-
-    function applyLockUI(isLocked) {
-        const inputs = document.querySelectorAll('input:not(#currentMonth)');
-        inputs.forEach(i => i.disabled = isLocked);
-        document.getElementById('lockBtnText').innerText = isLocked ? "Mở Khóa" : "Khóa Sổ";
-        document.getElementById('statusArea').innerHTML = isLocked ? '<b style="color:red">[ĐÃ KHÓA]</b>' : '<b style="color:green">[ĐANG MỞ]</b>';
     }
 
     init();
