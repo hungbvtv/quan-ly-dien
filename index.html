@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điện - EVN Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Điện - EVN Pro (iPhone Optimized)</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
@@ -15,11 +15,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             font-family: "Times New Roman", Times, serif; 
-            margin: 0; padding: 20px 10px; min-height: 100vh;
+            margin: 0; padding: 10px 5px; min-height: 100vh;
             background: #0b0f1a; position: relative; display: flex;
             justify-content: center; overflow-x: hidden;
             transition: background 0.3s;
@@ -37,9 +37,9 @@
         @keyframes sparkleMove { from { background-position: 0 0; } to { background-position: 0 -300px; } }
 
         .rainbow-wrapper {
-            position: relative; max-width: 1250px; width: 100%; padding: 5px; 
+            position: relative; max-width: 1250px; width: 100%; padding: 4px; 
             border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
-            box-shadow: 0 0 50px rgba(0, 191, 255, 0.4);
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.4);
         }
 
         .rainbow-wrapper::before {
@@ -50,66 +50,65 @@
         @keyframes rotateRainbow { 100% { transform: rotate(360deg); } }
 
         .container { 
-            background: rgba(255, 255, 255, 0.94); width: 100%; padding: 20px; 
+            background: rgba(255, 255, 255, 0.96); width: 100%; padding: 15px 10px; 
             border-radius: 10px; position: relative; z-index: 1; backdrop-filter: blur(10px);
+            overflow-x: auto; /* Cho phép vuốt ngang trên điện thoại */
+            -webkit-overflow-scrolling: touch;
         }
         
-        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.7); padding: 12px; border-radius: 8px; align-items: center; }
-        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
+        /* Chế độ thu nhỏ để vừa màn hình iPhone */
+        .container.fit-screen {
+            transform-origin: top left;
+            width: 1150px; /* Cố định chiều rộng để không bị nhảy dòng */
+        }
+
+        .controls { 
+            display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; 
+            background: rgba(233, 236, 239, 0.8); padding: 10px; border-radius: 8px; align-items: center; 
+        }
+        .btn { 
+            padding: 8px 10px; cursor: pointer; border: none; border-radius: 4px; 
+            font-weight: bold; color: white; font-size: 12px; display: inline-flex; 
+            align-items: center; justify-content: center; min-height: 35px;
+        }
         
-        table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 10px; table-layout: fixed; min-width: 1100px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 5px; table-layout: fixed; min-width: 1000px; }
 
         th, td { 
-            position: relative; padding: 8px 2px; text-align: center; font-size: 14px;
-            background: rgba(255, 255, 255, 0.85) !important;
-            border: 2.5px solid;
+            position: relative; padding: 6px 2px; text-align: center; font-size: 13px;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 2px solid;
             border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
             animation: rainbowBorder 3s linear infinite;
         }
         @keyframes rainbowBorder { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
-        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; font-size: 11px; height: 55px; vertical-align: middle; }
-        .title-header { font-size: 26px; font-weight: bold; color: #0054a5; background: white !important; padding: 15px !important; }
+        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; font-size: 10px; height: 50px; vertical-align: middle; }
+        .title-header { font-size: 22px; font-weight: bold; color: #0054a5; background: white !important; padding: 12px !important; }
 
         .col-stt { width: 35px; cursor: pointer; }
-        .col-name { width: 18%; text-align: left !important; padding-left: 10px !important; font-weight: bold; }
-        .col-kwh { background: rgba(232, 245, 233, 0.7) !important; }
-        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: rgba(227, 242, 253, 0.8) !important; }
-
-        input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; font-family: inherit; }
-        input:disabled { color: #000; opacity: 1; }
-
-        /* CSS ẢNH - KHÔNG BỊ CẮT */
+        .col-name { width: 150px; text-align: left !important; padding-left: 8px !important; font-weight: bold; }
         .col-img { width: 65px; }
+        .col-kwh { background: rgba(232, 245, 233, 0.8) !important; }
+        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 16px; background: rgba(227, 242, 253, 0.9) !important; }
+
+        input { width: 100%; border: none; text-align: center; font-size: 14px; outline: none; background: transparent; font-family: inherit; padding: 4px 0; }
+        input:disabled { color: #000; opacity: 1; -webkit-text-fill-color: #000; }
+
         .img-container { display: flex; flex-direction: column; align-items: center; gap: 2px; }
         .img-preview { 
-            width: 45px; height: 45px; 
-            object-fit: cover; border-radius: 4px; 
-            cursor: pointer; border: 1px solid #ddd; 
-            background: #eee;
-            display: none; /* Chỉ hiện khi có ảnh */
+            width: 45px; height: 45px; object-fit: cover; border-radius: 4px; 
+            border: 1px solid #ddd; background: #eee; display: none;
         }
-        .upload-btn { font-size: 10px; color: #007bff; cursor: pointer; display: block; font-weight: bold; }
+        .upload-btn { font-size: 10px; color: #007bff; cursor: pointer; font-weight: bold; text-decoration: underline; padding: 2px; }
         
-        /* CHẾ ĐỘ TẮT HIỆU ỨNG */
-        body.no-effects { background: #f0f2f5 !important; }
-        body.no-effects::before, body.no-effects::after { display: none !important; }
-        .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; border-image: none !important; }
-        .no-effects .rainbow-wrapper::before { display: none !important; }
-        .no-effects th, .no-effects td, .no-effects .calculation-guide { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; }
-
-        /* KHI XUẤT PNG */
-        .is-capturing .col-img { display: none !important; }
-        .is-capturing .rainbow-text { background: none !important; -webkit-text-fill-color: #0054a5 !important; color: #0054a5 !important; }
-
-        .footer-info { text-align: left; font-weight: bold; }
-        .loss-summary td { background: rgba(255, 243, 205, 0.8) !important; color: #856404; font-size: 16px; font-weight: bold; height: 50px; }
-        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 28px; }
+        .loss-summary td { background: rgba(255, 243, 205, 0.9) !important; color: #856404; font-size: 15px; font-weight: bold; height: 45px; }
+        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 26px; }
 
         .calculation-guide { 
-            margin-top: 30px; padding: 20px; background: rgba(255, 255, 255, 0.95); line-height: 1.8; text-align: left; 
-            border: 3.5px solid; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
-            animation: rainbowBorder 3s linear infinite;
+            margin-top: 20px; padding: 15px; background: white; line-height: 1.6; text-align: left; 
+            border: 3px solid; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
+            font-size: 13px;
         }
         .rainbow-text {
             display: inline-block; font-weight: bold;
@@ -119,10 +118,19 @@
         }
         @keyframes moveGradient { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
-        /* MODAL XEM ẢNH */
+        /* MODAL */
         #imgModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; }
-        #imgModal img { max-width:95%; max-height:95%; border:2px solid #fff; box-shadow: 0 0 20px #fff; }
-        
+        #imgModal img { max-width:95%; max-height:95%; border:2px solid #fff; }
+
+        /* ĐIỀU CHỈNH RIÊNG CHO DI ĐỘNG */
+        @media screen and (max-width: 768px) {
+            .title-header { font-size: 18px; }
+            .btn { padding: 6px 8px; font-size: 11px; }
+            .controls { gap: 4px; padding: 8px; }
+        }
+
+        .is-capturing .col-img { display: none !important; }
+        .is-capturing .rainbow-text { background: none !important; -webkit-text-fill-color: #0054a5 !important; color: #0054a5 !important; }
         .hide-for-capture { display: none !important; }
     </style>
 </head>
@@ -133,110 +141,115 @@
 <div class="rainbow-wrapper" id="rainbowWrapper">
     <div class="container" id="captureArea">
         <div class="controls">
-            <strong>Tháng: </strong><input type="month" id="currentMonth" onchange="changeMonth()" style="width: 140px; border: 1px solid #ccc; background: white;">
+            <div style="display:flex; align-items:center; gap:5px;">
+                <strong>Tháng:</strong>
+                <input type="month" id="currentMonth" onchange="changeMonth()" style="width: 130px; border: 1px solid #ccc; background: white; border-radius: 4px; padding: 4px;">
+            </div>
             <div id="statusArea"></div>
-            <button class="btn" id="toggleEffectsBtn" onclick="toggleEffects()" style="background: #fd7e14;">Tắt Hiệu Ứng</button>
+            
+            <button class="btn" id="fitBtn" onclick="toggleFitScreen()" style="background: #000;">Xem Vừa Màn Hình</button>
             <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa Sổ</span></button>
-            <button class="btn" onclick="addRow()" style="background: #28a745;">+ Thêm Hộ</button>
-            <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;">Chế Độ Xóa</button>
-            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ Liệu</button>
+            <button class="btn" onclick="addRow()" style="background: #28a745;">+ Hộ</button>
+            <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;">Xóa</button>
+            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu</button>
             <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup</button>
-            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập File<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
+            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
             <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (9 Cột)</button>
         </div>
 
-        <table id="mainTable">
-            <thead>
-                <tr><th colspan="10" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
-                <tr id="tableHeader">
-                    <th class="col-stt">STT</th>
-                    <th class="col-name">Tên hộ</th>
-                    <th class="col-img">Ảnh ĐH</th>
-                    <th>SĐ tháng trước</th>
-                    <th>SĐ tháng này</th>
-                    <th class="col-kwh">Số kí tiêu thụ(kWh)</th>
-                    <th>Giá điện(VNĐ)</th>
-                    <th>Tiền điện(VNĐ)</th>
-                    <th>Tiền điện Thất thoát</th>
-                    <th class="col-final">TIỀN PHẢI NỘP</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="10" id="footerMain" class="footer-info">
-                        <div style="display:flex; align-items:center; gap:15px; padding:10px;">
-                            <span>Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width: 30px;">: 
-                            <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 100px; font-weight: bold;"> (Kwh)</span>
-                            <div class="col-img" style="display:flex; align-items:center; gap:5px;">
-                                <span style="font-size:11px">Ảnh Tổng:</span>
-                                <div class="img-container">
-                                    <img src="" id="mainMeterImg" class="img-preview" onclick="openImg(this.src)">
-                                    <span class="upload-btn" onclick="document.getElementById('fileMain').click()">[Up Ảnh]</span>
-                                    <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this, 'mainMeterImg')">
+        <div style="width: 100%; overflow-x: auto;">
+            <table id="mainTable">
+                <thead>
+                    <tr><th colspan="10" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
+                    <tr id="tableHeader">
+                        <th class="col-stt">STT</th>
+                        <th class="col-name">Tên hộ</th>
+                        <th class="col-img">Ảnh ĐH</th>
+                        <th>SĐ tháng trước</th>
+                        <th>SĐ tháng này</th>
+                        <th class="col-kwh">Số kí(kWh)</th>
+                        <th>Giá(VNĐ)</th>
+                        <th>Tiền điện</th>
+                        <th>Thất thoát</th>
+                        <th class="col-final">PHẢI NỘP</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10" id="footerMain" class="footer-info">
+                            <div style="display:flex; align-items:center; flex-wrap: wrap; gap:15px; padding:10px;">
+                                <span>Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width: 30px; border-bottom: 1px solid #999;">: 
+                                <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 90px; font-weight: bold; border-bottom: 1px solid #999;"> (Kwh)</span>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span style="font-size:11px">Ảnh Tổng:</span>
+                                    <div class="img-container">
+                                        <img src="" id="mainMeterImg" class="img-preview" onclick="openImg(this.src)">
+                                        <span class="upload-btn" onclick="document.getElementById('fileMain').click()">[Up Ảnh]</span>
+                                        <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this, 'mainMeterImg')">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="loss-summary">
-                    <td colspan="3" id="f_col1">Tổng điện các hộ: <span id="lblTotalKwh">0</span> Kwh</td>
-                    <td colspan="3" id="f_col2">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span> Kwh</td>
-                    <td colspan="4" id="f_col3">Số kí điện thất thoát: <span id="lblLossKwh">0</span> Kwh</td>
-                </tr>
-                <tr class="loss-summary">
-                    <td colspan="5" id="f_col4">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
-                    <td colspan="5" id="f_col5">Tiền điện thất thoát (x 2.400đ): <span id="lblLossMoney">0</span> đ</td>
-                </tr>
-                <tr>
-                    <td colspan="10" id="f_col6" style="text-align: center; font-size: 18px; padding: 20px !important;">
-                        <span style="color:#0054a5; font-weight:bold;">TỔNG TIỀN CỦA THÁNG (tổng tiền phải nộp):</span> <br>
-                        <span id="lblGrandTotal">0đ</span>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+                        </td>
+                    </tr>
+                    <tr class="loss-summary">
+                        <td colspan="3" id="f_col1">Tổng điện hộ: <span id="lblTotalKwh">0</span></td>
+                        <td colspan="3" id="f_col2">Điện tổng: <span id="lblMainConsumption">0</span></td>
+                        <td colspan="4" id="f_col3">Thất thoát: <span id="lblLossKwh">0</span></td>
+                    </tr>
+                    <tr class="loss-summary">
+                        <td colspan="5" id="f_col4">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
+                        <td colspan="5" id="f_col5">Tiền thất thoát (x2.400đ): <span id="lblLossMoney">0</span> đ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" id="f_col6" style="text-align: center; padding: 20px !important;">
+                            <span style="color:#0054a5; font-weight:bold; font-size:16px;">TỔNG TIỀN PHẢI NỘP TRONG THÁNG:</span> <br>
+                            <span id="lblGrandTotal">0đ</span>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
         <div class="calculation-guide">
-            <h3>Ghi chú cách tính toán:</h3>
-            <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
-            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
-            <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
-            <p class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng để ra số kí thất thoát.</p><br>
-            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
-           <p class="rainbow-text">• Công thức thất thoát: Số kí thất thoát x 2400đ.<p><br>     
+            <h3 style="margin-top:0; color:#0054a5;">Ghi chú cách tính:</h3>
+            <p class="rainbow-text">• Số kí = Số tháng này - Số tháng trước.</p><br>
+            <p class="rainbow-text">• PHẢI NỘP = Tiền điện + Tiền điện thất thoát.</p><br>
+            <p class="rainbow-text">• Thất thoát = (Tổng điện - Tổng hộ) x 2.400đ.</p><br>
+            <p class="rainbow-text">• Tiền thất thoát chia theo tỉ lệ dùng nhiều chịu nhiều.</p>
         </div>
     </div>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('electricDB_vPhoto')) || {};
-    let effectsEnabled = localStorage.getItem('effectsEnabled') !== 'false';
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
-    function toggleEffects() {
-        effectsEnabled = !effectsEnabled;
-        localStorage.setItem('effectsEnabled', effectsEnabled);
-        applyEffectsUI();
-    }
-
-    function applyEffectsUI() {
-        const body = document.body;
-        const btn = document.getElementById('toggleEffectsBtn');
-        if (effectsEnabled) {
-            body.classList.remove('no-effects');
-            btn.innerText = "Tắt Hiệu Ứng";
-            btn.style.background = "#fd7e14";
+    // Tính năng zoom vừa màn hình iPhone
+    let isFitted = false;
+    function toggleFitScreen() {
+        const container = document.getElementById('captureArea');
+        const btn = document.getElementById('fitBtn');
+        if (!isFitted) {
+            const screenWidth = window.innerWidth - 20;
+            const tableWidth = 1150; 
+            const scale = screenWidth / tableWidth;
+            container.classList.add('fit-screen');
+            container.style.transform = `scale(${scale})`;
+            document.getElementById('rainbowWrapper').style.height = (container.offsetHeight * scale + 20) + 'px';
+            btn.innerText = "Xem Cỡ Gốc";
+            isFitted = true;
         } else {
-            body.classList.add('no-effects');
-            btn.innerText = "Bật Hiệu Ứng";
-            btn.style.background = "#20c997";
+            container.classList.remove('fit-screen');
+            container.style.transform = `none`;
+            document.getElementById('rainbowWrapper').style.height = 'auto';
+            btn.innerText = "Xem Vừa Màn Hình";
+            isFitted = false;
         }
     }
 
     function init() {
-        applyEffectsUI();
         const m = monthInput.value;
         const prev = new Date(m + '-01'); prev.setMonth(prev.getMonth() - 1);
         const pk = prev.toISOString().substring(0, 7);
@@ -253,12 +266,8 @@
         document.getElementById('footerMonthLabel').value = data?.footerMonthLabel || m.split('-')[1];
         
         const mainImg = document.getElementById('mainMeterImg');
-        if(data?.mainMeterImg) {
-            mainImg.src = data.mainMeterImg;
-            mainImg.style.display = 'block';
-        } else {
-            mainImg.style.display = 'none';
-        }
+        if(data?.mainMeterImg) { mainImg.src = data.mainMeterImg; mainImg.style.display = 'block'; }
+        else { mainImg.style.display = 'none'; }
 
         applyLockUI(data?.locked || false);
         updateTotals();
@@ -269,7 +278,7 @@
         row.className = 'data-row';
         row.innerHTML = `
             <td class="col-stt" onclick="handleRowAction(this)">1</td>
-            <td class="col-name"><input type="text" value="${data.name || ''}"></td>
+            <td class="col-name"><input type="text" value="${data.name || ''}" placeholder="Tên..."></td>
             <td class="col-img">
                 <div class="img-container">
                     <img src="${data.img || ''}" class="img-preview" onclick="openImg(this.src)" style="display:${data.img ? 'block' : 'none'}">
@@ -295,12 +304,11 @@
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    const maxW = 400; // Nén ảnh xuống 400px để không nặng
+                    const maxW = 400; 
                     canvas.width = maxW; 
                     canvas.height = img.height * (maxW/img.width);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     const b64 = canvas.toDataURL('image/jpeg', 0.7);
-                    
                     if(tid) {
                         const targetEl = document.getElementById(tid);
                         targetEl.src = b64; targetEl.style.display = 'block';
@@ -336,9 +344,9 @@
             row.querySelector('.loss-share').innerText = Math.round(s).toLocaleString('vi-VN');
             row.querySelector('.final-total').innerText = (Math.round((m+s)/1000)*1000).toLocaleString('vi-VN') + "đ";
         });
-        document.getElementById('lblTotalKwh').innerText = tkwh.toLocaleString('vi-VN');
-        document.getElementById('lblMainConsumption').innerText = mCons.toLocaleString('vi-VN');
-        document.getElementById('lblLossKwh').innerText = lKwh.toLocaleString('vi-VN');
+        document.getElementById('lblTotalKwh').innerText = tkwh;
+        document.getElementById('lblMainConsumption').innerText = mCons;
+        document.getElementById('lblLossKwh').innerText = lKwh;
         document.getElementById('lblTotalBaseMoney').innerText = Math.round(tmoney).toLocaleString('vi-VN');
         document.getElementById('lblLossMoney').innerText = Math.round(lMoney).toLocaleString('vi-VN');
         document.getElementById('lblGrandTotal').innerText = Math.round(tmoney+lMoney).toLocaleString('vi-VN') + "đ";
@@ -347,9 +355,10 @@
     async function exportToPNG() {
         const area = document.getElementById('captureArea');
         const ctrl = document.querySelector('.controls');
-        area.classList.add('is-capturing');
+        // Reset Fit Screen để chụp ảnh chuẩn
+        if (isFitted) toggleFitScreen();
         
-        // Điều chỉnh colspan về 9 cột
+        area.classList.add('is-capturing');
         document.getElementById('titleMonth').colSpan = 9;
         document.getElementById('footerMain').colSpan = 9;
         document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 3;
@@ -359,7 +368,7 @@
         try {
             const canvas = await html2canvas(area, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
             const link = document.createElement('a');
-            link.download = `HoaDon_Dien_${monthInput.value}.png`;
+            link.download = `EVN_Pro_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
         } finally {
@@ -401,12 +410,12 @@
         const allBtns = document.querySelectorAll('.upload-btn');
         if (isLocked) {
             document.getElementById('lockBtnText').innerText = "Mở Khóa";
-            document.getElementById('statusArea').innerHTML = '<span style="color:red; font-weight:bold;">[ĐÃ KHÓA]</span>';
+            document.getElementById('statusArea').innerHTML = '<span style="color:red; font-weight:bold; font-size:10px;">[ĐÃ KHÓA]</span>';
             allInputs.forEach(i => i.disabled = true);
             allBtns.forEach(b => b.style.display = 'none');
         } else {
             document.getElementById('lockBtnText').innerText = "Khóa Sổ";
-            document.getElementById('statusArea').innerHTML = '<span style="color:green; font-weight:bold;">[ĐANG MỞ]</span>';
+            document.getElementById('statusArea').innerHTML = '<span style="color:green; font-weight:bold; font-size:10px;">[ĐANG MỞ]</span>';
             allInputs.forEach(i => i.disabled = false);
             allBtns.forEach(b => b.style.display = 'block');
         }
@@ -416,7 +425,7 @@
         const btn = document.getElementById('deleteModeBtn');
         btn.classList.toggle('active');
         document.getElementById('captureArea').classList.toggle('delete-active');
-        btn.innerText = btn.classList.contains('active') ? "Xóa (Bấm STT)" : "Chế Độ Xóa";
+        btn.innerText = btn.classList.contains('active') ? "Xóa (Bấm STT)" : "Xóa";
         btn.style.background = btn.classList.contains('active') ? "#dc3545" : "#6c757d";
     }
 
