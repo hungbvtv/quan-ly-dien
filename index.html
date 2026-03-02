@@ -1,1 +1,359 @@
-aa
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Điện - EVN Pro (Bản Camera - Xuất 9 Cột)</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: "Times New Roman", Times, serif; 
+            margin: 0; padding: 20px 10px; min-height: 100vh;
+            background: #0b0f1a; display: flex; justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* Nền lấp lánh */
+        body::before, body::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 150px 150px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 100px 400px, #fff, rgba(0,0,0,0));
+            background-size: 300px 300px; animation: sparkleMove 5s linear infinite; opacity: 0.7; z-index: -1;
+        }
+        @keyframes sparkleMove { from { background-position: 0 0; } to { background-position: 0 -300px; } }
+
+        .rainbow-wrapper {
+            position: relative; max-width: 1300px; width: 100%; padding: 5px; 
+            border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
+            box-shadow: 0 0 50px rgba(0, 191, 255, 0.4);
+        }
+        .rainbow-wrapper::before {
+            content: ''; position: absolute; width: 250%; height: 250%;
+            background: conic-gradient(#ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000);
+            animation: rotateRainbow 4s linear infinite;
+        }
+        @keyframes rotateRainbow { 100% { transform: rotate(360deg); } }
+
+        .container { 
+            background: rgba(255, 255, 255, 0.94); width: 100%; padding: 20px; 
+            border-radius: 10px; overflow-x: auto; position: relative; z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+        
+        .controls { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(233, 236, 239, 0.7); padding: 12px; border-radius: 8px; align-items: center; }
+        .btn { padding: 8px 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; color: white; font-size: 13px; display: inline-flex; align-items: center; text-decoration: none; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 10px; table-layout: fixed; min-width: 1200px; }
+
+        th, td { 
+            padding: 8px 2px; text-align: center; font-size: 14px;
+            background: rgba(255, 255, 255, 0.85) !important;
+            border: 2.5px solid;
+            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
+            animation: rainbowBorder 3s linear infinite;
+        }
+        @keyframes rainbowBorder { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+
+        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; font-size: 11px; height: 55px; }
+        .title-header { font-size: 26px; font-weight: bold; color: #0054a5; background: white !important; padding: 15px !important; }
+
+        .col-stt { width: 35px; }
+        .col-name { width: 15%; text-align: left !important; padding-left: 10px !important; font-weight: bold; }
+        .col-img { width: 70px; } /* Cột ảnh */
+        .col-kwh { background: rgba(232, 245, 233, 0.7) !important; }
+        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: rgba(227, 242, 253, 0.8) !important; }
+
+        input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; font-family: inherit; }
+        input:disabled { color: #000; opacity: 1; }
+
+        /* Style ảnh */
+        .img-preview { width: 55px; height: 55px; object-fit: cover; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; display: block; margin: 0 auto; }
+        .upload-placeholder { font-size: 10px; color: #007bff; cursor: pointer; text-decoration: underline; }
+
+        .loss-summary td { background: rgba(255, 243, 205, 0.8) !important; color: #856404; font-size: 16px; font-weight: bold; height: 50px; }
+        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 28px; }
+
+        /* --- CSS KHI XUẤT ẢNH (ẨN CỘT ẢNH) --- */
+        .is-capturing .col-img { display: none !important; }
+        .is-capturing table { min-width: 1100px !important; }
+        .is-capturing th, .is-capturing td { animation: none !important; }
+        
+        .calculation-guide { 
+            margin-top: 30px; padding: 20px; background: white; line-height: 1.8; text-align: left; 
+            border: 3.5px solid; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
+        }
+        .rainbow-text { font-weight: bold; color: #0054a5; }
+
+        #imageModal { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
+        #imageModal img { max-width: 95%; max-height: 95%; border: 3px solid white; }
+
+        .hide-for-capture { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="imageModal" onclick="this.style.display='none'"><img id="modalImg"></div>
+
+<div class="rainbow-wrapper">
+    <div class="container" id="captureArea">
+        <div class="controls">
+            <strong>Tháng: </strong><input type="month" id="currentMonth" onchange="changeMonth()" style="width: 140px; border: 1px solid #ccc; padding: 4px; background: white;">
+            <div id="statusArea"></div>
+            <button class="btn" onclick="addRow()" style="background: #28a745;">+ Thêm Hộ</button>
+            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ Liệu</button>
+            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh 9 Cột (PNG)</button>
+            <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup</button>
+            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập File<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
+        </div>
+
+        <table id="mainTable">
+            <thead>
+                <tr><th colspan="10" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
+                <tr id="headerRow">
+                    <th class="col-stt">STT</th>
+                    <th class="col-name">Tên hộ</th>
+                    <th class="col-img">Ảnh ĐH</th>
+                    <th>SĐ tháng trước</th>
+                    <th>SĐ tháng này</th>
+                    <th class="col-kwh">Số kí(kWh)</th>
+                    <th>Giá điện</th>
+                    <th>Tiền điện</th>
+                    <th>Thất thoát</th>
+                    <th class="col-final">PHẢI NỘP</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="10" id="footer1" class="footer-info" style="text-align:left; padding:10px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span>Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width:30px; border-bottom:1px solid #333;">: 
+                            <input type="number" id="tongDHThang" oninput="updateTotals()" style="width:100px; border-bottom:1px solid #333; font-weight:bold;"> (Kwh)</span>
+                            <div style="display:flex; align-items:center; gap:5px;">
+                                <span style="font-size:12px;">Ảnh ĐH Tổng:</span>
+                                <img src="" id="mainMeterImg" class="img-preview" onclick="viewImage(this.src)" style="width:40px; height:40px;">
+                                <span class="upload-placeholder" onclick="document.getElementById('mainMeterInput').click()">Up ảnh</span>
+                                <input type="file" id="mainMeterInput" hidden accept="image/*" onchange="uploadMainMeter(this)">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="loss-summary">
+                    <td colspan="3" id="lossCol1">Tổng điện các hộ: <span id="lblTotalKwh">0</span> Kwh</td>
+                    <td colspan="3" id="lossCol2">Điện tổng: <span id="lblMainConsumption">0</span> Kwh</td>
+                    <td colspan="4" id="lossCol3">Thất thoát: <span id="lblLossKwh">0</span> Kwh</td>
+                </tr>
+                <tr class="loss-summary">
+                    <td colspan="5" id="totalMoneyCol1">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
+                    <td colspan="5" id="totalMoneyCol2">Tiền thất thoát (x 2.400đ): <span id="lblLossMoney">0</span> đ</td>
+                </tr>
+                <tr>
+                    <td colspan="10" id="grandTotalCol" style="text-align: center; padding: 15px !important;">
+                        <span style="color:#0054a5; font-weight:bold; font-size:18px;">TỔNG TIỀN PHẢI NỘP TRONG THÁNG:</span><br>
+                        <span id="lblGrandTotal">0đ</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="calculation-guide">
+            <h3 style="margin-top:0; color:#0054a5;">Ghi chú cách tính:</h3>
+            <p class="rainbow-text">• Số kí tiêu thụ = Số mới - Số cũ | Tiền điện = Số kí × Giá điện.</p>
+            <p class="rainbow-text">• PHẢI NỘP = Tiền điện + Tiền điện thất thoát (Chia theo tỉ lệ dùng nhiều chịu nhiều).</p>
+            <p class="rainbow-text">• Thất thoát = (Tổng điện nhà nước - Tổng điện các hộ) × 2.400đ.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let db = JSON.parse(localStorage.getItem('electricDB_v5')) || {};
+    const monthInput = document.getElementById('currentMonth');
+    if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
+
+    function init() {
+        const currentMonth = monthInput.value;
+        const dateParts = currentMonth.split('-');
+        const prevDate = new Date(dateParts[0], dateParts[1] - 2, 1);
+        const prevMonthKey = prevDate.getFullYear() + '-' + String(prevDate.getMonth() + 1).padStart(2, '0');
+        
+        let monthData = db[currentMonth];
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + currentMonth.split('-')[1] + "/" + currentMonth.split('-')[0];
+
+        if (monthData && monthData.rows && monthData.rows.length > 0) {
+            monthData.rows.forEach(item => addRow(item));
+        } else if (db[prevMonthKey] && db[prevMonthKey].rows) {
+            db[prevMonthKey].rows.forEach(old => addRow({ name: old.name, before: old.after, after: 0, price: old.price, img: '' }));
+        } else { addRow(); }
+
+        document.getElementById('tongDHThang').value = monthData?.tongDH || 0;
+        document.getElementById('footerMonthLabel').value = monthData?.footerMonthLabel || currentMonth.split('-')[1];
+        document.getElementById('mainMeterImg').src = monthData?.mainMeterImg || '';
+        applyLockUI(monthData?.locked || false);
+        updateTotals();
+    }
+
+    function addRow(data = {name: '', before: 0, after: 0, price: 2400, img: ''}) {
+        const tbody = document.getElementById('tableBody');
+        const row = tbody.insertRow();
+        row.className = 'data-row';
+        row.innerHTML = `
+            <td class="col-stt" onclick="handleDelete(this)">${tbody.rows.length}</td>
+            <td class="col-name"><input type="text" value="${data.name || ''}" placeholder="..."></td>
+            <td class="col-img">
+                <img src="${data.img || ''}" class="img-preview" onclick="viewImage(this.src)" onerror="this.style.display='none'" onload="this.style.display='block'">
+                <span class="upload-placeholder" onclick="this.nextElementSibling.click()">Up ảnh</span>
+                <input type="file" hidden accept="image/*" onchange="uploadRowImage(this)">
+            </td>
+            <td><input type="number" class="before" value="${data.before || 0}" oninput="updateTotals()"></td>
+            <td><input type="number" class="after" value="${data.after || 0}" oninput="updateTotals()"></td>
+            <td class="col-kwh"><input type="number" class="usage" readonly></td>
+            <td><input type="number" class="price" value="${data.price || 2400}" oninput="updateTotals()"></td>
+            <td><span class="base-money">0</span></td>
+            <td><span class="loss-share">0</span></td>
+            <td class="col-final"><span class="final-total">0đ</span></td>
+        `;
+    }
+
+    function processImage(file, callback) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const scale = Math.min(1, 400 / img.width);
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                callback(canvas.toDataURL('image/jpeg', 0.7));
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function uploadRowImage(input) {
+        if (input.files[0]) processImage(input.files[0], (base64) => {
+            input.parentElement.querySelector('.img-preview').src = base64;
+            input.parentElement.querySelector('.img-preview').style.display = 'block';
+            saveToLocal(true);
+        });
+    }
+
+    function uploadMainMeter(input) {
+        if (input.files[0]) processImage(input.files[0], (base64) => {
+            document.getElementById('mainMeterImg').src = base64;
+            saveToLocal(true);
+        });
+    }
+
+    function updateTotals() {
+        let totalKwhHo = 0, totalBaseMoney = 0;
+        const rows = document.querySelectorAll('.data-row');
+        rows.forEach(row => {
+            const b = parseFloat(row.querySelector('.before').value) || 0;
+            const a = parseFloat(row.querySelector('.after').value) || 0;
+            const p = parseFloat(row.querySelector('.price').value) || 0;
+            const u = Math.max(0, a - b);
+            const m = u * p;
+            row.querySelector('.usage').value = u;
+            row.querySelector('.base-money').innerText = Math.round(m).toLocaleString('vi-VN');
+            row.dataset.u = u; row.dataset.m = m;
+            totalKwhHo += u; totalBaseMoney += m;
+        });
+
+        const currentTotal = parseFloat(document.getElementById('tongDHThang').value) || 0;
+        const prevMonth = new Date(monthInput.value + '-01');
+        prevMonth.setMonth(prevMonth.getMonth() - 1);
+        const prevKey = prevMonth.toISOString().substring(0, 7);
+        const prevTotal = db[prevKey]?.tongDH || 0;
+        
+        const mainCons = Math.max(0, currentTotal - prevTotal);
+        const lossKwh = Math.max(0, mainCons - totalKwhHo);
+        const lossMoney = lossKwh * 2400;
+
+        rows.forEach(row => {
+            const u = parseFloat(row.dataset.u) || 0;
+            const m = parseFloat(row.dataset.m) || 0;
+            const share = totalKwhHo > 0 ? (u / totalKwhHo) * lossMoney : 0;
+            row.querySelector('.loss-share').innerText = Math.round(share).toLocaleString('vi-VN');
+            row.querySelector('.final-total').innerText = (Math.round((m + share)/1000)*1000).toLocaleString('vi-VN') + "đ";
+        });
+
+        document.getElementById('lblTotalKwh').innerText = totalKwhHo;
+        document.getElementById('lblMainConsumption').innerText = mainCons;
+        document.getElementById('lblLossKwh').innerText = lossKwh;
+        document.getElementById('lblTotalBaseMoney').innerText = Math.round(totalBaseMoney).toLocaleString('vi-VN');
+        document.getElementById('lblLossMoney').innerText = Math.round(lossMoney).toLocaleString('vi-VN');
+        document.getElementById('lblGrandTotal').innerText = Math.round(totalBaseMoney + lossMoney).toLocaleString('vi-VN') + "đ";
+    }
+
+    async function exportToPNG() {
+        const area = document.getElementById('captureArea');
+        const controls = document.querySelector('.controls');
+        
+        // Ẩn các thứ không cần thiết và chỉnh colspan về 9 cột
+        controls.classList.add('hide-for-capture');
+        area.classList.add('is-capturing');
+        
+        document.getElementById('titleMonth').colSpan = 9;
+        document.getElementById('footer1').colSpan = 9;
+        document.getElementById('lossCol1').colSpan = 2;
+        document.getElementById('lossCol2').colSpan = 3;
+        document.getElementById('lossCol3').colSpan = 4;
+        document.getElementById('totalMoneyCol1').colSpan = 4;
+        document.getElementById('totalMoneyCol2').colSpan = 5;
+        document.getElementById('grandTotalCol').colSpan = 9;
+
+        const canvas = await html2canvas(area, { scale: 2, backgroundColor: "#ffffff" });
+        
+        // Trả lại giao diện 10 cột sau khi chụp
+        controls.classList.remove('hide-for-capture');
+        area.classList.remove('is-capturing');
+        document.getElementById('titleMonth').colSpan = 10;
+        document.getElementById('footer1').colSpan = 10;
+        // ... (trả lại các colspan khác tương tự)
+        init(); // Reset nhanh giao diện
+
+        const link = document.createElement('a');
+        link.download = `HoaDon_Dien_${monthInput.value}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+
+    function saveToLocal(silent = false) {
+        const rows = [];
+        document.querySelectorAll('.data-row').forEach(row => {
+            rows.push({
+                name: row.querySelector('.col-name input').value,
+                img: row.querySelector('.img-preview').src,
+                before: row.querySelector('.before').value,
+                after: row.querySelector('.after').value,
+                price: row.querySelector('.price').value
+            });
+        });
+        db[monthInput.value] = {
+            rows, tongDH: document.getElementById('tongDHThang').value,
+            footerMonthLabel: document.getElementById('footerMonthLabel').value,
+            mainMeterImg: document.getElementById('mainMeterImg').src,
+            locked: db[monthInput.value]?.locked || false
+        };
+        localStorage.setItem('electricDB_v5', JSON.stringify(db));
+        if(!silent) alert("Đã lưu!");
+    }
+
+    function viewImage(src) { if(src) { document.getElementById('imageModal').style.display='flex'; document.getElementById('modalImg').src=src; } }
+    function handleDelete(cell) { if(confirm("Xóa hộ này?")) { cell.parentElement.remove(); updateTotals(); } }
+    function changeMonth() { init(); }
+    function exportData() { saveToLocal(true); const blob = new Blob([JSON.stringify(db)], {type:'application/json'}); const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='backup_dien.json'; a.click(); }
+    function importData(e) { const reader = new FileReader(); reader.onload=(ev)=>{ db=JSON.parse(ev.target.result); localStorage.setItem('electricDB_v5', JSON.stringify(db)); init(); }; reader.readAsText(e.target.files[0]); }
+    function applyLockUI(lock) { document.querySelectorAll('input:not(#currentMonth)').forEach(i=>i.disabled=lock); }
+
+    init();
+</script>
+</body>
+</html>
