@@ -99,13 +99,17 @@
         .loss-summary td { background: rgba(255, 243, 205, 0.9) !important; color: #856404; font-size: 15px; font-weight: bold; height: 45px; }
         #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 26px; }
 
+        /* GHI CHÚ CSS - FIX LỖI DÒNG TO DÒNG NHỎ */
         .calculation-guide { 
-            margin-top: 22px; padding: 17px; background: white; line-height: 1.6; text-align: left; 
+            margin-top: 20px; padding: 20px; background: white; 
+            line-height: 1.8; /* Cố định khoảng cách dòng */
+            text-align: left; 
             border: 3px solid; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
-            font-size: 13px;
+            font-size: 18px; /* Kích thước chữ chuẩn */
         }
         .rainbow-text {
-            display: inline-block; font-weight: bold;
+            display: inline; font-weight: bold;
+            font-size: 18px; /* Ép kích thước dòng bằng nhau */
             background: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-size: 400% 400%; animation: moveGradient 5s linear infinite;
@@ -115,10 +119,18 @@
         #imgModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; }
         #imgModal img { max-width: 95%; max-height: 95%; border: 2px solid #fff; }
 
-        /* Khi chụp ảnh, bỏ cuộn ngang để chụp trọn vẹn */
+        /* FIX KHI XUẤT ẢNH TRÊN IPHONE */
         .is-capturing { overflow: visible !important; width: 1150px !important; max-width: none !important; }
         .is-capturing .col-img { display: none !important; }
-        .is-capturing .rainbow-text { background: none !important; -webkit-text-fill-color: #0054a5 !important; color: #0054a5 !important; }
+        
+        /* Chống lỗi gradient khi chụp ảnh */
+        .is-capturing .rainbow-text { 
+            background: none !important; 
+            -webkit-text-fill-color: #0054a5 !important; 
+            color: #0054a5 !important;
+            font-size: 18px !important;
+            display: inline !important;
+        }
         .hide-for-capture { display: none !important; }
 
         @media screen and (max-width: 768px) {
@@ -164,7 +176,7 @@
                         <th>Giá điện(VNĐ)</th>
                         <th>Tiền điện(VNĐ)</th>
                         <th>Tiền điện thất thoát(VNĐ)</th>
-                        <th class="col-final">TIỀN PHẢI NỘP(VNĐ)</th>
+                        <th class="col-final">TIỀN PHẢI NỘP</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -186,9 +198,9 @@
                         </td>
                     </tr>
                     <tr class="loss-summary">
-                        <td colspan="3" id="f_col1">Tổng điện các hộ tiêu thụ trong tháng: <span id="lblTotalKwh">0</span></td>
-                        <td colspan="3" id="f_col2">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span></td>
-                        <td colspan="4" id="f_col3">Số điện Thất thoát trong tháng: <span id="lblLossKwh">0</span></td>
+                        <td colspan="3" id="f_col1">Tổng điện hộ: <span id="lblTotalKwh">0</span></td>
+                        <td colspan="3" id="f_col2">Điện tổng tiêu thụ: <span id="lblMainConsumption">0</span></td>
+                        <td colspan="4" id="f_col3">Số kí Thất thoát: <span id="lblLossKwh">0</span></td>
                     </tr>
                     <tr class="loss-summary">
                         <td colspan="5" id="f_col4">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
@@ -196,7 +208,7 @@
                     </tr>
                     <tr>
                         <td colspan="10" id="f_col6" style="text-align: center; padding: 20px !important;">
-                            <span style="color:#0054a5; font-weight:bold; font-size:16px;">TỔNG TIỀN PHẢI NỘP TRONG THÁNG:</span> <br>
+                            <span style="color:#0054a5; font-weight:bold; font-size:18px;">TỔNG TIỀN PHẢI NỘP TRONG THÁNG:</span> <br>
                             <span id="lblGrandTotal">0đ</span>
                         </td>
                     </tr>
@@ -206,12 +218,12 @@
 
         <div class="calculation-guide">
             <h3 style="margin-top:0; color:#0054a5;">Ghi chú cách tính:</h3>
-            <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
-            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
-            <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
-            <p class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng để ra số kí thất thoát.</p><br>
-            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
-           <p class="rainbow-text">• Công thức thất thoát: Số kí thất thoát x 2400đ.<p><br>
+            <span class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</span><br>
+            <span class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</span><br>
+            <span class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</span><br>
+            <span class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng để ra số kí thất thoát.</span><br>
+            <span class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</span><br>
+            <span class="rainbow-text">• Công thức thất thoát: Số kí thất thoát x 2400đ.</span>
         </div>
     </div>
 </div>
@@ -329,18 +341,15 @@
         const ctrl = document.querySelector('.controls');
         const scrollWrapper = document.getElementById('tableScrollWrapper');
 
-        // Bật trạng thái chụp ảnh
         area.classList.add('is-capturing');
         ctrl.classList.add('hide-for-capture');
-        scrollWrapper.style.overflow = "visible"; // Ép hiện hết bảng
+        scrollWrapper.style.overflow = "visible"; 
 
-        // Điều chỉnh cột để xuất ảnh 9 cột chuẩn
         document.getElementById('titleMonth').colSpan = 9;
         document.getElementById('footerMain').colSpan = 9;
         document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 3;
         document.getElementById('f_col4').colSpan = 4; document.getElementById('f_col5').colSpan = 5; document.getElementById('f_col6').colSpan = 9;
 
-        // Cuộn lên đầu để tránh lỗi tọa độ trên Safari
         window.scrollTo(0, 0);
 
         try {
@@ -348,7 +357,7 @@
                 scale: 2, 
                 useCORS: true, 
                 backgroundColor: "#ffffff",
-                width: 1150 // Ép chiều rộng vùng chụp
+                width: 1150
             });
             const link = document.createElement('a');
             link.download = `EVN_Pro_${monthInput.value}.png`;
@@ -357,7 +366,6 @@
         } catch (err) {
             alert("Lỗi xuất ảnh: " + err);
         } finally {
-            // Trả lại trạng thái cũ
             area.classList.remove('is-capturing');
             ctrl.classList.remove('hide-for-capture');
             scrollWrapper.style.overflow = "auto";
