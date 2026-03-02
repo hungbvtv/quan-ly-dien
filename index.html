@@ -25,10 +25,21 @@
             transition: background 0.5s;
         }
 
-        /* ===== EFFECT 1: ⭐ Lấp lánh sao - nền tím đêm ===== */
+        /* ===== LỚP PHỦ HIỆU ỨNG TOÀN TRANG ===== */
+        /* Các lớp này nằm TRÊN nội dung nhưng không chặn click/scroll */
+        #fx-layer-1, #fx-layer-2 {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;  /* Cho phép click/scroll xuyên qua */
+            z-index: 9999;
+        }
+
+        /* ===== EFFECT 1: ⭐ Lấp lánh sao ===== */
         body.effect-1 { background: #0b0f1a !important; }
-        body.effect-1::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-1 #fx-layer-1 {
+            display: block;
             background-image:
                 radial-gradient(2px 2px at 10%  8%, #fff, transparent),
                 radial-gradient(2px 2px at 25% 30%, #ffe, transparent),
@@ -42,9 +53,10 @@
                 radial-gradient(3px 3px at 35% 60%, #ffe, transparent);
             background-size: 400px 400px;
             animation: e1move 6s linear infinite;
+            opacity: 0.5;
         }
-        body.effect-1::after {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-1 #fx-layer-2 {
+            display: block;
             background-image:
                 radial-gradient(2px 2px at 5%  50%, #fff, transparent),
                 radial-gradient(2px 2px at 45% 40%, #ffe, transparent),
@@ -53,116 +65,122 @@
                 radial-gradient(2px 2px at 30% 95%, #fff, transparent);
             background-size: 300px 300px;
             animation: e1move 9s linear infinite reverse;
+            opacity: 0.4;
         }
         @keyframes e1move { from{background-position:0 0;} to{background-position:0 -400px;} }
 
-        /* ===== EFFECT 2:❤️‍🔥  Bong bóng - nền xanh biển đậm ===== */
+        /* ===== EFFECT 2: 🫧 Bong bóng ===== */
         body.effect-2 { background: #020b18 !important; }
-        body.effect-2::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-2 #fx-layer-1 {
+            display: block;
             background:
-                radial-gradient(circle 80px at 15% 20%, rgba(0,150,255,0.5), transparent),
-                radial-gradient(circle 60px at 50% 60%, rgba(100,200,255,0.4), transparent),
-                radial-gradient(circle 100px at 80% 30%, rgba(0,80,200,0.5), transparent),
-                radial-gradient(circle 50px at 30% 80%, rgba(50,180,255,0.4), transparent),
-                radial-gradient(circle 70px at 70% 85%, rgba(0,120,255,0.45), transparent);
+                radial-gradient(circle 80px at 15% 20%, rgba(0,150,255,0.35), transparent),
+                radial-gradient(circle 60px at 50% 60%, rgba(100,200,255,0.28), transparent),
+                radial-gradient(circle 100px at 80% 30%, rgba(0,80,200,0.35), transparent),
+                radial-gradient(circle 50px at 30% 80%, rgba(50,180,255,0.28), transparent),
+                radial-gradient(circle 70px at 70% 85%, rgba(0,120,255,0.32), transparent);
             animation: e2float 5s ease-in-out infinite alternate;
         }
-        body.effect-2::after {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
-            background-image: radial-gradient(circle, rgba(100,200,255,0.7) 2px, transparent 2px);
+        body.effect-2 #fx-layer-2 {
+            display: block;
+            background-image: radial-gradient(circle, rgba(100,200,255,0.5) 2px, transparent 2px);
             background-size: 80px 80px;
             animation: e2dots 7s linear infinite;
         }
         @keyframes e2float { from{transform:translateY(0) scale(1);} to{transform:translateY(-20px) scale(1.05);} }
         @keyframes e2dots  { from{background-position:0 0;} to{background-position:80px -80px;} }
 
-        /* ===== EFFECT 3: 💻 Ma trận - nền đen với chữ xanh lá ===== */
+        /* ===== EFFECT 3: 💻 Ma trận ===== */
         body.effect-3 { background: #000800 !important; }
-        body.effect-3::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-3 #fx-layer-1 {
+            display: block;
             background:
-                repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(0,255,50,0.12) 18px, rgba(0,255,50,0.12) 20px),
-                repeating-linear-gradient(90deg, transparent, transparent 18px, rgba(0,255,50,0.06) 18px, rgba(0,255,50,0.06) 20px);
+                repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(0,255,50,0.08) 18px, rgba(0,255,50,0.08) 20px),
+                repeating-linear-gradient(90deg, transparent, transparent 18px, rgba(0,255,50,0.04) 18px, rgba(0,255,50,0.04) 20px);
         }
-        body.effect-3::after {
-            content:""; position:fixed; top:0; left:0; width:100%; height:300%; z-index:-1;
+        body.effect-3 #fx-layer-2 {
+            display: block;
             background:
-                linear-gradient(180deg, rgba(0,255,50,0.5) 0%, transparent 15%),
-                linear-gradient(180deg, transparent 20%, rgba(0,200,50,0.3) 35%, transparent 50%),
-                linear-gradient(180deg, transparent 55%, rgba(0,255,50,0.4) 70%, transparent 85%);
+                linear-gradient(180deg, rgba(0,255,50,0.35) 0%, transparent 15%),
+                linear-gradient(180deg, transparent 20%, rgba(0,200,50,0.2) 35%, transparent 50%),
+                linear-gradient(180deg, transparent 55%, rgba(0,255,50,0.28) 70%, transparent 85%);
             background-size: 30px 100%, 80px 100%, 50px 100%;
             animation: e3rain 3s linear infinite;
+            height: 300%;
+            top: -100%;
         }
-        @keyframes e3rain { from{transform:translateY(-66.66%);} to{transform:translateY(0%);} }
+        @keyframes e3rain { from{transform:translateY(-66.66%);} to{transform:translateY(33.33%);} }
 
-        /* ===== EFFECT 4: 🌌 Cực quang - nền đen với dải màu xanh/tím ===== */
+        /* ===== EFFECT 4: 🌌 Cực quang ===== */
         body.effect-4 { background: #000510 !important; }
-        body.effect-4::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-4 #fx-layer-1 {
+            display: block;
             background:
-                radial-gradient(ellipse 120% 40% at 50% 0%,  rgba(0,255,180,0.5) 0%, transparent 60%),
-                radial-gradient(ellipse 80%  30% at 20% 50%, rgba(100,0,255,0.45) 0%, transparent 60%),
-                radial-gradient(ellipse 80%  30% at 80% 40%, rgba(0,150,255,0.45) 0%, transparent 60%);
+                radial-gradient(ellipse 120% 40% at 50% 0%,  rgba(0,255,180,0.35) 0%, transparent 60%),
+                radial-gradient(ellipse 80%  30% at 20% 50%, rgba(100,0,255,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse 80%  30% at 80% 40%, rgba(0,150,255,0.3) 0%, transparent 60%);
             animation: e4aurora 5s ease-in-out infinite alternate;
         }
-        body.effect-4::after {
-            content:""; position:fixed; top:-50%; left:-50%; width:200%; height:200%; z-index:-1;
-            background: conic-gradient(from 0deg, rgba(0,255,180,0.15), rgba(100,0,255,0.2), rgba(0,200,255,0.15), rgba(0,255,180,0.15));
+        body.effect-4 #fx-layer-2 {
+            display: block;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, rgba(0,255,180,0.1), rgba(100,0,255,0.13), rgba(0,200,255,0.1), rgba(0,255,180,0.1));
             animation: e4spin 12s linear infinite;
         }
         @keyframes e4aurora { 0%{opacity:0.6; transform:scaleX(1);}   100%{opacity:1; transform:scaleX(1.1);} }
         @keyframes e4spin  { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
 
-        /* ===== EFFECT 5: 🔥 Lửa - nền đỏ cam rực ===== */
+        /* ===== EFFECT 5: 🔥 Lửa ===== */
         body.effect-5 { background: #1a0000 !important; }
-        body.effect-5::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-5 #fx-layer-1 {
+            display: block;
             background:
-                radial-gradient(ellipse 60% 80% at 50% 110%, rgba(255,80,0,0.9)  0%, rgba(200,20,0,0.6) 40%, transparent 70%),
-                radial-gradient(ellipse 40% 60% at 20% 110%, rgba(255,150,0,0.7) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 60% at 80% 110%, rgba(255,100,0,0.7) 0%, transparent 60%);
+                radial-gradient(ellipse 60% 80% at 50% 110%, rgba(255,80,0,0.55)  0%, rgba(200,20,0,0.4) 40%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 20% 110%, rgba(255,150,0,0.45) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 60% at 80% 110%, rgba(255,100,0,0.45) 0%, transparent 60%);
             animation: e5flicker 0.8s ease-in-out infinite alternate;
         }
-        body.effect-5::after {
-            content:""; position:fixed; top:0; left:0; width:200%; height:100%; z-index:-1;
+        body.effect-5 #fx-layer-2 {
+            display: block;
+            width: 200%;
             background: repeating-linear-gradient(90deg,
-                rgba(255,60,0,0.08) 0px, rgba(255,120,0,0.12) 10px,
-                rgba(255,200,0,0.06) 20px, transparent 30px, transparent 60px);
+                rgba(255,60,0,0.06) 0px, rgba(255,120,0,0.09) 10px,
+                rgba(255,200,0,0.04) 20px, transparent 30px, transparent 60px);
             animation: e5wave 2s linear infinite;
         }
         @keyframes e5flicker { 0%{opacity:0.75;} 100%{opacity:1;} }
         @keyframes e5wave { from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
-        /* ===== EFFECT 6: 🌊 Đại dương - nền xanh dương đậm ===== */
+        /* ===== EFFECT 6: 🌊 Đại dương ===== */
         body.effect-6 { background: #000f22 !important; }
-        body.effect-6::before {
-            content:""; position:fixed; top:0; left:0; width:200%; height:100%; z-index:-1;
+        body.effect-6 #fx-layer-1 {
+            display: block;
+            width: 200%;
             background:
                 repeating-linear-gradient(170deg,
                     transparent 0px, transparent 30px,
-                    rgba(0,150,255,0.2) 30px, rgba(0,150,255,0.2) 32px,
+                    rgba(0,150,255,0.15) 30px, rgba(0,150,255,0.15) 32px,
                     transparent 32px, transparent 64px),
                 repeating-linear-gradient(190deg,
                     transparent 0px, transparent 20px,
-                    rgba(0,200,255,0.15) 20px, rgba(0,200,255,0.15) 22px,
+                    rgba(0,200,255,0.12) 20px, rgba(0,200,255,0.12) 22px,
                     transparent 22px, transparent 44px);
             animation: e6wave 4s linear infinite;
         }
-        body.effect-6::after {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-6 #fx-layer-2 {
+            display: block;
             background:
-                radial-gradient(ellipse at 30% 80%, rgba(0,100,255,0.5), transparent 50%),
-                radial-gradient(ellipse at 70% 20%, rgba(0,200,255,0.4), transparent 50%);
+                radial-gradient(ellipse at 30% 80%, rgba(0,100,255,0.35), transparent 50%),
+                radial-gradient(ellipse at 70% 20%, rgba(0,200,255,0.28), transparent 50%);
             animation: e6pulse 6s ease-in-out infinite alternate;
         }
         @keyframes e6wave  { from{transform:translateX(0);}  to{transform:translateX(-50%);} }
         @keyframes e6pulse { from{opacity:0.5;} to{opacity:1;} }
 
-        /* ===== EFFECT 7: 🪐 Vũ trụ - nền đen + sao + thiên hà ===== */
+        /* ===== EFFECT 7: 🪐 Vũ trụ ===== */
         body.effect-7 { background: #02000a !important; }
-        body.effect-7::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-7 #fx-layer-1 {
+            display: block;
             background-image:
                 radial-gradient(1px 1px at  5%  5%, white, transparent),
                 radial-gradient(2px 2px at 15% 25%, #ffe, transparent),
@@ -178,57 +196,62 @@
                 radial-gradient(2px 2px at 50% 50%, #fff, transparent);
             background-size: 500px 500px;
             animation: e7twinkle 4s ease-in-out infinite alternate;
+            opacity: 0.7;
         }
-        body.effect-7::after {
-            content:""; position:fixed; top:-50%; left:-50%; width:200%; height:200%; z-index:-1;
-            background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(80,0,180,0.4) 0%, rgba(30,0,80,0.3) 50%, transparent 70%);
+        body.effect-7 #fx-layer-2 {
+            display: block;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(80,0,180,0.25) 0%, rgba(30,0,80,0.18) 50%, transparent 70%);
             animation: e7spin 20s linear infinite;
         }
-        @keyframes e7twinkle { from{opacity:0.5;} to{opacity:1;} }
+        @keyframes e7twinkle { from{opacity:0.4;} to{opacity:0.8;} }
         @keyframes e7spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
 
-        /* ===== EFFECT 8: 🔮 Neon Cyber - nền đen + lưới cyan/magenta ===== */
+        /* ===== EFFECT 8: 🔮 Neon Cyber ===== */
         body.effect-8 { background: #050005 !important; }
-        body.effect-8::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-8 #fx-layer-1 {
+            display: block;
             background:
-                repeating-linear-gradient(0deg,   transparent, transparent 59px, rgba(0,255,255,0.25) 59px, rgba(0,255,255,0.25) 60px),
-                repeating-linear-gradient(90deg,  transparent, transparent 59px, rgba(255,0,255,0.25) 59px, rgba(255,0,255,0.25) 60px);
+                repeating-linear-gradient(0deg,   transparent, transparent 59px, rgba(0,255,255,0.18) 59px, rgba(0,255,255,0.18) 60px),
+                repeating-linear-gradient(90deg,  transparent, transparent 59px, rgba(255,0,255,0.18) 59px, rgba(255,0,255,0.18) 60px);
             animation: e8grid 0.5s linear infinite;
         }
-        body.effect-8::after {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-8 #fx-layer-2 {
+            display: block;
             background:
-                radial-gradient(ellipse at 0%   0%,   rgba(0,255,255,0.5)   0%, transparent 45%),
-                radial-gradient(ellipse at 100% 100%, rgba(255,0,255,0.5)   0%, transparent 45%),
-                radial-gradient(ellipse at 100% 0%,   rgba(255,255,0,0.3)   0%, transparent 40%),
-                radial-gradient(ellipse at 0%   100%, rgba(0,255,100,0.3)   0%, transparent 40%);
+                radial-gradient(ellipse at 0%   0%,   rgba(0,255,255,0.35)   0%, transparent 45%),
+                radial-gradient(ellipse at 100% 100%, rgba(255,0,255,0.35)   0%, transparent 45%),
+                radial-gradient(ellipse at 100% 0%,   rgba(255,255,0,0.2)   0%, transparent 40%),
+                radial-gradient(ellipse at 0%   100%, rgba(0,255,100,0.2)   0%, transparent 40%);
             animation: e8glow 2s ease-in-out infinite alternate;
         }
         @keyframes e8grid { from{background-position:0 0,0 0;} to{background-position:0 2px,2px 0;} }
         @keyframes e8glow { from{opacity:0.5;} to{opacity:1;} }
 
-        /* ===== EFFECT 9: 🌅 Hoàng hôn - gradient dọc sặc sỡ ===== */
+        /* ===== EFFECT 9: 🌅 Hoàng hôn ===== */
         body.effect-9 { background: #0a0005 !important; }
-        body.effect-9::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-9 #fx-layer-1 {
+            display: block;
             background: linear-gradient(180deg,
                 #050020 0%, #200060 15%, #800080 30%,
                 #cc0060 45%, #ff4000 60%, #ff8800 75%, #ffcc00 90%, #ffffaa 100%);
+            opacity: 0.35;
             animation: e9shift 6s ease-in-out infinite alternate;
         }
-        body.effect-9::after {
-            content:""; position:fixed; bottom:0; left:0; width:100%; height:50%; z-index:-1;
-            background: linear-gradient(0deg, rgba(255,80,0,0.3) 0%, transparent 100%);
+        body.effect-9 #fx-layer-2 {
+            display: block;
+            top: auto; bottom: 0;
+            height: 50%;
+            background: linear-gradient(0deg, rgba(255,80,0,0.22) 0%, transparent 100%);
             animation: e9glow 3s ease-in-out infinite alternate;
         }
         @keyframes e9shift { from{filter:hue-rotate(0deg);} to{filter:hue-rotate(30deg);} }
         @keyframes e9glow  { from{opacity:0.5;} to{opacity:1;} }
 
-        /* ===== EFFECT 10: ❄️ Tuyết rơi - nền xanh băng lạnh ===== */
+        /* ===== EFFECT 10: ❄️ Tuyết rơi ===== */
         body.effect-10 { background: #010d1a !important; }
-        body.effect-10::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-10 #fx-layer-1 {
+            display: block;
             background-image:
                 radial-gradient(3px 3px at 8%   5%,  rgba(200,230,255,0.95), transparent),
                 radial-gradient(4px 4px at 22%  18%, rgba(255,255,255,1),    transparent),
@@ -242,30 +265,31 @@
                 radial-gradient(5px 5px at 92%  50%, rgba(255,255,255,1),    transparent);
             background-size: 100% 200px;
             animation: e10snow 4s linear infinite;
+            opacity: 0.7;
         }
-        body.effect-10::after {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-10 #fx-layer-2 {
+            display: block;
             background:
-                radial-gradient(ellipse at 50% 0%, rgba(100,180,255,0.35) 0%, transparent 60%),
-                radial-gradient(ellipse at 50% 100%, rgba(0,80,150,0.4) 0%, transparent 60%);
+                radial-gradient(ellipse at 50% 0%, rgba(100,180,255,0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 100%, rgba(0,80,150,0.28) 0%, transparent 60%);
         }
         @keyframes e10snow { from{background-position:0 -200px, 50px 0;} to{background-position:30px 200px, 80px 200px;} }
 
-        /* ===== EFFECT 11: ⚡ Điện chớp - nền đen với tia sáng vàng ===== */
+        /* ===== EFFECT 11: ⚡ Điện chớp ===== */
         body.effect-11 { background: #050005 !important; }
-        body.effect-11::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-11 #fx-layer-1 {
+            display: block;
             background:
-                radial-gradient(ellipse at 50%  0%, rgba(255,220,0,0.6)  0%, transparent 50%),
-                radial-gradient(ellipse at 20% 50%, rgba(255,150,0,0.4)  0%, transparent 40%),
-                radial-gradient(ellipse at 80% 80%, rgba(255,255,100,0.35) 0%, transparent 40%);
+                radial-gradient(ellipse at 50%  0%, rgba(255,220,0,0.45)  0%, transparent 50%),
+                radial-gradient(ellipse at 20% 50%, rgba(255,150,0,0.3)  0%, transparent 40%),
+                radial-gradient(ellipse at 80% 80%, rgba(255,255,100,0.25) 0%, transparent 40%);
             animation: e11flash 1.2s ease-in-out infinite;
         }
-        body.effect-11::after {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-11 #fx-layer-2 {
+            display: block;
             background:
-                repeating-linear-gradient(75deg,  transparent 0px, transparent 90px, rgba(255,200,0,0.18) 90px, rgba(255,200,0,0.18) 92px),
-                repeating-linear-gradient(105deg, transparent 0px, transparent 70px, rgba(255,220,50,0.12) 70px, rgba(255,220,50,0.12) 72px);
+                repeating-linear-gradient(75deg,  transparent 0px, transparent 90px, rgba(255,200,0,0.14) 90px, rgba(255,200,0,0.14) 92px),
+                repeating-linear-gradient(105deg, transparent 0px, transparent 70px, rgba(255,220,50,0.09) 70px, rgba(255,220,50,0.09) 72px);
             animation: e11move 0.8s linear infinite;
         }
         @keyframes e11flash {
@@ -275,21 +299,25 @@
         }
         @keyframes e11move { from{background-position:0 0,0 0;} to{background-position:92px 0,72px 0;} }
 
-        /* ===== EFFECT 12: 🟢 Hologram - nền đen với quét xanh lá ===== */
+        /* ===== EFFECT 12: 🟢 Hologram ===== */
         body.effect-12 { background: #000a05 !important; }
-        body.effect-12::before {
-            content:""; position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+        body.effect-12 #fx-layer-1 {
+            display: block;
             background:
                 repeating-linear-gradient(0deg,
-                    rgba(0,255,120,0.12) 0px, rgba(0,255,120,0.12) 2px,
+                    rgba(0,255,120,0.09) 0px, rgba(0,255,120,0.09) 2px,
                     transparent 2px, transparent 6px);
             animation: e12scan 2s linear infinite;
         }
-        body.effect-12::after {
-            content:""; position:fixed; top:0; left:-10%; width:120%; height:60px; z-index:-1;
-            background: linear-gradient(180deg, transparent, rgba(0,255,150,0.5) 50%, transparent);
+        body.effect-12 #fx-layer-2 {
+            display: block;
+            width: 120%;
+            left: -10%;
+            height: 60px;
+            top: 0;
+            background: linear-gradient(180deg, transparent, rgba(0,255,150,0.4) 50%, transparent);
             animation: e12beam 3s linear infinite;
-            box-shadow: 0 0 30px rgba(0,255,120,0.6), 0 0 60px rgba(0,255,120,0.3);
+            box-shadow: 0 0 30px rgba(0,255,120,0.5), 0 0 60px rgba(0,255,120,0.25);
         }
         @keyframes e12scan { from{background-position:0 0;} to{background-position:0 -6px;} }
         @keyframes e12beam { from{top:-60px;} to{top:100vh;} }
@@ -323,7 +351,6 @@
             align-items: center; justify-content: center; min-height: 35px;
         }
 
-        /* Icon hiệu ứng trong nút */
         #effectBadge { font-size: 14px; }
         
         table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 5px; table-layout: fixed; min-width: 1100px; }
@@ -374,7 +401,8 @@
 
         /* ===== TẮT HIỆU ỨNG ===== */
         body.no-effects { background: #f0f2f5 !important; }
-        body.no-effects::before, body.no-effects::after { display: none !important; }
+        body.no-effects #fx-layer-1,
+        body.no-effects #fx-layer-2 { display: none !important; }
         .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; }
         .no-effects .rainbow-wrapper::before { display: none !important; }
         .no-effects th, .no-effects td, .no-effects .calculation-guide { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; }
@@ -396,6 +424,10 @@
 </head>
 <body id="mainBody">
 
+<!-- LỚP HIỆU ỨNG PHỦ TOÀN TRANG (pointer-events:none nên không chặn click) -->
+<div id="fx-layer-1"></div>
+<div id="fx-layer-2"></div>
+
 <div id="imgModal" onclick="this.style.display='none'"><img id="modalImg" src=""></div>
 
 <div class="rainbow-wrapper" id="rainbowWrapper">
@@ -407,9 +439,9 @@
             </div>
             <div id="statusArea"></div>
             
-            <!-- NÚT TẮT/BẬT (riêng) -->
+            <!-- NÚT TẮT/BẬT -->
             <button class="btn" id="toggleEffectsBtn" onclick="toggleEffects()" style="background: #fd7e14;">⚡ Tắt Hiệu Ứng</button>
-            <!-- NÚT ĐỔI HIỆU ỨNG (riêng) -->
+            <!-- NÚT ĐỔI HIỆU ỨNG -->
             <button class="btn" id="cycleEffectBtn" onclick="cycleEffect()" style="background: #9b59b6;"><span id="effectBadge">⭐</span> Đổi Hiệu Ứng</button>
 
             <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa tháng</span></button>
@@ -515,18 +547,18 @@
 
     const WRAPPER_GRADIENTS = [
         '',
-        'conic-gradient(#fff,#aaf,#fff,#aaf,#fff)',                                   // 1 sao
-        'conic-gradient(#006,#04f,#0af,#06f,#006)',                                   // 2 bong bóng
-        'conic-gradient(#000,#0f0,#020,#0f0,#000)',                                   // 3 matrix
-        'conic-gradient(#00ffb4,#6400ff,#0096ff,#ff3296,#00ffb4)',                    // 4 cực quang
-        'conic-gradient(#ff0000,#ff4400,#ff8800,#ffcc00,#ff4400,#ff0000)',             // 5 lửa
-        'conic-gradient(#000f22,#0064c8,#00c8ff,#0096ff,#000f22)',                    // 6 đại dương
-        'conic-gradient(#02000a,#8000ff,#4000aa,#ff00ff,#02000a)',                    // 7 vũ trụ
-        'conic-gradient(#00ffff,#ff00ff,#ffff00,#00ff00,#00ffff)',                    // 8 neon
-        'conic-gradient(#200060,#cc0060,#ff4000,#ffcc00,#800080,#200060)',            // 9 hoàng hôn
-        'conic-gradient(#010d1a,#64b4ff,#ffffff,#c8e6ff,#010d1a)',                    // 10 tuyết
-        'conic-gradient(#050005,#ffd700,#ffaa00,#ffffff,#ffd700,#050005)',             // 11 điện chớp
-        'conic-gradient(#000a05,#00ff78,#004422,#00ff78,#000a05)',                    // 12 hologram
+        'conic-gradient(#fff,#aaf,#fff,#aaf,#fff)',
+        'conic-gradient(#006,#04f,#0af,#06f,#006)',
+        'conic-gradient(#000,#0f0,#020,#0f0,#000)',
+        'conic-gradient(#00ffb4,#6400ff,#0096ff,#ff3296,#00ffb4)',
+        'conic-gradient(#ff0000,#ff4400,#ff8800,#ffcc00,#ff4400,#ff0000)',
+        'conic-gradient(#000f22,#0064c8,#00c8ff,#0096ff,#000f22)',
+        'conic-gradient(#02000a,#8000ff,#4000aa,#ff00ff,#02000a)',
+        'conic-gradient(#00ffff,#ff00ff,#ffff00,#00ff00,#00ffff)',
+        'conic-gradient(#200060,#cc0060,#ff4000,#ffcc00,#800080,#200060)',
+        'conic-gradient(#010d1a,#64b4ff,#ffffff,#c8e6ff,#010d1a)',
+        'conic-gradient(#050005,#ffd700,#ffaa00,#ffffff,#ffd700,#050005)',
+        'conic-gradient(#000a05,#00ff78,#004422,#00ff78,#000a05)',
     ];
 
     function applyEffectsUI() {
@@ -534,13 +566,13 @@
         const toggleBtn = document.getElementById('toggleEffectsBtn');
         const cycleBtn  = document.getElementById('cycleEffectBtn');
 
+        // Xóa tất cả class hiệu ứng cũ
         for (let i = 1; i <= TOTAL_EFFECTS; i++) body.classList.remove('effect-' + i);
         body.classList.remove('no-effects');
 
         document.getElementById('effectBadge').innerText = EFFECT_ICONS[currentEffect];
         cycleBtn.title = EFFECT_NAMES[currentEffect];
 
-        // Đổi viền wrapper theo chế độ
         const wrapper = document.getElementById('rainbowWrapper');
         if (!effectsEnabled) {
             wrapper.style.setProperty('--rw-bg', 'conic-gradient(#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff,#ff0000)');
