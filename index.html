@@ -427,7 +427,7 @@
         });
         db[monthInput.value] = { rows, tongDH: document.getElementById('tongDHThang').value, footerMonthLabel: document.getElementById('footerMonthLabel').value, mainMeterImg: document.getElementById('mainMeterImg').src, locked: db[monthInput.value]?.locked || false };
         localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
-        if(!s) alert('Đã lưu!');
+        if(!s) alert('Đã lưu thành công');
     }
 
     function toggleLock() {
