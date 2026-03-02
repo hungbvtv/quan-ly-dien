@@ -25,7 +25,6 @@
             transition: background 0.3s;
         }
 
-        /* Hiệu ứng nền */
         body::before, body::after {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
@@ -37,7 +36,6 @@
         }
         @keyframes sparkleMove { from { background-position: 0 0; } to { background-position: 0 -300px; } }
 
-        /* Viền 7 màu */
         .rainbow-wrapper {
             position: relative; max-width: 1250px; width: 100%; padding: 5px; 
             border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
@@ -81,19 +79,26 @@
         input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; font-family: inherit; }
         input:disabled { color: #000; opacity: 1; }
 
-        /* CSS ẢNH */
-        .col-img { width: 60px; }
-        .img-preview { width: 45px; height: 45px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; display: block; margin: 0 auto; background: #eee; }
-        .upload-btn { font-size: 10px; color: #007bff; cursor: pointer; display: block; }
+        /* CSS ẢNH - KHÔNG BỊ CẮT */
+        .col-img { width: 65px; }
+        .img-container { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .img-preview { 
+            width: 45px; height: 45px; 
+            object-fit: cover; border-radius: 4px; 
+            cursor: pointer; border: 1px solid #ddd; 
+            background: #eee;
+            display: none; /* Chỉ hiện khi có ảnh */
+        }
+        .upload-btn { font-size: 10px; color: #007bff; cursor: pointer; display: block; font-weight: bold; }
         
-        /* Chế độ tắt hiệu ứng */
+        /* CHẾ ĐỘ TẮT HIỆU ỨNG */
         body.no-effects { background: #f0f2f5 !important; }
         body.no-effects::before, body.no-effects::after { display: none !important; }
-        .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; }
+        .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; border-image: none !important; }
         .no-effects .rainbow-wrapper::before { display: none !important; }
         .no-effects th, .no-effects td, .no-effects .calculation-guide { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; }
 
-        /* Xuất ảnh */
+        /* KHI XUẤT PNG */
         .is-capturing .col-img { display: none !important; }
         .is-capturing .rainbow-text { background: none !important; -webkit-text-fill-color: #0054a5 !important; color: #0054a5 !important; }
 
@@ -114,8 +119,10 @@
         }
         @keyframes moveGradient { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
+        /* MODAL XEM ẢNH */
         #imgModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; }
-        #imgModal img { max-width:90%; max-height:90%; border:2px solid #fff; }
+        #imgModal img { max-width:95%; max-height:95%; border:2px solid #fff; box-shadow: 0 0 20px #fff; }
+        
         .hide-for-capture { display: none !important; }
     </style>
 </head>
@@ -135,7 +142,7 @@
             <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ Liệu</button>
             <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup</button>
             <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập File<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
-            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh Nè</button>
+            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (9 Cột)</button>
         </div>
 
         <table id="mainTable">
@@ -163,9 +170,11 @@
                             <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 100px; font-weight: bold;"> (Kwh)</span>
                             <div class="col-img" style="display:flex; align-items:center; gap:5px;">
                                 <span style="font-size:11px">Ảnh Tổng:</span>
-                                <img src="" id="mainMeterImg" class="img-preview" onclick="openImg(this.src)" style="width:35px; height:35px;">
-                                <span class="upload-btn" onclick="document.getElementById('fileMain').click()">[Up]</span>
-                                <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this, 'mainMeterImg')">
+                                <div class="img-container">
+                                    <img src="" id="mainMeterImg" class="img-preview" onclick="openImg(this.src)">
+                                    <span class="upload-btn" onclick="document.getElementById('fileMain').click()">[Up Ảnh]</span>
+                                    <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this, 'mainMeterImg')">
+                                </div>
                             </div>
                         </div>
                     </td>
@@ -242,10 +251,14 @@
 
         document.getElementById('tongDHThang').value = data?.tongDH || 0;
         document.getElementById('footerMonthLabel').value = data?.footerMonthLabel || m.split('-')[1];
-        document.getElementById('mainMeterImg').src = data?.mainMeterImg || '';
         
         const mainImg = document.getElementById('mainMeterImg');
-        mainImg.style.display = mainImg.src.includes('data:image') ? 'block' : 'none';
+        if(data?.mainMeterImg) {
+            mainImg.src = data.mainMeterImg;
+            mainImg.style.display = 'block';
+        } else {
+            mainImg.style.display = 'none';
+        }
 
         applyLockUI(data?.locked || false);
         updateTotals();
@@ -258,9 +271,11 @@
             <td class="col-stt" onclick="handleRowAction(this)">1</td>
             <td class="col-name"><input type="text" value="${data.name || ''}"></td>
             <td class="col-img">
-                <img src="${data.img || ''}" class="img-preview" onclick="openImg(this.src)" style="display:${(data.img && data.img.includes('data:image')) ? 'block' : 'none'}">
-                <span class="upload-btn" onclick="this.nextElementSibling.click()">[Up Ảnh]</span>
-                <input type="file" hidden accept="image/*" onchange="previewImg(this)">
+                <div class="img-container">
+                    <img src="${data.img || ''}" class="img-preview" onclick="openImg(this.src)" style="display:${data.img ? 'block' : 'none'}">
+                    <span class="upload-btn" onclick="this.nextElementSibling.click()">[Up Ảnh]</span>
+                    <input type="file" hidden accept="image/*" onchange="previewImg(this)">
+                </div>
             </td>
             <td><input type="number" class="before" value="${data.before || 0}" oninput="updateTotals()"></td>
             <td><input type="number" class="after" value="${data.after || 0}" oninput="updateTotals()"></td>
@@ -280,7 +295,7 @@
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    const maxW = 500;
+                    const maxW = 400; // Nén ảnh xuống 400px để không nặng
                     canvas.width = maxW; 
                     canvas.height = img.height * (maxW/img.width);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -333,30 +348,40 @@
         const area = document.getElementById('captureArea');
         const ctrl = document.querySelector('.controls');
         area.classList.add('is-capturing');
+        
+        // Điều chỉnh colspan về 9 cột
         document.getElementById('titleMonth').colSpan = 9;
         document.getElementById('footerMain').colSpan = 9;
         document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 3;
         document.getElementById('f_col4').colSpan = 4; document.getElementById('f_col5').colSpan = 5; document.getElementById('f_col6').colSpan = 9;
         ctrl.classList.add('hide-for-capture');
 
-        const canvas = await html2canvas(area, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
-        const link = document.createElement('a');
-        link.download = `HoaDon_Dien_${monthInput.value}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-
-        area.classList.remove('is-capturing');
-        document.getElementById('titleMonth').colSpan = 10;
-        document.getElementById('footerMain').colSpan = 10;
-        document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 4;
-        document.getElementById('f_col4').colSpan = 5; document.getElementById('f_col5').colSpan = 5; document.getElementById('f_col6').colSpan = 10;
-        ctrl.classList.remove('hide-for-capture');
+        try {
+            const canvas = await html2canvas(area, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+            const link = document.createElement('a');
+            link.download = `HoaDon_Dien_${monthInput.value}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        } finally {
+            area.classList.remove('is-capturing');
+            document.getElementById('titleMonth').colSpan = 10;
+            document.getElementById('footerMain').colSpan = 10;
+            document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 4;
+            document.getElementById('f_col4').colSpan = 5; document.getElementById('f_col5').colSpan = 5; document.getElementById('f_col6').colSpan = 10;
+            ctrl.classList.remove('hide-for-capture');
+        }
     }
 
     function saveToLocal(s) {
         const rows = [];
         document.querySelectorAll('.data-row').forEach(row => {
-            rows.push({ name: row.querySelector('.col-name input').value, img: row.querySelector('.img-preview').src, before: row.querySelector('.before').value, after: row.querySelector('.after').value, price: row.querySelector('.price').value });
+            rows.push({ 
+                name: row.querySelector('.col-name input').value, 
+                img: row.querySelector('.img-preview').src, 
+                before: row.querySelector('.before').value, 
+                after: row.querySelector('.after').value, 
+                price: row.querySelector('.price').value 
+            });
         });
         db[monthInput.value] = { rows, tongDH: document.getElementById('tongDHThang').value, footerMonthLabel: document.getElementById('footerMonthLabel').value, mainMeterImg: document.getElementById('mainMeterImg').src, locked: db[monthInput.value]?.locked || false };
         localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
@@ -401,10 +426,34 @@
         }
     }
     
-    function openImg(s) { if(s && s.includes('data:image')) { document.getElementById('modalImg').src=s; document.getElementById('imgModal').style.display='flex'; } }
+    function openImg(s) { 
+        if(s && s.includes('data:image')) { 
+            document.getElementById('modalImg').src = s; 
+            document.getElementById('imgModal').style.display = 'flex'; 
+        } 
+    }
+    
     function changeMonth() { init(); }
-    function exportData() { saveToLocal(true); const b = new Blob([JSON.stringify(db)], {type:'application/json'}); const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download='backup_dien.json'; a.click(); }
-    function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ db=JSON.parse(ev.target.result); localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); init(); alert("Đã nhập thành công!"); }; r.readAsText(e.target.files[0]); }
+    
+    function exportData() { 
+        saveToLocal(true); 
+        const b = new Blob([JSON.stringify(db)], {type:'application/json'}); 
+        const a = document.createElement('a'); 
+        a.href=URL.createObjectURL(b); 
+        a.download='backup_dien.json'; 
+        a.click(); 
+    }
+    
+    function importData(e) { 
+        const r = new FileReader(); 
+        r.onload=(ev)=>{ 
+            db=JSON.parse(ev.target.result); 
+            localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); 
+            init(); 
+            alert("Đã nhập thành công!"); 
+        }; 
+        r.readAsText(e.target.files[0]); 
+    }
     
     init();
 </script>
