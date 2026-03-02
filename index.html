@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Điện - EVN Pro (iPhone Optimized)</title>
+    <title>Điện - EVN Pro</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
@@ -52,14 +52,8 @@
         .container { 
             background: rgba(255, 255, 255, 0.96); width: 100%; padding: 15px 10px; 
             border-radius: 10px; position: relative; z-index: 1; backdrop-filter: blur(10px);
-            overflow-x: auto; /* Cho phép vuốt ngang trên điện thoại */
+            overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-        }
-        
-        /* Chế độ thu nhỏ để vừa màn hình iPhone */
-        .container.fit-screen {
-            transform-origin: top left;
-            width: 1150px; /* Cố định chiều rộng để không bị nhảy dòng */
         }
 
         .controls { 
@@ -72,7 +66,7 @@
             align-items: center; justify-content: center; min-height: 35px;
         }
         
-        table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 5px; table-layout: fixed; min-width: 1000px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 5px; table-layout: fixed; min-width: 1100px; }
 
         th, td { 
             position: relative; padding: 6px 2px; text-align: center; font-size: 13px;
@@ -118,20 +112,20 @@
         }
         @keyframes moveGradient { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
-        /* MODAL */
         #imgModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; }
-        #imgModal img { max-width:95%; max-height:95%; border:2px solid #fff; }
+        #imgModal img { max-width: 95%; max-height: 95%; border: 2px solid #fff; }
 
-        /* ĐIỀU CHỈNH RIÊNG CHO DI ĐỘNG */
+        /* Khi chụp ảnh, bỏ cuộn ngang để chụp trọn vẹn */
+        .is-capturing { overflow: visible !important; width: 1150px !important; max-width: none !important; }
+        .is-capturing .col-img { display: none !important; }
+        .is-capturing .rainbow-text { background: none !important; -webkit-text-fill-color: #0054a5 !important; color: #0054a5 !important; }
+        .hide-for-capture { display: none !important; }
+
         @media screen and (max-width: 768px) {
             .title-header { font-size: 18px; }
             .btn { padding: 6px 8px; font-size: 11px; }
             .controls { gap: 4px; padding: 8px; }
         }
-
-        .is-capturing .col-img { display: none !important; }
-        .is-capturing .rainbow-text { background: none !important; -webkit-text-fill-color: #0054a5 !important; color: #0054a5 !important; }
-        .hide-for-capture { display: none !important; }
     </style>
 </head>
 <body id="mainBody">
@@ -147,17 +141,16 @@
             </div>
             <div id="statusArea"></div>
             
-            <button class="btn" id="fitBtn" onclick="toggleFitScreen()" style="background: #000;">Xem Vừa Màn Hình</button>
             <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa tháng</span></button>
             <button class="btn" onclick="addRow()" style="background: #28a745;">+ thêm Hộ</button>
             <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;"> chế độ Xóa</button>
             <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dliệu</button>
             <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup Dliệu</button>
             <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập Dliệu<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
-            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh Nè</button>
+            <button class="btn" style="background: #d63384;" onclick="exportToPNG()">Xuất Ảnh Nè</button>
         </div>
 
-        <div style="width: 100%; overflow-x: auto;">
+        <div id="tableScrollWrapper" style="width: 100%; overflow-x: auto;">
             <table id="mainTable">
                 <thead>
                     <tr><th colspan="10" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
@@ -193,9 +186,9 @@
                         </td>
                     </tr>
                     <tr class="loss-summary">
-                        <td colspan="3" id="f_col1">Tổng điện các hộ tiêu thu trong tháng: <span id="lblTotalKwh">0</span></td>
-                        <td colspan="3" id="f_col2">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span></td>
-                        <td colspan="4" id="f_col3">số điện Thất thoát: <span id="lblLossKwh">0</span></td>
+                        <td colspan="3" id="f_col1">Tổng điện các hộ tiêu thụ: <span id="lblTotalKwh">0</span></td>
+                        <td colspan="3" id="f_col2">Điện tổng tiêu thụ: <span id="lblMainConsumption">0</span></td>
+                        <td colspan="4" id="f_col3">Số điện Thất thoát: <span id="lblLossKwh">0</span></td>
                     </tr>
                     <tr class="loss-summary">
                         <td colspan="5" id="f_col4">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
@@ -227,29 +220,6 @@
     let db = JSON.parse(localStorage.getItem('electricDB_vPhoto')) || {};
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
-
-    // Tính năng zoom vừa màn hình iPhone
-    let isFitted = false;
-    function toggleFitScreen() {
-        const container = document.getElementById('captureArea');
-        const btn = document.getElementById('fitBtn');
-        if (!isFitted) {
-            const screenWidth = window.innerWidth - 20;
-            const tableWidth = 1150; 
-            const scale = screenWidth / tableWidth;
-            container.classList.add('fit-screen');
-            container.style.transform = `scale(${scale})`;
-            document.getElementById('rainbowWrapper').style.height = (container.offsetHeight * scale + 20) + 'px';
-            btn.innerText = "Xem Cỡ Gốc";
-            isFitted = true;
-        } else {
-            container.classList.remove('fit-screen');
-            container.style.transform = `none`;
-            document.getElementById('rainbowWrapper').style.height = 'auto';
-            btn.innerText = "Xem Vừa Màn Hình";
-            isFitted = false;
-        }
-    }
 
     function init() {
         const m = monthInput.value;
@@ -357,29 +327,45 @@
     async function exportToPNG() {
         const area = document.getElementById('captureArea');
         const ctrl = document.querySelector('.controls');
-        // Reset Fit Screen để chụp ảnh chuẩn
-        if (isFitted) toggleFitScreen();
-        
+        const scrollWrapper = document.getElementById('tableScrollWrapper');
+
+        // Bật trạng thái chụp ảnh
         area.classList.add('is-capturing');
+        ctrl.classList.add('hide-for-capture');
+        scrollWrapper.style.overflow = "visible"; // Ép hiện hết bảng
+
+        // Điều chỉnh cột để xuất ảnh 9 cột chuẩn
         document.getElementById('titleMonth').colSpan = 9;
         document.getElementById('footerMain').colSpan = 9;
         document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 3;
         document.getElementById('f_col4').colSpan = 4; document.getElementById('f_col5').colSpan = 5; document.getElementById('f_col6').colSpan = 9;
-        ctrl.classList.add('hide-for-capture');
+
+        // Cuộn lên đầu để tránh lỗi tọa độ trên Safari
+        window.scrollTo(0, 0);
 
         try {
-            const canvas = await html2canvas(area, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+            const canvas = await html2canvas(area, { 
+                scale: 2, 
+                useCORS: true, 
+                backgroundColor: "#ffffff",
+                width: 1150 // Ép chiều rộng vùng chụp
+            });
             const link = document.createElement('a');
             link.download = `EVN_Pro_${monthInput.value}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
+        } catch (err) {
+            alert("Lỗi xuất ảnh: " + err);
         } finally {
+            // Trả lại trạng thái cũ
             area.classList.remove('is-capturing');
+            ctrl.classList.remove('hide-for-capture');
+            scrollWrapper.style.overflow = "auto";
+            
             document.getElementById('titleMonth').colSpan = 10;
             document.getElementById('footerMain').colSpan = 10;
             document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 4;
             document.getElementById('f_col4').colSpan = 5; document.getElementById('f_col5').colSpan = 5; document.getElementById('f_col6').colSpan = 10;
-            ctrl.classList.remove('hide-for-capture');
         }
     }
 
@@ -416,7 +402,7 @@
             allInputs.forEach(i => i.disabled = true);
             allBtns.forEach(b => b.style.display = 'none');
         } else {
-            document.getElementById('lockBtnText').innerText = "Khóa Sổ";
+            document.getElementById('lockBtnText').innerText = "Khóa tháng";
             document.getElementById('statusArea').innerHTML = '<span style="color:green; font-weight:bold; font-size:10px;">[ĐANG MỞ]</span>';
             allInputs.forEach(i => i.disabled = false);
             allBtns.forEach(b => b.style.display = 'block');
@@ -427,7 +413,7 @@
         const btn = document.getElementById('deleteModeBtn');
         btn.classList.toggle('active');
         document.getElementById('captureArea').classList.toggle('delete-active');
-        btn.innerText = btn.classList.contains('active') ? "Xóa (Bấm STT)" : "Xóa";
+        btn.innerText = btn.classList.contains('active') ? "Xóa (Bấm STT)" : "chế độ Xóa";
         btn.style.background = btn.classList.contains('active') ? "#dc3545" : "#6c757d";
     }
 
