@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Điện - EVN Pro</title>
+    <title>Điện - EVN Pro (Full Version)</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
@@ -22,8 +22,10 @@
             margin: 0; padding: 20px 10px; min-height: 100vh;
             background: #0b0f1a; position: relative; display: flex;
             justify-content: center; overflow-x: hidden;
+            transition: background 0.3s;
         }
 
+        /* Hiệu ứng nền */
         body::before, body::after {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
@@ -35,6 +37,7 @@
         }
         @keyframes sparkleMove { from { background-position: 0 0; } to { background-position: 0 -300px; } }
 
+        /* Viền 7 màu */
         .rainbow-wrapper {
             position: relative; max-width: 1250px; width: 100%; padding: 5px; 
             border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
@@ -70,26 +73,29 @@
         th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; font-size: 11px; height: 55px; vertical-align: middle; }
         .title-header { font-size: 26px; font-weight: bold; color: #0054a5; background: white !important; padding: 15px !important; }
 
-        .col-stt { width: 35px; }
+        .col-stt { width: 35px; cursor: pointer; }
         .col-name { width: 18%; text-align: left !important; padding-left: 10px !important; font-weight: bold; }
         .col-kwh { background: rgba(232, 245, 233, 0.7) !important; }
         .col-final { font-weight: bold; color: #ff0000 !important; font-size: 17px; background: rgba(227, 242, 253, 0.8) !important; }
 
         input { width: 100%; border: none; text-align: center; font-size: 15px; outline: none; background: transparent; font-family: inherit; }
+        input:disabled { color: #000; opacity: 1; }
 
         /* CSS ẢNH */
         .col-img { width: 60px; }
         .img-preview { width: 45px; height: 45px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; display: block; margin: 0 auto; background: #eee; }
         .upload-btn { font-size: 10px; color: #007bff; cursor: pointer; display: block; }
         
-        /* ẨN CỘT ẢNH KHI XUẤT PNG */
+        /* Chế độ tắt hiệu ứng */
+        body.no-effects { background: #f0f2f5 !important; }
+        body.no-effects::before, body.no-effects::after { display: none !important; }
+        .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; }
+        .no-effects .rainbow-wrapper::before { display: none !important; }
+        .no-effects th, .no-effects td, .no-effects .calculation-guide { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; }
+
+        /* Xuất ảnh */
         .is-capturing .col-img { display: none !important; }
-        /* FIX LỖI GHI CHÚ KHI CHỤP ẢNH */
-        .is-capturing .rainbow-text { 
-            background: none !important; 
-            -webkit-text-fill-color: #0054a5 !important; 
-            color: #0054a5 !important;
-        }
+        .is-capturing .rainbow-text { background: none !important; -webkit-text-fill-color: #0054a5 !important; color: #0054a5 !important; }
 
         .footer-info { text-align: left; font-weight: bold; }
         .loss-summary td { background: rgba(255, 243, 205, 0.8) !important; color: #856404; font-size: 16px; font-weight: bold; height: 50px; }
@@ -121,11 +127,15 @@
     <div class="container" id="captureArea">
         <div class="controls">
             <strong>Tháng: </strong><input type="month" id="currentMonth" onchange="changeMonth()" style="width: 140px; border: 1px solid #ccc; background: white;">
+            <div id="statusArea"></div>
+            <button class="btn" id="toggleEffectsBtn" onclick="toggleEffects()" style="background: #fd7e14;">Tắt Hiệu Ứng</button>
+            <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa Sổ</span></button>
             <button class="btn" onclick="addRow()" style="background: #28a745;">+ Thêm Hộ</button>
+            <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;">Chế Độ Xóa</button>
             <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ Liệu</button>
-            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh </button>
             <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup</button>
             <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập File<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
+            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (9 Cột)</button>
         </div>
 
         <table id="mainTable">
@@ -140,7 +150,7 @@
                     <th class="col-kwh">Số kí tiêu thụ(kWh)</th>
                     <th>Giá điện(VNĐ)</th>
                     <th>Tiền điện(VNĐ)</th>
-                    <th>tiền điện Thất thoát</th>
+                    <th>Tiền điện Thất thoát</th>
                     <th class="col-final">TIỀN PHẢI NỘP</th>
                 </tr>
             </thead>
@@ -184,18 +194,40 @@
             <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
             <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
             <p class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng để ra số kí thất thoát.</p><br>
-            <p class="rainbow-text">• Tiền điện thất thoát(từng hộ): Được chia theo tỉ lệ số kí tiêu thụ(hộ dùng ít chịu ít,hộ dùng nhiều chịu nhiều.</p><br>
-           <p class="rainbow-text">• công thức thất thoát:số kí thất thoát x 2400đ.<p><br>     
+            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
+           <p class="rainbow-text">• Công thức thất thoát: Số kí thất thoát x 2400đ.<p><br>     
         </div>
     </div>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('electricDB_vPhoto')) || {};
+    let effectsEnabled = localStorage.getItem('effectsEnabled') !== 'false';
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
+    function toggleEffects() {
+        effectsEnabled = !effectsEnabled;
+        localStorage.setItem('effectsEnabled', effectsEnabled);
+        applyEffectsUI();
+    }
+
+    function applyEffectsUI() {
+        const body = document.body;
+        const btn = document.getElementById('toggleEffectsBtn');
+        if (effectsEnabled) {
+            body.classList.remove('no-effects');
+            btn.innerText = "Tắt Hiệu Ứng";
+            btn.style.background = "#fd7e14";
+        } else {
+            body.classList.add('no-effects');
+            btn.innerText = "Bật Hiệu Ứng";
+            btn.style.background = "#20c997";
+        }
+    }
+
     function init() {
+        applyEffectsUI();
         const m = monthInput.value;
         const prev = new Date(m + '-01'); prev.setMonth(prev.getMonth() - 1);
         const pk = prev.toISOString().substring(0, 7);
@@ -211,6 +243,11 @@
         document.getElementById('tongDHThang').value = data?.tongDH || 0;
         document.getElementById('footerMonthLabel').value = data?.footerMonthLabel || m.split('-')[1];
         document.getElementById('mainMeterImg').src = data?.mainMeterImg || '';
+        
+        const mainImg = document.getElementById('mainMeterImg');
+        mainImg.style.display = mainImg.src.includes('data:image') ? 'block' : 'none';
+
+        applyLockUI(data?.locked || false);
         updateTotals();
     }
 
@@ -218,17 +255,17 @@
         const row = document.getElementById('tableBody').insertRow();
         row.className = 'data-row';
         row.innerHTML = `
-            <td class="col-stt" onclick="if(confirm('Xóa?')){this.parentElement.remove();updateTotals();}">1</td>
-            <td class="col-name"><input type="text" value="${data.name}"></td>
+            <td class="col-stt" onclick="handleRowAction(this)">1</td>
+            <td class="col-name"><input type="text" value="${data.name || ''}"></td>
             <td class="col-img">
-                <img src="${data.img || ''}" class="img-preview" onclick="openImg(this.src)" style="opacity:${data.img?1:0}">
+                <img src="${data.img || ''}" class="img-preview" onclick="openImg(this.src)" style="display:${(data.img && data.img.includes('data:image')) ? 'block' : 'none'}">
                 <span class="upload-btn" onclick="this.nextElementSibling.click()">[Up Ảnh]</span>
                 <input type="file" hidden accept="image/*" onchange="previewImg(this)">
             </td>
-            <td><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
-            <td><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
+            <td><input type="number" class="before" value="${data.before || 0}" oninput="updateTotals()"></td>
+            <td><input type="number" class="after" value="${data.after || 0}" oninput="updateTotals()"></td>
             <td class="col-kwh"><input type="number" class="usage" readonly></td>
-            <td><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
+            <td><input type="number" class="price" value="${data.price || 2400}" oninput="updateTotals()"></td>
             <td><span class="base-money">0</span></td>
             <td><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0đ</span></td>
@@ -243,11 +280,19 @@
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    canvas.width = 400; canvas.height = img.height * (400/img.width);
+                    const maxW = 500;
+                    canvas.width = maxW; 
+                    canvas.height = img.height * (maxW/img.width);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     const b64 = canvas.toDataURL('image/jpeg', 0.7);
-                    if(tid) document.getElementById(tid).src = b64;
-                    else { const el = input.parentElement.querySelector('.img-preview'); el.src = b64; el.style.opacity = '1'; }
+                    
+                    if(tid) {
+                        const targetEl = document.getElementById(tid);
+                        targetEl.src = b64; targetEl.style.display = 'block';
+                    } else {
+                        const el = input.parentElement.querySelector('.img-preview');
+                        el.src = b64; el.style.display = 'block';
+                    }
                     saveToLocal(true);
                 };
                 img.src = e.target.result;
@@ -313,15 +358,54 @@
         document.querySelectorAll('.data-row').forEach(row => {
             rows.push({ name: row.querySelector('.col-name input').value, img: row.querySelector('.img-preview').src, before: row.querySelector('.before').value, after: row.querySelector('.after').value, price: row.querySelector('.price').value });
         });
-        db[monthInput.value] = { rows, tongDH: document.getElementById('tongDHThang').value, footerMonthLabel: document.getElementById('footerMonthLabel').value, mainMeterImg: document.getElementById('mainMeterImg').src };
+        db[monthInput.value] = { rows, tongDH: document.getElementById('tongDHThang').value, footerMonthLabel: document.getElementById('footerMonthLabel').value, mainMeterImg: document.getElementById('mainMeterImg').src, locked: db[monthInput.value]?.locked || false };
         localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
         if(!s) alert('Đã lưu!');
     }
+
+    function toggleLock() {
+        const m = monthInput.value;
+        if (!db[m]) saveToLocal(true);
+        db[m].locked = !db[m].locked;
+        localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
+        init();
+    }
+
+    function applyLockUI(isLocked) {
+        const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
+        const allBtns = document.querySelectorAll('.upload-btn');
+        if (isLocked) {
+            document.getElementById('lockBtnText').innerText = "Mở Khóa";
+            document.getElementById('statusArea').innerHTML = '<span style="color:red; font-weight:bold;">[ĐÃ KHÓA]</span>';
+            allInputs.forEach(i => i.disabled = true);
+            allBtns.forEach(b => b.style.display = 'none');
+        } else {
+            document.getElementById('lockBtnText').innerText = "Khóa Sổ";
+            document.getElementById('statusArea').innerHTML = '<span style="color:green; font-weight:bold;">[ĐANG MỞ]</span>';
+            allInputs.forEach(i => i.disabled = false);
+            allBtns.forEach(b => b.style.display = 'block');
+        }
+    }
+
+    function toggleDeleteMode() {
+        const btn = document.getElementById('deleteModeBtn');
+        btn.classList.toggle('active');
+        document.getElementById('captureArea').classList.toggle('delete-active');
+        btn.innerText = btn.classList.contains('active') ? "Xóa (Bấm STT)" : "Chế Độ Xóa";
+        btn.style.background = btn.classList.contains('active') ? "#dc3545" : "#6c757d";
+    }
+
+    function handleRowAction(cell) {
+        if(document.getElementById('captureArea').classList.contains('delete-active')) {
+            if(confirm("Xóa hộ này?")) { cell.parentElement.remove(); updateTotals(); }
+        }
+    }
     
-    function openImg(s) { if(s) { document.getElementById('modalImg').src=s; document.getElementById('imgModal').style.display='flex'; } }
+    function openImg(s) { if(s && s.includes('data:image')) { document.getElementById('modalImg').src=s; document.getElementById('imgModal').style.display='flex'; } }
     function changeMonth() { init(); }
     function exportData() { saveToLocal(true); const b = new Blob([JSON.stringify(db)], {type:'application/json'}); const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download='backup_dien.json'; a.click(); }
-    function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ db=JSON.parse(ev.target.result); localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); init(); }; r.readAsText(e.target.files[0]); }
+    function importData(e) { const r = new FileReader(); r.onload=(ev)=>{ db=JSON.parse(ev.target.result); localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); init(); alert("Đã nhập thành công!"); }; r.readAsText(e.target.files[0]); }
+    
     init();
 </script>
 </body>
