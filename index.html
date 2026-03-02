@@ -25,6 +25,7 @@
             transition: background 0.3s;
         }
 
+        /* Hiệu ứng lấp lánh */
         body::before, body::after {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
@@ -36,6 +37,7 @@
         }
         @keyframes sparkleMove { from { background-position: 0 0; } to { background-position: 0 -300px; } }
 
+        /* Viền 7 màu app */
         .rainbow-wrapper {
             position: relative; max-width: 1250px; width: 100%; padding: 4px; 
             border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
@@ -99,17 +101,14 @@
         .loss-summary td { background: rgba(255, 243, 205, 0.9) !important; color: #856404; font-size: 15px; font-weight: bold; height: 45px; }
         #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 26px; }
 
-        /* GHI CHÚ CSS - FIX LỖI DÒNG TO DÒNG NHỎ */
         .calculation-guide { 
             margin-top: 20px; padding: 20px; background: white; 
-            line-height: 1.8; /* Cố định khoảng cách dòng */
-            text-align: left; 
+            line-height: 1.8; text-align: left; 
             border: 3px solid; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
-            font-size: 18px; /* Kích thước chữ chuẩn */
+            font-size: 18px; 
         }
         .rainbow-text {
-            display: inline; font-weight: bold;
-            font-size: 18px; /* Ép kích thước dòng bằng nhau */
+            display: inline; font-weight: bold; font-size: 18px; 
             background: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-size: 400% 400%; animation: moveGradient 5s linear infinite;
@@ -119,17 +118,32 @@
         #imgModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; }
         #imgModal img { max-width: 95%; max-height: 95%; border: 2px solid #fff; }
 
-        /* FIX KHI XUẤT ẢNH TRÊN IPHONE */
-        .is-capturing { overflow: visible !important; width: 1150px !important; max-width: none !important; }
+        /* -----------------------------------------------------------
+           CHẾ ĐỘ TẮT HIỆU ỨNG
+        ----------------------------------------------------------- */
+        body.no-effects { background: #f0f2f5 !important; }
+        body.no-effects::before, body.no-effects::after { display: none !important; }
+        .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; }
+        .no-effects .rainbow-wrapper::before { display: none !important; }
+        .no-effects th, .no-effects td, .no-effects .calculation-guide { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; }
+        .no-effects .rainbow-text { background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; color: #333 !important; }
+
+        /* -----------------------------------------------------------
+           FIX KHI XUẤT ẢNH TRÊN IPHONE
+        ----------------------------------------------------------- */
+        .is-capturing { overflow: visible !important; width: 1150px !important; max-width: none !important; background: white !important; }
         .is-capturing .col-img { display: none !important; }
-        
-        /* Chống lỗi gradient khi chụp ảnh */
         .is-capturing .rainbow-text { 
             background: none !important; 
             -webkit-text-fill-color: #0054a5 !important; 
             color: #0054a5 !important;
             font-size: 18px !important;
             display: inline !important;
+        }
+        .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { 
+            border: 2px solid !important;
+            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1 !important;
+            animation: none !important; 
         }
         .hide-for-capture { display: none !important; }
 
@@ -153,6 +167,7 @@
             </div>
             <div id="statusArea"></div>
             
+            <button class="btn" id="toggleEffectsBtn" onclick="toggleEffects()" style="background: #fd7e14;">Tắt Hiệu Ứng</button>
             <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa tháng</span></button>
             <button class="btn" onclick="addRow()" style="background: #28a745;">+ thêm Hộ</button>
             <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;"> chế độ Xóa</button>
@@ -198,7 +213,7 @@
                         </td>
                     </tr>
                     <tr class="loss-summary">
-                        <td colspan="3" id="f_col1">Tổng điện số điện các hộ tiêu thụ trong tháng: <span id="lblTotalKwh">0</span></td>
+                        <td colspan="3" id="f_col1">Tổng ĐH các hộ trong tháng: <span id="lblTotalKwh">0</span></td>
                         <td colspan="3" id="f_col2">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span></td>
                         <td colspan="4" id="f_col3">Số kí Thất thoát: <span id="lblLossKwh">0</span></td>
                     </tr>
@@ -230,10 +245,32 @@
 
 <script>
     let db = JSON.parse(localStorage.getItem('electricDB_vPhoto')) || {};
+    let effectsEnabled = localStorage.getItem('effectsEnabled') !== 'false';
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
 
+    function toggleEffects() {
+        effectsEnabled = !effectsEnabled;
+        localStorage.setItem('effectsEnabled', effectsEnabled);
+        applyEffectsUI();
+    }
+
+    function applyEffectsUI() {
+        const body = document.body;
+        const btn = document.getElementById('toggleEffectsBtn');
+        if (effectsEnabled) {
+            body.classList.remove('no-effects');
+            btn.innerText = "Tắt Hiệu Ứng";
+            btn.style.background = "#fd7e14";
+        } else {
+            body.classList.add('no-effects');
+            btn.innerText = "Bật Hiệu Ứng";
+            btn.style.background = "#20c997";
+        }
+    }
+
     function init() {
+        applyEffectsUI();
         const m = monthInput.value;
         const prev = new Date(m + '-01'); prev.setMonth(prev.getMonth() - 1);
         const pk = prev.toISOString().substring(0, 7);
