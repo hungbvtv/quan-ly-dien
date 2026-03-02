@@ -4,481 +4,333 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Điện - EVN Pro</title>
-    
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#0b0f1a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            font-family: "Times New Roman", Times, serif; 
-            margin: 0; padding: 10px 5px; min-height: 100vh;
-            background: #0b0f1a; position: relative; display: flex;
-            justify-content: center; overflow-x: hidden;
-            transition: background 0.5s;
+
+        /* =============================================
+           5 THEMES - CSS VARIABLES
+        ============================================= */
+        body.theme-1 {
+            --bg-page:#0b0f1a; --bg-container:rgba(255,255,255,0.96); --bg-controls:rgba(233,236,239,0.85);
+            --bg-table-head:#f1f3f5; --bg-table-cell:rgba(255,255,255,0.9); --bg-loss:rgba(255,243,205,0.9);
+            --bg-guide:#ffffff; --color-title:#0054a5; --color-final:#ff0000; --color-grand:#ff0000;
+            --color-loss-text:#856404;
+            --border-table:linear-gradient(45deg,#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff);
+            --shadow-wrap:0 0 30px rgba(0,191,255,0.4);
+        }
+        body.theme-2 {
+            --bg-page:#dde4f0; --bg-container:rgba(255,255,255,0.99); --bg-controls:rgba(210,220,235,0.9);
+            --bg-table-head:#d0e4f8; --bg-table-cell:rgba(255,255,255,0.97); --bg-loss:rgba(255,249,220,0.95);
+            --bg-guide:#f0f6ff; --color-title:#1a5cb8; --color-final:#c0000a; --color-grand:#c0000a;
+            --color-loss-text:#7a5900;
+            --border-table:linear-gradient(45deg,#1a5cb8,#2980b9,#56b4e0,#1a5cb8);
+            --shadow-wrap:0 4px 20px rgba(26,92,184,0.3);
+        }
+        body.theme-3 {
+            --bg-page:#071a0c; --bg-container:rgba(240,255,245,0.97); --bg-controls:rgba(195,235,208,0.9);
+            --bg-table-head:#c8edda; --bg-table-cell:rgba(240,255,245,0.95); --bg-loss:rgba(200,237,218,0.9);
+            --bg-guide:#f0fff4; --color-title:#145a32; --color-final:#1e7e34; --color-grand:#155724;
+            --color-loss-text:#155724;
+            --border-table:linear-gradient(45deg,#00c853,#69f0ae,#00e676,#00c853);
+            --shadow-wrap:0 0 30px rgba(0,200,83,0.5);
+        }
+        body.theme-4 {
+            --bg-page:#180400; --bg-container:rgba(255,252,248,0.97); --bg-controls:rgba(255,232,215,0.9);
+            --bg-table-head:#fde0cc; --bg-table-cell:rgba(255,252,248,0.95); --bg-loss:rgba(255,233,205,0.9);
+            --bg-guide:#fff8f0; --color-title:#b83200; --color-final:#c0392b; --color-grand:#c0392b;
+            --color-loss-text:#7e3500;
+            --border-table:linear-gradient(45deg,#ff4500,#ff8c00,#ffd700,#ff4500);
+            --shadow-wrap:0 0 35px rgba(255,69,0,0.55);
+        }
+        body.theme-5 {
+            --bg-page:#0c0015; --bg-container:rgba(252,248,255,0.97); --bg-controls:rgba(232,215,255,0.9);
+            --bg-table-head:#e8d8ff; --bg-table-cell:rgba(252,248,255,0.95); --bg-loss:rgba(234,220,255,0.9);
+            --bg-guide:#faf5ff; --color-title:#6a0dad; --color-final:#7b2d8b; --color-grand:#6a0dad;
+            --color-loss-text:#5a0080;
+            --border-table:linear-gradient(45deg,#9b59b6,#e056fd,#a29bfe,#9b59b6);
+            --shadow-wrap:0 0 35px rgba(155,89,182,0.55);
         }
 
-        /* ===== LỚP PHỦ HIỆU ỨNG TOÀN TRANG ===== */
-        /* mix-blend-mode: screen => nền tối: hiệu ứng 100% | nền trắng: tự mờ ~25-30% */
-        #fx-layer-1, #fx-layer-2 {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: screen;
+        body {
+            font-family:"Times New Roman",Times,serif;
+            margin:0; padding:10px 5px; min-height:100vh;
+            background:var(--bg-page) !important;
+            position:relative; display:flex; justify-content:center; overflow-x:hidden;
+            transition:background 0.5s;
         }
 
-        /* ===== EFFECT 1: ⭐ Lấp lánh sao ===== */
-        body.effect-1 { background: #0b0f1a !important; }
-        body.effect-1 #fx-layer-1 {
-            display: block;
-            background-image:
-                radial-gradient(2px 2px at 10%  8%, #fff, transparent),
-                radial-gradient(2px 2px at 25% 30%, #ffe, transparent),
-                radial-gradient(3px 3px at 40% 15%, #fff, transparent),
-                radial-gradient(2px 2px at 55% 55%, #eef, transparent),
-                radial-gradient(2px 2px at 70%  5%, #fff, transparent),
-                radial-gradient(3px 3px at 80% 70%, #ffe, transparent),
-                radial-gradient(2px 2px at 90% 35%, #fff, transparent),
-                radial-gradient(2px 2px at 15% 80%, #eef, transparent),
-                radial-gradient(2px 2px at 60% 90%, #fff, transparent),
-                radial-gradient(3px 3px at 35% 60%, #ffe, transparent);
-            background-size: 400px 400px;
-            animation: e1move 6s linear infinite;
+        /* ===== FX LAYERS ===== */
+        #fx-layer-1,#fx-layer-2 {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            pointer-events:none; z-index:9999; mix-blend-mode:screen;
         }
-        body.effect-1 #fx-layer-2 {
-            display: block;
-            background-image:
-                radial-gradient(2px 2px at 5%  50%, #fff, transparent),
-                radial-gradient(2px 2px at 45% 40%, #ffe, transparent),
-                radial-gradient(3px 3px at 75% 20%, #fff, transparent),
-                radial-gradient(2px 2px at 95% 75%, #eef, transparent),
-                radial-gradient(2px 2px at 30% 95%, #fff, transparent);
-            background-size: 300px 300px;
-            animation: e1move 9s linear infinite reverse;
-        }
-        @keyframes e1move { from{background-position:0 0;} to{background-position:0 -400px;} }
 
-        /* ===== EFFECT 2: 🫧 Bong bóng ===== */
-        body.effect-2 { background: #020b18 !important; }
-        body.effect-2 #fx-layer-1 {
-            display: block;
-            background:
-                radial-gradient(circle 80px at 15% 20%, rgba(0,150,255,0.35), transparent),
-                radial-gradient(circle 60px at 50% 60%, rgba(100,200,255,0.28), transparent),
-                radial-gradient(circle 100px at 80% 30%, rgba(0,80,200,0.35), transparent),
-                radial-gradient(circle 50px at 30% 80%, rgba(50,180,255,0.28), transparent),
-                radial-gradient(circle 70px at 70% 85%, rgba(0,120,255,0.32), transparent);
-            animation: e2float 5s ease-in-out infinite alternate;
-        }
-        body.effect-2 #fx-layer-2 {
-            display: block;
-            background-image: radial-gradient(circle, rgba(100,200,255,0.5) 2px, transparent 2px);
-            background-size: 80px 80px;
-            animation: e2dots 7s linear infinite;
-        }
-        @keyframes e2float { from{transform:translateY(0) scale(1);} to{transform:translateY(-20px) scale(1.05);} }
-        @keyframes e2dots  { from{background-position:0 0;} to{background-position:80px -80px;} }
+        /* EFFECT 1 */
+        body.effect-1 #fx-layer-1{display:block;background-image:radial-gradient(2px 2px at 10% 8%,#fff,transparent),radial-gradient(2px 2px at 25% 30%,#ffe,transparent),radial-gradient(3px 3px at 40% 15%,#fff,transparent),radial-gradient(2px 2px at 55% 55%,#eef,transparent),radial-gradient(2px 2px at 70% 5%,#fff,transparent),radial-gradient(3px 3px at 80% 70%,#ffe,transparent),radial-gradient(2px 2px at 90% 35%,#fff,transparent),radial-gradient(2px 2px at 15% 80%,#eef,transparent),radial-gradient(2px 2px at 60% 90%,#fff,transparent),radial-gradient(3px 3px at 35% 60%,#ffe,transparent);background-size:400px 400px;animation:e1move 6s linear infinite;}
+        body.effect-1 #fx-layer-2{display:block;background-image:radial-gradient(2px 2px at 5% 50%,#fff,transparent),radial-gradient(2px 2px at 45% 40%,#ffe,transparent),radial-gradient(3px 3px at 75% 20%,#fff,transparent),radial-gradient(2px 2px at 95% 75%,#eef,transparent),radial-gradient(2px 2px at 30% 95%,#fff,transparent);background-size:300px 300px;animation:e1move 9s linear infinite reverse;}
+        @keyframes e1move{from{background-position:0 0}to{background-position:0 -400px}}
+        /* EFFECT 2 */
+        body.effect-2 #fx-layer-1{display:block;background:radial-gradient(circle 80px at 15% 20%,rgba(0,150,255,.35),transparent),radial-gradient(circle 60px at 50% 60%,rgba(100,200,255,.28),transparent),radial-gradient(circle 100px at 80% 30%,rgba(0,80,200,.35),transparent),radial-gradient(circle 50px at 30% 80%,rgba(50,180,255,.28),transparent),radial-gradient(circle 70px at 70% 85%,rgba(0,120,255,.32),transparent);animation:e2float 5s ease-in-out infinite alternate;}
+        body.effect-2 #fx-layer-2{display:block;background-image:radial-gradient(circle,rgba(100,200,255,.5) 2px,transparent 2px);background-size:80px 80px;animation:e2dots 7s linear infinite;}
+        @keyframes e2float{from{transform:translateY(0) scale(1)}to{transform:translateY(-20px) scale(1.05)}}
+        @keyframes e2dots{from{background-position:0 0}to{background-position:80px -80px}}
+        /* EFFECT 3 */
+        body.effect-3 #fx-layer-1{display:block;background:repeating-linear-gradient(0deg,transparent,transparent 18px,rgba(0,255,50,.08) 18px,rgba(0,255,50,.08) 20px),repeating-linear-gradient(90deg,transparent,transparent 18px,rgba(0,255,50,.04) 18px,rgba(0,255,50,.04) 20px);}
+        body.effect-3 #fx-layer-2{display:block;background:linear-gradient(180deg,rgba(0,255,50,.35) 0%,transparent 15%),linear-gradient(180deg,transparent 20%,rgba(0,200,50,.2) 35%,transparent 50%),linear-gradient(180deg,transparent 55%,rgba(0,255,50,.28) 70%,transparent 85%);background-size:30px 100%,80px 100%,50px 100%;animation:e3rain 3s linear infinite;height:300%;top:-100%;}
+        @keyframes e3rain{from{transform:translateY(-66.66%)}to{transform:translateY(33.33%)}}
+        /* EFFECT 4 */
+        body.effect-4 #fx-layer-1{display:block;background:radial-gradient(ellipse 120% 40% at 50% 0%,rgba(0,255,180,.35),transparent 60%),radial-gradient(ellipse 80% 30% at 20% 50%,rgba(100,0,255,.3),transparent 60%),radial-gradient(ellipse 80% 30% at 80% 40%,rgba(0,150,255,.3),transparent 60%);animation:e4aurora 5s ease-in-out infinite alternate;}
+        body.effect-4 #fx-layer-2{display:block;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,rgba(0,255,180,.1),rgba(100,0,255,.13),rgba(0,200,255,.1),rgba(0,255,180,.1));animation:e4spin 12s linear infinite;}
+        @keyframes e4aurora{0%{opacity:.6;transform:scaleX(1)}100%{opacity:1;transform:scaleX(1.1)}}
+        @keyframes e4spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        /* EFFECT 5 */
+        body.effect-5 #fx-layer-1{display:block;background:radial-gradient(ellipse 60% 80% at 50% 110%,rgba(255,80,0,.55),rgba(200,20,0,.4) 40%,transparent 70%),radial-gradient(ellipse 40% 60% at 20% 110%,rgba(255,150,0,.45),transparent 60%),radial-gradient(ellipse 40% 60% at 80% 110%,rgba(255,100,0,.45),transparent 60%);animation:e5flicker .8s ease-in-out infinite alternate;}
+        body.effect-5 #fx-layer-2{display:block;width:200%;background:repeating-linear-gradient(90deg,rgba(255,60,0,.06) 0px,rgba(255,120,0,.09) 10px,rgba(255,200,0,.04) 20px,transparent 30px,transparent 60px);animation:e5wave 2s linear infinite;}
+        @keyframes e5flicker{0%{opacity:.75}100%{opacity:1}}
+        @keyframes e5wave{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        /* EFFECT 6 */
+        body.effect-6 #fx-layer-1{display:block;width:200%;background:repeating-linear-gradient(170deg,transparent 0px,transparent 30px,rgba(0,150,255,.15) 30px,rgba(0,150,255,.15) 32px,transparent 32px,transparent 64px),repeating-linear-gradient(190deg,transparent 0px,transparent 20px,rgba(0,200,255,.12) 20px,rgba(0,200,255,.12) 22px,transparent 22px,transparent 44px);animation:e6wave 4s linear infinite;}
+        body.effect-6 #fx-layer-2{display:block;background:radial-gradient(ellipse at 30% 80%,rgba(0,100,255,.35),transparent 50%),radial-gradient(ellipse at 70% 20%,rgba(0,200,255,.28),transparent 50%);animation:e6pulse 6s ease-in-out infinite alternate;}
+        @keyframes e6wave{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        @keyframes e6pulse{from{opacity:.5}to{opacity:1}}
+        /* EFFECT 7 */
+        body.effect-7 #fx-layer-1{display:block;background-image:radial-gradient(1px 1px at 5% 5%,white,transparent),radial-gradient(2px 2px at 15% 25%,#ffe,transparent),radial-gradient(1px 1px at 25% 65%,white,transparent),radial-gradient(2px 2px at 35% 10%,#eef,transparent),radial-gradient(1px 1px at 45% 85%,white,transparent),radial-gradient(2px 2px at 55% 45%,#fef,transparent),radial-gradient(1px 1px at 65% 15%,white,transparent),radial-gradient(2px 2px at 75% 70%,#ffe,transparent),radial-gradient(1px 1px at 85% 35%,white,transparent),radial-gradient(3px 3px at 92% 90%,#eef,transparent),radial-gradient(1px 1px at 10% 92%,white,transparent),radial-gradient(2px 2px at 50% 50%,#fff,transparent);background-size:500px 500px;animation:e7twinkle 4s ease-in-out infinite alternate;}
+        body.effect-7 #fx-layer-2{display:block;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse 60% 40% at 50% 50%,rgba(80,0,180,.25),rgba(30,0,80,.18) 50%,transparent 70%);animation:e7spin 20s linear infinite;}
+        @keyframes e7twinkle{from{opacity:.9}to{opacity:1}}
+        @keyframes e7spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        /* EFFECT 8 */
+        body.effect-8 #fx-layer-1{display:block;background:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(0,255,255,.18) 59px,rgba(0,255,255,.18) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,0,255,.18) 59px,rgba(255,0,255,.18) 60px);animation:e8grid .5s linear infinite;}
+        body.effect-8 #fx-layer-2{display:block;background:radial-gradient(ellipse at 0% 0%,rgba(0,255,255,.35),transparent 45%),radial-gradient(ellipse at 100% 100%,rgba(255,0,255,.35),transparent 45%),radial-gradient(ellipse at 100% 0%,rgba(255,255,0,.2),transparent 40%),radial-gradient(ellipse at 0% 100%,rgba(0,255,100,.2),transparent 40%);animation:e8glow 2s ease-in-out infinite alternate;}
+        @keyframes e8grid{from{background-position:0 0,0 0}to{background-position:0 2px,2px 0}}
+        @keyframes e8glow{from{opacity:.5}to{opacity:1}}
+        /* EFFECT 9 */
+        body.effect-9 #fx-layer-1{display:block;background:linear-gradient(180deg,#050020 0%,#200060 15%,#800080 30%,#cc0060 45%,#ff4000 60%,#ff8800 75%,#ffcc00 90%,#ffffaa 100%);animation:e9shift 6s ease-in-out infinite alternate;}
+        body.effect-9 #fx-layer-2{display:block;top:auto;bottom:0;height:50%;background:linear-gradient(0deg,rgba(255,80,0,.22),transparent);animation:e9glow 3s ease-in-out infinite alternate;}
+        @keyframes e9shift{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(30deg)}}
+        @keyframes e9glow{from{opacity:.5}to{opacity:1}}
+        /* EFFECT 10 */
+        body.effect-10 #fx-layer-1{display:block;background-image:radial-gradient(3px 3px at 8% 5%,rgba(200,230,255,.95),transparent),radial-gradient(4px 4px at 22% 18%,rgba(255,255,255,1),transparent),radial-gradient(3px 3px at 38% 40%,rgba(180,220,255,.9),transparent),radial-gradient(5px 5px at 52% 8%,rgba(255,255,255,.95),transparent),radial-gradient(3px 3px at 65% 65%,rgba(200,235,255,.9),transparent),radial-gradient(4px 4px at 78% 25%,rgba(255,255,255,1),transparent),radial-gradient(3px 3px at 88% 80%,rgba(180,220,255,.85),transparent),radial-gradient(4px 4px at 12% 75%,rgba(255,255,255,.95),transparent),radial-gradient(3px 3px at 48% 90%,rgba(200,230,255,.9),transparent),radial-gradient(5px 5px at 92% 50%,rgba(255,255,255,1),transparent);background-size:100% 200px;animation:e10snow 4s linear infinite;}
+        body.effect-10 #fx-layer-2{display:block;background:radial-gradient(ellipse at 50% 0%,rgba(100,180,255,.25),transparent 60%),radial-gradient(ellipse at 50% 100%,rgba(0,80,150,.28),transparent 60%);}
+        @keyframes e10snow{from{background-position:0 -200px,50px 0}to{background-position:30px 200px,80px 200px}}
+        /* EFFECT 11 */
+        body.effect-11 #fx-layer-1{display:block;background:radial-gradient(ellipse at 50% 0%,rgba(255,220,0,.45),transparent 50%),radial-gradient(ellipse at 20% 50%,rgba(255,150,0,.3),transparent 40%),radial-gradient(ellipse at 80% 80%,rgba(255,255,100,.25),transparent 40%);animation:e11flash 1.2s ease-in-out infinite;}
+        body.effect-11 #fx-layer-2{display:block;background:repeating-linear-gradient(75deg,transparent 0px,transparent 90px,rgba(255,200,0,.14) 90px,rgba(255,200,0,.14) 92px),repeating-linear-gradient(105deg,transparent 0px,transparent 70px,rgba(255,220,50,.09) 70px,rgba(255,220,50,.09) 72px);animation:e11move .8s linear infinite;}
+        @keyframes e11flash{0%,100%{opacity:.4}42%{opacity:1}44%{opacity:.4}62%{opacity:1}64%{opacity:.4}}
+        @keyframes e11move{from{background-position:0 0,0 0}to{background-position:92px 0,72px 0}}
+        /* EFFECT 12 */
+        body.effect-12 #fx-layer-1{display:block;background:repeating-linear-gradient(0deg,rgba(0,255,120,.09) 0px,rgba(0,255,120,.09) 2px,transparent 2px,transparent 6px);animation:e12scan 2s linear infinite;}
+        body.effect-12 #fx-layer-2{display:block;width:120%;left:-10%;height:60px;top:0;background:linear-gradient(180deg,transparent,rgba(0,255,150,.4) 50%,transparent);animation:e12beam 3s linear infinite;box-shadow:0 0 30px rgba(0,255,120,.5),0 0 60px rgba(0,255,120,.25);}
+        @keyframes e12scan{from{background-position:0 0}to{background-position:0 -6px}}
+        @keyframes e12beam{from{top:-60px}to{top:100vh}}
 
-        /* ===== EFFECT 3: 💻 Ma trận ===== */
-        body.effect-3 { background: #000800 !important; }
-        body.effect-3 #fx-layer-1 {
-            display: block;
-            background:
-                repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(0,255,50,0.08) 18px, rgba(0,255,50,0.08) 20px),
-                repeating-linear-gradient(90deg, transparent, transparent 18px, rgba(0,255,50,0.04) 18px, rgba(0,255,50,0.04) 20px);
-        }
-        body.effect-3 #fx-layer-2 {
-            display: block;
-            background:
-                linear-gradient(180deg, rgba(0,255,50,0.35) 0%, transparent 15%),
-                linear-gradient(180deg, transparent 20%, rgba(0,200,50,0.2) 35%, transparent 50%),
-                linear-gradient(180deg, transparent 55%, rgba(0,255,50,0.28) 70%, transparent 85%);
-            background-size: 30px 100%, 80px 100%, 50px 100%;
-            animation: e3rain 3s linear infinite;
-            height: 300%;
-            top: -100%;
-        }
-        @keyframes e3rain { from{transform:translateY(-66.66%);} to{transform:translateY(33.33%);} }
-
-        /* ===== EFFECT 4: 🌌 Cực quang ===== */
-        body.effect-4 { background: #000510 !important; }
-        body.effect-4 #fx-layer-1 {
-            display: block;
-            background:
-                radial-gradient(ellipse 120% 40% at 50% 0%,  rgba(0,255,180,0.35) 0%, transparent 60%),
-                radial-gradient(ellipse 80%  30% at 20% 50%, rgba(100,0,255,0.3) 0%, transparent 60%),
-                radial-gradient(ellipse 80%  30% at 80% 40%, rgba(0,150,255,0.3) 0%, transparent 60%);
-            animation: e4aurora 5s ease-in-out infinite alternate;
-        }
-        body.effect-4 #fx-layer-2 {
-            display: block;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg, rgba(0,255,180,0.1), rgba(100,0,255,0.13), rgba(0,200,255,0.1), rgba(0,255,180,0.1));
-            animation: e4spin 12s linear infinite;
-        }
-        @keyframes e4aurora { 0%{opacity:0.6; transform:scaleX(1);}   100%{opacity:1; transform:scaleX(1.1);} }
-        @keyframes e4spin  { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
-
-        /* ===== EFFECT 5: 🔥 Lửa ===== */
-        body.effect-5 { background: #1a0000 !important; }
-        body.effect-5 #fx-layer-1 {
-            display: block;
-            background:
-                radial-gradient(ellipse 60% 80% at 50% 110%, rgba(255,80,0,0.55)  0%, rgba(200,20,0,0.4) 40%, transparent 70%),
-                radial-gradient(ellipse 40% 60% at 20% 110%, rgba(255,150,0,0.45) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 60% at 80% 110%, rgba(255,100,0,0.45) 0%, transparent 60%);
-            animation: e5flicker 0.8s ease-in-out infinite alternate;
-        }
-        body.effect-5 #fx-layer-2 {
-            display: block;
-            width: 200%;
-            background: repeating-linear-gradient(90deg,
-                rgba(255,60,0,0.06) 0px, rgba(255,120,0,0.09) 10px,
-                rgba(255,200,0,0.04) 20px, transparent 30px, transparent 60px);
-            animation: e5wave 2s linear infinite;
-        }
-        @keyframes e5flicker { 0%{opacity:0.75;} 100%{opacity:1;} }
-        @keyframes e5wave { from{transform:translateX(0);} to{transform:translateX(-50%);} }
-
-        /* ===== EFFECT 6: 🌊 Đại dương ===== */
-        body.effect-6 { background: #000f22 !important; }
-        body.effect-6 #fx-layer-1 {
-            display: block;
-            width: 200%;
-            background:
-                repeating-linear-gradient(170deg,
-                    transparent 0px, transparent 30px,
-                    rgba(0,150,255,0.15) 30px, rgba(0,150,255,0.15) 32px,
-                    transparent 32px, transparent 64px),
-                repeating-linear-gradient(190deg,
-                    transparent 0px, transparent 20px,
-                    rgba(0,200,255,0.12) 20px, rgba(0,200,255,0.12) 22px,
-                    transparent 22px, transparent 44px);
-            animation: e6wave 4s linear infinite;
-        }
-        body.effect-6 #fx-layer-2 {
-            display: block;
-            background:
-                radial-gradient(ellipse at 30% 80%, rgba(0,100,255,0.35), transparent 50%),
-                radial-gradient(ellipse at 70% 20%, rgba(0,200,255,0.28), transparent 50%);
-            animation: e6pulse 6s ease-in-out infinite alternate;
-        }
-        @keyframes e6wave  { from{transform:translateX(0);}  to{transform:translateX(-50%);} }
-        @keyframes e6pulse { from{opacity:0.5;} to{opacity:1;} }
-
-        /* ===== EFFECT 7: 🪐 Vũ trụ ===== */
-        body.effect-7 { background: #02000a !important; }
-        body.effect-7 #fx-layer-1 {
-            display: block;
-            background-image:
-                radial-gradient(1px 1px at  5%  5%, white, transparent),
-                radial-gradient(2px 2px at 15% 25%, #ffe, transparent),
-                radial-gradient(1px 1px at 25% 65%, white, transparent),
-                radial-gradient(2px 2px at 35% 10%, #eef, transparent),
-                radial-gradient(1px 1px at 45% 85%, white, transparent),
-                radial-gradient(2px 2px at 55% 45%, #fef, transparent),
-                radial-gradient(1px 1px at 65% 15%, white, transparent),
-                radial-gradient(2px 2px at 75% 70%, #ffe, transparent),
-                radial-gradient(1px 1px at 85% 35%, white, transparent),
-                radial-gradient(3px 3px at 92% 90%, #eef, transparent),
-                radial-gradient(1px 1px at 10% 92%, white, transparent),
-                radial-gradient(2px 2px at 50% 50%, #fff, transparent);
-            background-size: 500px 500px;
-            animation: e7twinkle 4s ease-in-out infinite alternate;
-        }
-        body.effect-7 #fx-layer-2 {
-            display: block;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(80,0,180,0.25) 0%, rgba(30,0,80,0.18) 50%, transparent 70%);
-            animation: e7spin 20s linear infinite;
-        }
-        @keyframes e7twinkle { from{opacity:0.9;} to{opacity:1;} }
-        @keyframes e7spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
-
-        /* ===== EFFECT 8: 🔮 Neon Cyber ===== */
-        body.effect-8 { background: #050005 !important; }
-        body.effect-8 #fx-layer-1 {
-            display: block;
-            background:
-                repeating-linear-gradient(0deg,   transparent, transparent 59px, rgba(0,255,255,0.18) 59px, rgba(0,255,255,0.18) 60px),
-                repeating-linear-gradient(90deg,  transparent, transparent 59px, rgba(255,0,255,0.18) 59px, rgba(255,0,255,0.18) 60px);
-            animation: e8grid 0.5s linear infinite;
-        }
-        body.effect-8 #fx-layer-2 {
-            display: block;
-            background:
-                radial-gradient(ellipse at 0%   0%,   rgba(0,255,255,0.35)   0%, transparent 45%),
-                radial-gradient(ellipse at 100% 100%, rgba(255,0,255,0.35)   0%, transparent 45%),
-                radial-gradient(ellipse at 100% 0%,   rgba(255,255,0,0.2)   0%, transparent 40%),
-                radial-gradient(ellipse at 0%   100%, rgba(0,255,100,0.2)   0%, transparent 40%);
-            animation: e8glow 2s ease-in-out infinite alternate;
-        }
-        @keyframes e8grid { from{background-position:0 0,0 0;} to{background-position:0 2px,2px 0;} }
-        @keyframes e8glow { from{opacity:0.5;} to{opacity:1;} }
-
-        /* ===== EFFECT 9: 🌅 Hoàng hôn ===== */
-        body.effect-9 { background: #0a0005 !important; }
-        body.effect-9 #fx-layer-1 {
-            display: block;
-            background: linear-gradient(180deg,
-                #050020 0%, #200060 15%, #800080 30%,
-                #cc0060 45%, #ff4000 60%, #ff8800 75%, #ffcc00 90%, #ffffaa 100%);
-            animation: e9shift 6s ease-in-out infinite alternate;
-        }
-        body.effect-9 #fx-layer-2 {
-            display: block;
-            top: auto; bottom: 0;
-            height: 50%;
-            background: linear-gradient(0deg, rgba(255,80,0,0.22) 0%, transparent 100%);
-            animation: e9glow 3s ease-in-out infinite alternate;
-        }
-        @keyframes e9shift { from{filter:hue-rotate(0deg);} to{filter:hue-rotate(30deg);} }
-        @keyframes e9glow  { from{opacity:0.5;} to{opacity:1;} }
-
-        /* ===== EFFECT 10: ❄️ Tuyết rơi ===== */
-        body.effect-10 { background: #010d1a !important; }
-        body.effect-10 #fx-layer-1 {
-            display: block;
-            background-image:
-                radial-gradient(3px 3px at 8%   5%,  rgba(200,230,255,0.95), transparent),
-                radial-gradient(4px 4px at 22%  18%, rgba(255,255,255,1),    transparent),
-                radial-gradient(3px 3px at 38%  40%, rgba(180,220,255,0.9),  transparent),
-                radial-gradient(5px 5px at 52%  8%,  rgba(255,255,255,0.95), transparent),
-                radial-gradient(3px 3px at 65%  65%, rgba(200,235,255,0.9),  transparent),
-                radial-gradient(4px 4px at 78%  25%, rgba(255,255,255,1),    transparent),
-                radial-gradient(3px 3px at 88%  80%, rgba(180,220,255,0.85), transparent),
-                radial-gradient(4px 4px at 12%  75%, rgba(255,255,255,0.95), transparent),
-                radial-gradient(3px 3px at 48%  90%, rgba(200,230,255,0.9),  transparent),
-                radial-gradient(5px 5px at 92%  50%, rgba(255,255,255,1),    transparent);
-            background-size: 100% 200px;
-            animation: e10snow 4s linear infinite;
-        }
-        body.effect-10 #fx-layer-2 {
-            display: block;
-            background:
-                radial-gradient(ellipse at 50% 0%, rgba(100,180,255,0.25) 0%, transparent 60%),
-                radial-gradient(ellipse at 50% 100%, rgba(0,80,150,0.28) 0%, transparent 60%);
-        }
-        @keyframes e10snow { from{background-position:0 -200px, 50px 0;} to{background-position:30px 200px, 80px 200px;} }
-
-        /* ===== EFFECT 11: ⚡ Điện chớp ===== */
-        body.effect-11 { background: #050005 !important; }
-        body.effect-11 #fx-layer-1 {
-            display: block;
-            background:
-                radial-gradient(ellipse at 50%  0%, rgba(255,220,0,0.45)  0%, transparent 50%),
-                radial-gradient(ellipse at 20% 50%, rgba(255,150,0,0.3)  0%, transparent 40%),
-                radial-gradient(ellipse at 80% 80%, rgba(255,255,100,0.25) 0%, transparent 40%);
-            animation: e11flash 1.2s ease-in-out infinite;
-        }
-        body.effect-11 #fx-layer-2 {
-            display: block;
-            background:
-                repeating-linear-gradient(75deg,  transparent 0px, transparent 90px, rgba(255,200,0,0.14) 90px, rgba(255,200,0,0.14) 92px),
-                repeating-linear-gradient(105deg, transparent 0px, transparent 70px, rgba(255,220,50,0.09) 70px, rgba(255,220,50,0.09) 72px);
-            animation: e11move 0.8s linear infinite;
-        }
-        @keyframes e11flash {
-            0%,100%{opacity:0.4;}
-            40%{opacity:0.4;} 42%{opacity:1;} 44%{opacity:0.4;}
-            60%{opacity:0.4;} 62%{opacity:1;} 64%{opacity:0.4;}
-        }
-        @keyframes e11move { from{background-position:0 0,0 0;} to{background-position:92px 0,72px 0;} }
-
-        /* ===== EFFECT 12: 🟢 Hologram ===== */
-        body.effect-12 { background: #000a05 !important; }
-        body.effect-12 #fx-layer-1 {
-            display: block;
-            background:
-                repeating-linear-gradient(0deg,
-                    rgba(0,255,120,0.09) 0px, rgba(0,255,120,0.09) 2px,
-                    transparent 2px, transparent 6px);
-            animation: e12scan 2s linear infinite;
-        }
-        body.effect-12 #fx-layer-2 {
-            display: block;
-            width: 120%;
-            left: -10%;
-            height: 60px;
-            top: 0;
-            background: linear-gradient(180deg, transparent, rgba(0,255,150,0.4) 50%, transparent);
-            animation: e12beam 3s linear infinite;
-            box-shadow: 0 0 30px rgba(0,255,120,0.5), 0 0 60px rgba(0,255,120,0.25);
-        }
-        @keyframes e12scan { from{background-position:0 0;} to{background-position:0 -6px;} }
-        @keyframes e12beam { from{top:-60px;} to{top:100vh;} }
-
-        /* ===== VIỀN 7 MÀU ===== */
+        /* ===== LAYOUT ===== */
         .rainbow-wrapper {
-            position: relative; max-width: 1250px; width: 100%; padding: 4px; 
-            border-radius: 15px; overflow: hidden; display: flex; justify-content: center;
-            box-shadow: 0 0 30px rgba(0, 191, 255, 0.4);
+            position:relative; max-width:1250px; width:100%; padding:4px;
+            border-radius:15px; overflow:hidden; display:flex; justify-content:center;
+            box-shadow:var(--shadow-wrap); transition:box-shadow 0.4s;
         }
         .rainbow-wrapper::before {
-            content: ''; position: absolute; width: 250%; height: 250%;
-            background: var(--rw-bg, conic-gradient(#ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000));
-            animation: rotateRainbow 4s linear infinite;
+            content:''; position:absolute; width:250%; height:250%;
+            background:var(--rw-bg,conic-gradient(#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff,#ff0000));
+            animation:rotateRainbow 4s linear infinite;
         }
-        @keyframes rotateRainbow { 100% { transform: rotate(360deg); } }
+        @keyframes rotateRainbow{100%{transform:rotate(360deg)}}
 
-        .container { 
-            background: rgba(255, 255, 255, 0.96); width: 100%; padding: 15px 10px; 
-            border-radius: 10px; position: relative; z-index: 1; backdrop-filter: blur(10px);
-            overflow-x: auto; -webkit-overflow-scrolling: touch;
+        .container {
+            background:var(--bg-container); width:100%; padding:15px 10px;
+            border-radius:10px; position:relative; z-index:1;
+            backdrop-filter:blur(10px); overflow-x:auto; -webkit-overflow-scrolling:touch;
+            transition:background 0.4s;
         }
-
-        .controls { 
-            display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; 
-            background: rgba(233, 236, 239, 0.8); padding: 10px; border-radius: 8px; align-items: center; 
+        .controls {
+            display:flex; gap:6px; margin-bottom:15px; flex-wrap:wrap;
+            background:var(--bg-controls); padding:10px; border-radius:8px;
+            align-items:center; transition:background 0.4s;
         }
-        .btn { 
-            padding: 8px 10px; cursor: pointer; border: none; border-radius: 4px; 
-            font-weight: bold; color: white; font-size: 12px; display: inline-flex; 
-            align-items: center; justify-content: center; min-height: 35px;
+        .btn {
+            padding:8px 10px; cursor:pointer; border:none; border-radius:4px;
+            font-weight:bold; color:white; font-size:12px; display:inline-flex;
+            align-items:center; justify-content:center; min-height:35px;
+            transition:transform 0.1s;
         }
+        .btn:active{transform:scale(0.96);}
+        #effectBadge{font-size:14px;}
 
-        #effectBadge { font-size: 14px; }
-        
-        table { width: 100%; border-collapse: separate; border-spacing: 2px; margin-top: 5px; table-layout: fixed; min-width: 1100px; }
-
-        th, td { 
-            position: relative; padding: 6px 2px; text-align: center; font-size: 13px;
-            background: rgba(255, 255, 255, 0.9) !important;
-            border: 2px solid;
-            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
-            animation: rainbowBorder 3s linear infinite;
+        table{width:100%;border-collapse:separate;border-spacing:2px;margin-top:5px;table-layout:fixed;min-width:1100px;}
+        th,td{
+            position:relative; padding:6px 2px; text-align:center; font-size:13px;
+            background:var(--bg-table-cell) !important;
+            border:2px solid;
+            border-image:var(--border-table) 1;
+            animation:rainbowBorder 3s linear infinite;
+            transition:background 0.4s;
         }
-        @keyframes rainbowBorder { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-
-        th { background: #f1f3f5 !important; font-weight: bold; text-transform: uppercase; font-size: 10px; height: 50px; vertical-align: middle; }
-        .title-header { font-size: 22px; font-weight: bold; color: #0054a5; background: white !important; padding: 12px !important; }
-
-        .col-stt { width: 35px; cursor: pointer; }
-        .col-name { width: 150px; text-align: left !important; padding-left: 8px !important; font-weight: bold; }
-        .col-img { width: 65px; }
-        .col-kwh { background: rgba(232, 245, 233, 0.8) !important; }
-        .col-final { font-weight: bold; color: #ff0000 !important; font-size: 16px; background: rgba(227, 242, 253, 0.9) !important; }
-
-        input { width: 100%; border: none; text-align: center; font-size: 14px; outline: none; background: transparent; font-family: inherit; padding: 4px 0; }
-        input:disabled { color: #000; opacity: 1; -webkit-text-fill-color: #000; }
-
-        .img-container { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .img-preview { width: 45px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; background: #eee; display: none; }
-        .upload-btn { font-size: 10px; color: #007bff; cursor: pointer; font-weight: bold; text-decoration: underline; padding: 2px; }
-        
-        .loss-summary td { background: rgba(255, 243, 205, 0.9) !important; color: #856404; font-size: 15px; font-weight: bold; height: 45px; }
-        #lblGrandTotal { color: #ff0000; font-weight: bold; font-size: 26px; }
-
-        .calculation-guide { 
-            margin-top: 20px; padding: 20px; background: white; line-height: 1.8; text-align: left; 
-            border: 3px solid; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1;
-            font-size: 18px; 
-        }
-        .rainbow-text {
-            display: inline; font-weight: bold; font-size: 18px; 
-            background: linear-gradient(to right, #ff0000, #ff7f00, #e9ed00, #00ff00, #0000ff, #4b0082, #8b00ff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-size: 400% 400%; animation: moveGradient 5s linear infinite;
-        }
-        @keyframes moveGradient { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-
-        #imgModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; }
-        #imgModal img { max-width: 95%; max-height: 95%; border: 2px solid #fff; }
+        @keyframes rainbowBorder{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+        th{background:var(--bg-table-head) !important;font-weight:bold;text-transform:uppercase;font-size:10px;height:50px;vertical-align:middle;}
+        .title-header{font-size:22px;font-weight:bold;color:var(--color-title) !important;background:var(--bg-container) !important;padding:12px !important;transition:color 0.4s;}
+        .col-stt{width:35px;cursor:pointer;} .col-name{width:150px;text-align:left !important;padding-left:8px !important;font-weight:bold;}
+        .col-img{width:65px;} .col-kwh{background:rgba(232,245,233,0.8) !important;}
+        .col-final{font-weight:bold;color:var(--color-final) !important;font-size:16px;background:rgba(227,242,253,0.9) !important;}
+        input{width:100%;border:none;text-align:center;font-size:14px;outline:none;background:transparent;font-family:inherit;padding:4px 0;}
+        input:disabled{color:#000;opacity:1;-webkit-text-fill-color:#000;}
+        .img-container{display:flex;flex-direction:column;align-items:center;gap:2px;}
+        .img-preview{width:45px;height:45px;object-fit:cover;border-radius:4px;border:1px solid #ddd;background:#eee;display:none;}
+        .upload-btn{font-size:10px;color:#007bff;cursor:pointer;font-weight:bold;text-decoration:underline;padding:2px;}
+        .loss-summary td{background:var(--bg-loss) !important;color:var(--color-loss-text) !important;font-size:15px;font-weight:bold;height:45px;}
+        #lblGrandTotal{color:var(--color-grand);font-weight:bold;font-size:26px;}
+        .calculation-guide{margin-top:20px;padding:20px;background:var(--bg-guide);line-height:1.8;text-align:left;border:3px solid;border-image:var(--border-table) 1;font-size:18px;transition:background 0.4s;}
+        .rainbow-text{display:inline;font-weight:bold;font-size:18px;background:linear-gradient(to right,#ff0000,#ff7f00,#e9ed00,#00ff00,#0000ff,#4b0082,#8b00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:400% 400%;animation:moveGradient 5s linear infinite;}
+        @keyframes moveGradient{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+        #imgModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:10000;justify-content:center;align-items:center;}
+        #imgModal img{max-width:95%;max-height:95%;border:2px solid #fff;}
 
         /* ===== TẮT HIỆU ỨNG ===== */
-        body.no-effects { background: #f0f2f5 !important; }
-        body.no-effects #fx-layer-1,
-        body.no-effects #fx-layer-2 { display: none !important; }
-        .no-effects .rainbow-wrapper { padding: 0 !important; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; }
-        .no-effects .rainbow-wrapper::before { display: none !important; }
-        .no-effects th, .no-effects td, .no-effects .calculation-guide { border: 1px solid #333 !important; animation: none !important; filter: none !important; border-image: none !important; }
-        .no-effects .rainbow-text { background: none !important; -webkit-background-clip: initial !important; -webkit-text-fill-color: initial !important; color: #333 !important; }
+        body.no-effects #fx-layer-1,body.no-effects #fx-layer-2{display:none !important;}
+        .no-effects .rainbow-wrapper{padding:0 !important;}
+        .no-effects .rainbow-wrapper::before{display:none !important;}
+        .no-effects th,.no-effects td,.no-effects .calculation-guide{border:1px solid #999 !important;animation:none !important;filter:none !important;border-image:none !important;}
+        .no-effects .rainbow-text{background:none !important;-webkit-background-clip:initial !important;-webkit-text-fill-color:initial !important;color:var(--color-title) !important;}
 
-        /* ===== FIX XUẤT ẢNH IPHONE ===== */
-        .is-capturing { overflow: visible !important; width: 1150px !important; max-width: none !important; background: white !important; }
-        .is-capturing .col-img { display: none !important; }
-        .is-capturing .rainbow-text { background: none !important; -webkit-text-fill-color: #0054a5 !important; color: #0054a5 !important; font-size: 18px !important; display: inline !important; }
-        .is-capturing th, .is-capturing td, .is-capturing .calculation-guide { border: 2px solid !important; border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff) 1 !important; animation: none !important; }
-        .hide-for-capture { display: none !important; }
+        /* ===== GEAR SETTINGS PANEL ===== */
+        #settingsPanel {
+            position:fixed; bottom:18px; right:14px; z-index:10001;
+            display:flex; flex-direction:column; align-items:flex-end; gap:10px;
+        }
+        #gearBtn {
+            width:50px; height:50px; border-radius:50%; cursor:pointer;
+            background:rgba(20,20,30,0.85); border:2px solid rgba(255,255,255,0.3);
+            color:white; font-size:24px;
+            display:flex; align-items:center; justify-content:center;
+            box-shadow:0 3px 16px rgba(0,0,0,0.6); backdrop-filter:blur(8px);
+            transition:transform 0.35s cubic-bezier(.68,-.55,.27,1.55);
+        }
+        #gearBtn:hover{transform:rotate(60deg) scale(1.1);}
+        #gearBtn.open{transform:rotate(90deg);}
+        #settingsPopup {
+            display:none; flex-direction:column; gap:14px;
+            background:rgba(12,15,25,0.93); padding:16px 14px;
+            border-radius:18px; border:1px solid rgba(255,255,255,0.15);
+            backdrop-filter:blur(14px); box-shadow:0 6px 30px rgba(0,0,0,0.7);
+            min-width:210px; animation:popIn 0.2s ease-out;
+        }
+        #settingsPopup.open{display:flex;}
+        @keyframes popIn{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .sp-label{font-size:10px;font-weight:bold;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+        .sp-btn{
+            width:100%; padding:9px 12px; border-radius:10px; border:none;
+            font-size:12px; font-weight:bold; cursor:pointer; color:white;
+            display:flex; align-items:center; gap:8px;
+            transition:opacity 0.15s, transform 0.1s;
+        }
+        .sp-btn:active{transform:scale(0.96);}
+        .sp-btn:hover{opacity:0.88;}
+        .sp-themes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+        .theme-dot{
+            width:38px; height:38px; border-radius:50%; cursor:pointer;
+            border:3px solid rgba(255,255,255,0.2);
+            box-shadow:0 2px 8px rgba(0,0,0,0.5);
+            transition:transform 0.2s, border-color 0.2s;
+            display:flex; align-items:center; justify-content:center; font-size:16px;
+        }
+        .theme-dot:hover{transform:scale(1.15);}
+        .theme-dot.active{border-color:#fff;transform:scale(1.2);box-shadow:0 0 12px rgba(255,255,255,0.6);}
+        .sp-divider{border:none;border-top:1px solid rgba(255,255,255,0.12);margin:0;}
 
-        @media screen and (max-width: 768px) {
-            .title-header { font-size: 18px; }
-            .btn { padding: 6px 8px; font-size: 11px; }
-            .controls { gap: 4px; padding: 8px; }
+        /* ===== XUẤT ẢNH ===== */
+        .is-capturing{overflow:visible !important;width:1150px !important;max-width:none !important;background:white !important;}
+        .is-capturing .col-img{display:none !important;}
+        .is-capturing .rainbow-text{background:none !important;-webkit-text-fill-color:#0054a5 !important;color:#0054a5 !important;font-size:18px !important;display:inline !important;}
+        .is-capturing th,.is-capturing td,.is-capturing .calculation-guide{border:2px solid !important;border-image:linear-gradient(45deg,#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff) 1 !important;animation:none !important;}
+        .hide-for-capture{display:none !important;}
+
+        @media screen and (max-width:768px){
+            .title-header{font-size:18px;} .btn{padding:6px 8px;font-size:11px;} .controls{gap:4px;padding:8px;}
+            #themeBadgePanel{bottom:10px;right:8px;}
+            #settingsPanel{bottom:10px;right:8px;}
         }
     </style>
 </head>
 <body id="mainBody">
 
-<!-- LỚP HIỆU ỨNG PHỦ TOÀN TRANG (pointer-events:none nên không chặn click) -->
 <div id="fx-layer-1"></div>
 <div id="fx-layer-2"></div>
+
+<!-- GEAR SETTINGS PANEL -->
+<div id="settingsPanel">
+    <div id="settingsPopup">
+        <!-- HIỆU ỨNG -->
+        <div>
+            <div class="sp-label">⚡ Hiệu Ứng</div>
+            <button class="sp-btn" id="spToggleEffectsBtn" onclick="toggleEffects()" style="background:#fd7e14;">⚡ Tắt Hiệu Ứng</button>
+        </div>
+        <div>
+            <button class="sp-btn" id="spCycleEffectBtn" onclick="cycleEffect()" style="background:#9b59b6;"><span id="effectBadge">⭐</span><span id="effectName">Lấp lánh sao</span></button>
+        </div>
+        <hr class="sp-divider">
+        <!-- DỮ LIỆU -->
+        <div>
+            <div class="sp-label">💾 Dữ Liệu</div>
+            <button class="sp-btn" onclick="exportData();toggleSettingsPanel()" style="background:#17a2b8;">📤 Backup file</button>
+        </div>
+        <div>
+            <label class="sp-btn" style="background:#ffc107;color:#000;cursor:pointer;">
+                📥 Nhập file khôi phục
+                <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+            </label>
+        </div>
+    </div>
+    <div id="gearBtn" onclick="toggleSettingsPanel()" title="Cài đặt">⚙️</div>
+</div>
 
 <div id="imgModal" onclick="this.style.display='none'"><img id="modalImg" src=""></div>
 
 <div class="rainbow-wrapper" id="rainbowWrapper">
     <div class="container" id="captureArea">
         <div class="controls">
-            <div style="display:flex; align-items:center; gap:5px;">
+            <div style="display:flex;align-items:center;gap:5px;">
                 <strong>Tháng:</strong>
-                <input type="month" id="currentMonth" onchange="changeMonth()" style="width: 130px; border: 1px solid #ccc; background: white; border-radius: 4px; padding: 4px;">
+                <input type="month" id="currentMonth" onchange="changeMonth()" style="width:130px;border:1px solid #ccc;background:white;border-radius:4px;padding:4px;">
             </div>
             <div id="statusArea"></div>
-            
-            <!-- NÚT TẮT/BẬT -->
-            <button class="btn" id="toggleEffectsBtn" onclick="toggleEffects()" style="background: #fd7e14;">⚡ Tắt Hiệu Ứng</button>
-            <!-- NÚT ĐỔI HIỆU ỨNG -->
-            <button class="btn" id="cycleEffectBtn" onclick="cycleEffect()" style="background: #9b59b6;"><span id="effectBadge">⭐</span> Đổi Hiệu Ứng</button>
-
-            <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa tháng</span></button>
-            <button class="btn" onclick="addRow()" style="background: #28a745;">+ thêm Hộ</button>
-            <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;">Chế Độ Xóa</button>
-            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ liệu</button>
-            <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup file</button>
-            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập file khôi phục<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
-            <button class="btn" style="background: #d63384;" onclick="exportToPNG()">Xuất Ảnh Nè</button>
+            <button class="btn" id="lockBtn" onclick="toggleLock()" style="background:#6f42c1;"><span id="lockBtnText">Khóa tháng</span></button>
+            <button class="btn" onclick="addRow()" style="background:#28a745;">+ thêm Hộ</button>
+            <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background:#6c757d;">Chế Độ Xóa</button>
+            <button class="btn" onclick="saveToLocal()" style="background:#007bff;">Lưu Dữ liệu</button>
+            <button class="btn" style="background:#d63384;" onclick="exportToPNG()">Xuất Ảnh Nè</button>
         </div>
 
-        <div id="tableScrollWrapper" style="width: 100%; overflow-x: auto;">
+        <div id="tableScrollWrapper" style="width:100%;overflow-x:auto;">
             <table id="mainTable">
                 <thead>
                     <tr><th colspan="10" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
-                    <tr id="tableHeader">
-                        <th class="col-stt">STT</th>
-                        <th class="col-name">Tên hộ</th>
-                        <th class="col-img">Ảnh ĐH</th>
-                        <th>SĐ tháng trước</th>
-                        <th>SĐ tháng này</th>
-                        <th class="col-kwh">Số kí tiêu thụ(kWh)</th>
-                        <th>Giá điện(VNĐ)</th>
-                        <th>Tiền điện(VNĐ)</th>
-                        <th>Tiền điện thất thoát(VNĐ)</th>
+                    <tr>
+                        <th class="col-stt">STT</th><th class="col-name">Tên hộ</th><th class="col-img">Ảnh ĐH</th>
+                        <th>SĐ tháng trước</th><th>SĐ tháng này</th>
+                        <th class="col-kwh">Số kí tiêu thụ(kWh)</th><th>Giá điện(VNĐ)</th>
+                        <th>Tiền điện(VNĐ)</th><th>Tiền điện thất thoát(VNĐ)</th>
                         <th class="col-final">TIỀN PHẢI NỘP(VNĐ)</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="10" id="footerMain" class="footer-info">
-                            <div style="display:flex; align-items:center; flex-wrap: wrap; gap:15px; padding:10px;">
-                                <span>Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width: 30px; border-bottom: 1px solid #999;">: 
-                                <input type="number" id="tongDHThang" oninput="updateTotals()" style="width: 90px; font-weight: bold; border-bottom: 1px solid #999;"> (Kwh)</span>
-                                <div style="display:flex; align-items:center; gap:8px;">
+                        <td colspan="10" id="footerMain">
+                            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:15px;padding:10px;">
+                                <span>Số ĐH tổng tháng <input type="text" id="footerMonthLabel" style="width:30px;border-bottom:1px solid #999;">:
+                                <input type="number" id="tongDHThang" oninput="updateTotals()" style="width:90px;font-weight:bold;border-bottom:1px solid #999;"> (Kwh)</span>
+                                <div style="display:flex;align-items:center;gap:8px;">
                                     <span style="font-size:11px">Ảnh Tổng:</span>
                                     <div class="img-container">
                                         <img src="" id="mainMeterImg" class="img-preview" onclick="openImg(this.src)">
                                         <span class="upload-btn" onclick="document.getElementById('fileMain').click()">[Up Ảnh]</span>
-                                        <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this, 'mainMeterImg')">
+                                        <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this,'mainMeterImg')">
                                     </div>
                                 </div>
                             </div>
@@ -494,8 +346,8 @@
                         <td colspan="5" id="f_col5">Tiền điện thất thoát (x2.400đ): <span id="lblLossMoney">0</span> đ</td>
                     </tr>
                     <tr>
-                        <td colspan="10" id="f_col6" style="text-align: center; padding: 20px !important;">
-                            <span style="color:#0054a5; font-weight:bold; font-size:18px;">TỔNG TIỀN PHẢI NỘP TRONG THÁNG:</span> <br>
+                        <td colspan="10" id="f_col6" style="text-align:center;padding:20px !important;">
+                            <span style="font-weight:bold;font-size:18px;color:var(--color-title)">TỔNG TIỀN PHẢI NỘP TRONG THÁNG:</span><br>
                             <span id="lblGrandTotal">0đ</span>
                         </td>
                     </tr>
@@ -504,7 +356,7 @@
         </div>
 
         <div class="calculation-guide">
-            <h3 style="margin-top:0; color:#0054a5;">Ghi chú cách tính:</h3>
+            <h3 style="margin-top:0;color:var(--color-title)">Ghi chú cách tính:</h3>
             <span class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</span><br>
             <span class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</span><br>
             <span class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</span><br>
@@ -516,297 +368,238 @@
 </div>
 
 <script>
-    const EFFECT_ICONS = ['','⭐','🫧','💻','🌌','🔥','🌊','🪐','🔮','🌅','❄️','⚡','🟢'];
-    const TOTAL_EFFECTS = 12;
-    const EFFECT_NAMES = ['','⭐ Lấp lánh sao','❤️‍🔥 Bong bóng','💻 Ma trận','🌌 Cực quang','🔥 Lửa','🌊 Đại dương','🪐 Vũ trụ','🔮 Neon Cyber','🌅 Hoàng hôn','❄️ Tuyết rơi','⚡ Điện chớp','🟢 Hologram'];
+    const EFFECT_ICONS  = ['','⭐','🫧','💻','🌌','🔥','🌊','🪐','🔮','🌅','❄️','⚡','🟢'];
+    const EFFECT_NAMES  = ['','⭐ Lấp lánh sao','❤️‍🔥 Bong bóng','💻 Ma trận','🌌 Cực quang','🔥 Lửa','🌊 Đại dương','🪐 Vũ trụ','🔮 Neon Cyber','🌅 Hoàng hôn','❄️ Tuyết rơi','⚡ Điện chớp','🟢 Hologram'];
     const EFFECT_COLORS = ['','#e67e22','#8e44ad','#27ae60','#16a085','#c0392b','#2980b9','#6c3483','#0097a7','#ad1457','#546e7a','#4527a0','#00897b'];
-
-    let db = JSON.parse(localStorage.getItem('electricDB_vPhoto')) || {};
-    let effectsEnabled = localStorage.getItem('effectsEnabled') !== 'false';
-    let currentEffect = parseInt(localStorage.getItem('currentEffect') || '1');
-    if (isNaN(currentEffect) || currentEffect < 1 || currentEffect > TOTAL_EFFECTS) currentEffect = 1;
-
-    const monthInput = document.getElementById('currentMonth');
-    if (!monthInput.value) monthInput.value = new Date().toISOString().substring(0, 7);
-
-    function toggleEffects() {
-        effectsEnabled = !effectsEnabled;
-        localStorage.setItem('effectsEnabled', effectsEnabled);
-        applyEffectsUI();
-    }
-
-    function cycleEffect() {
-        currentEffect = (currentEffect % TOTAL_EFFECTS) + 1;
-        localStorage.setItem('currentEffect', currentEffect);
-        applyEffectsUI();
-    }
-
-    const WRAPPER_GRADIENTS = [
-        '',
+    const TOTAL_EFFECTS = 12;
+    const TOTAL_THEMES  = 5;
+    const WRAPPER_GRADIENTS = ['',
         'conic-gradient(#fff,#aaf,#fff,#aaf,#fff)',
-        'conic-gradient(#006,#04f,#0af,#06f,#006)',
+        'conic-gradient(#1a5cb8,#56b4e0,#2980b9,#1a5cb8)',
         'conic-gradient(#000,#0f0,#020,#0f0,#000)',
-        'conic-gradient(#00ffb4,#6400ff,#0096ff,#ff3296,#00ffb4)',
-        'conic-gradient(#ff0000,#ff4400,#ff8800,#ffcc00,#ff4400,#ff0000)',
-        'conic-gradient(#000f22,#0064c8,#00c8ff,#0096ff,#000f22)',
-        'conic-gradient(#02000a,#8000ff,#4000aa,#ff00ff,#02000a)',
-        'conic-gradient(#00ffff,#ff00ff,#ffff00,#00ff00,#00ffff)',
-        'conic-gradient(#200060,#cc0060,#ff4000,#ffcc00,#800080,#200060)',
-        'conic-gradient(#010d1a,#64b4ff,#ffffff,#c8e6ff,#010d1a)',
-        'conic-gradient(#050005,#ffd700,#ffaa00,#ffffff,#ffd700,#050005)',
-        'conic-gradient(#000a05,#00ff78,#004422,#00ff78,#000a05)',
+        'conic-gradient(#ff4500,#ff8c00,#ffd700,#ff4500)',
+        'conic-gradient(#9b59b6,#e056fd,#a29bfe,#9b59b6)',
+        'conic-gradient(#00ffb4,#6400ff,#0096ff,#00ffb4)',
+        'conic-gradient(#8000ff,#4000aa,#ff00ff,#8000ff)',
+        'conic-gradient(#00ffff,#ff00ff,#ffff00,#00ffff)',
+        'conic-gradient(#200060,#cc0060,#ff4000,#ffcc00,#200060)',
+        'conic-gradient(#64b4ff,#ffffff,#c8e6ff,#64b4ff)',
+        'conic-gradient(#ffd700,#ffaa00,#ffffff,#ffd700)',
+        'conic-gradient(#00ff78,#004422,#00ff78)',
     ];
 
-    function applyEffectsUI() {
-        const body = document.body;
-        const toggleBtn = document.getElementById('toggleEffectsBtn');
-        const cycleBtn  = document.getElementById('cycleEffectBtn');
+    let db             = JSON.parse(localStorage.getItem('electricDB_vPhoto'))||{};
+    let effectsEnabled = localStorage.getItem('effectsEnabled')!=='false';
+    let currentEffect  = parseInt(localStorage.getItem('currentEffect')||'1');
+    let currentTheme   = parseInt(localStorage.getItem('currentTheme') ||'1');
+    if(isNaN(currentEffect)||currentEffect<1||currentEffect>TOTAL_EFFECTS) currentEffect=1;
+    if(isNaN(currentTheme) ||currentTheme<1 ||currentTheme>TOTAL_THEMES)  currentTheme=1;
 
-        // Xóa tất cả class hiệu ứng cũ
-        for (let i = 1; i <= TOTAL_EFFECTS; i++) body.classList.remove('effect-' + i);
-        body.classList.remove('no-effects');
+    const monthInput = document.getElementById('currentMonth');
+    if(!monthInput.value) monthInput.value=new Date().toISOString().substring(0,7);
 
-        document.getElementById('effectBadge').innerText = EFFECT_ICONS[currentEffect];
-        cycleBtn.title = EFFECT_NAMES[currentEffect];
-
-        const wrapper = document.getElementById('rainbowWrapper');
-        if (!effectsEnabled) {
-            wrapper.style.setProperty('--rw-bg', 'conic-gradient(#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff,#ff0000)');
-        } else {
-            wrapper.style.setProperty('--rw-bg', WRAPPER_GRADIENTS[currentEffect]);
+    /* THEME */
+    function setTheme(n){
+        currentTheme=n; localStorage.setItem('currentTheme',n); applyThemeUI();
+    }
+    function applyThemeUI(){
+        const body=document.body;
+        for(let i=1;i<=TOTAL_THEMES;i++) body.classList.remove('theme-'+i);
+        body.classList.add('theme-'+currentTheme);
+        // Force repaint để var(--bg-page) áp dụng ngay
+        const bgMap={1:'#0b0f1a',2:'#dde4f0',3:'#071a0c',4:'#180400',5:'#0c0015'};
+        body.style.background = bgMap[currentTheme];
+        document.querySelectorAll('.theme-dot').forEach(d=>{
+            d.classList.toggle('active',parseInt(d.dataset.theme)===currentTheme);
+        });
+    }
+    function toggleSettingsPanel(){
+        const popup=document.getElementById('settingsPopup');
+        const gear=document.getElementById('gearBtn');
+        popup.classList.toggle('open');
+        gear.classList.toggle('open');
+    }
+    document.addEventListener('click',e=>{
+        const panel=document.getElementById('settingsPanel');
+        if(!panel.contains(e.target)){
+            document.getElementById('settingsPopup').classList.remove('open');
+            document.getElementById('gearBtn').classList.remove('open');
         }
+    });
 
-        if (!effectsEnabled) {
+    /* EFFECTS */
+    function toggleEffects(){effectsEnabled=!effectsEnabled;localStorage.setItem('effectsEnabled',effectsEnabled);applyEffectsUI();}
+    function cycleEffect(){currentEffect=(currentEffect%TOTAL_EFFECTS)+1;localStorage.setItem('currentEffect',currentEffect);applyEffectsUI();}
+    function applyEffectsUI(){
+        const body=document.body;
+        const toggleBtn=document.getElementById('spToggleEffectsBtn');
+        const cycleBtn=document.getElementById('spCycleEffectBtn');
+        for(let i=1;i<=TOTAL_EFFECTS;i++) body.classList.remove('effect-'+i);
+        body.classList.remove('no-effects');
+        document.getElementById('effectBadge').innerText=EFFECT_ICONS[currentEffect];
+        document.getElementById('effectName').innerText=EFFECT_NAMES[currentEffect].replace(/^.{1,3}\s/,'');
+        const wrapper=document.getElementById('rainbowWrapper');
+        if(!effectsEnabled){
             body.classList.add('no-effects');
-            toggleBtn.innerText = '⚡ Bật Hiệu Ứng';
-            toggleBtn.style.background = '#20c997';
-            cycleBtn.style.opacity = '0.5';
-            cycleBtn.style.background = '#7f8c8d';
+            wrapper.style.setProperty('--rw-bg','conic-gradient(#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff,#ff0000)');
+            toggleBtn.innerHTML='⚡ Bật Hiệu Ứng'; toggleBtn.style.background='#20c997';
+            cycleBtn.style.opacity='0.5'; cycleBtn.style.background='#7f8c8d';
         } else {
-            body.classList.add('effect-' + currentEffect);
-            toggleBtn.innerText = '⚡ Tắt Hiệu Ứng';
-            toggleBtn.style.background = '#fd7e14';
-            cycleBtn.style.opacity = '1';
-            cycleBtn.style.background = EFFECT_COLORS[currentEffect];
+            body.classList.add('effect-'+currentEffect);
+            wrapper.style.setProperty('--rw-bg',WRAPPER_GRADIENTS[currentEffect]);
+            toggleBtn.innerHTML='⚡ Tắt Hiệu Ứng'; toggleBtn.style.background='#fd7e14';
+            cycleBtn.style.opacity='1'; cycleBtn.style.background=EFFECT_COLORS[currentEffect];
         }
     }
 
-    function init() {
-        applyEffectsUI();
-        const m = monthInput.value;
-        const prev = new Date(m + '-01'); prev.setMonth(prev.getMonth() - 1);
-        const pk = prev.toISOString().substring(0, 7);
-        let data = db[m];
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = '';
-        document.getElementById('titleMonth').innerText = "SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG " + m.split('-')[1] + "/" + m.split('-')[0];
-
-        if (data && data.rows) data.rows.forEach(item => addRow(item));
-        else if (db[pk]?.rows) db[pk].rows.forEach(old => addRow({ name: old.name, before: old.after, after: 0, price: old.price, img: '' }));
+    /* INIT */
+    function init(){
+        applyThemeUI(); applyEffectsUI();
+        const m=monthInput.value;
+        const prev=new Date(m+'-01');prev.setMonth(prev.getMonth()-1);
+        const pk=prev.toISOString().substring(0,7);
+        let data=db[m];
+        document.getElementById('tableBody').innerHTML='';
+        document.getElementById('titleMonth').innerText='SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG '+m.split('-')[1]+'/'+m.split('-')[0];
+        if(data?.rows) data.rows.forEach(item=>addRow(item));
+        else if(db[pk]?.rows) db[pk].rows.forEach(old=>addRow({name:old.name,before:old.after,after:0,price:old.price,img:''}));
         else addRow();
-
-        document.getElementById('tongDHThang').value = data?.tongDH || 0;
-        document.getElementById('footerMonthLabel').value = data?.footerMonthLabel || m.split('-')[1];
-        
-        const mainImg = document.getElementById('mainMeterImg');
-        if (data?.mainMeterImg) { mainImg.src = data.mainMeterImg; mainImg.style.display = 'block'; }
-        else { mainImg.style.display = 'none'; }
-
-        applyLockUI(data?.locked || false);
+        document.getElementById('tongDHThang').value=data?.tongDH||0;
+        document.getElementById('footerMonthLabel').value=data?.footerMonthLabel||m.split('-')[1];
+        const mainImg=document.getElementById('mainMeterImg');
+        if(data?.mainMeterImg){mainImg.src=data.mainMeterImg;mainImg.style.display='block';}
+        else mainImg.style.display='none';
+        applyLockUI(data?.locked||false);
         updateTotals();
     }
 
-    function addRow(data = {name:'', before:0, after:0, price:2400, img:''}) {
-        const row = document.getElementById('tableBody').insertRow();
-        row.className = 'data-row';
-        row.innerHTML = `
+    function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
+        const row=document.getElementById('tableBody').insertRow();
+        row.className='data-row';
+        row.innerHTML=`
             <td class="col-stt" onclick="handleRowAction(this)">1</td>
-            <td class="col-name"><input type="text" value="${data.name || ''}" placeholder="Tên..."></td>
-            <td class="col-img">
-                <div class="img-container">
-                    <img src="${data.img || ''}" class="img-preview" onclick="openImg(this.src)" style="display:${data.img ? 'block' : 'none'}">
-                    <span class="upload-btn" onclick="this.nextElementSibling.click()">[Up Ảnh]</span>
-                    <input type="file" hidden accept="image/*" onchange="previewImg(this)">
-                </div>
-            </td>
-            <td><input type="number" class="before" value="${data.before || 0}" oninput="updateTotals()"></td>
-            <td><input type="number" class="after" value="${data.after || 0}" oninput="updateTotals()"></td>
+            <td class="col-name"><input type="text" value="${data.name||''}" placeholder="Tên..."></td>
+            <td class="col-img"><div class="img-container">
+                <img src="${data.img||''}" class="img-preview" onclick="openImg(this.src)" style="display:${data.img?'block':'none'}">
+                <span class="upload-btn" onclick="this.nextElementSibling.click()">[Up Ảnh]</span>
+                <input type="file" hidden accept="image/*" onchange="previewImg(this)">
+            </div></td>
+            <td><input type="number" class="before" value="${data.before||0}" oninput="updateTotals()"></td>
+            <td><input type="number" class="after" value="${data.after||0}" oninput="updateTotals()"></td>
             <td class="col-kwh"><input type="number" class="usage" readonly></td>
-            <td><input type="number" class="price" value="${data.price || 2400}" oninput="updateTotals()"></td>
+            <td><input type="number" class="price" value="${data.price||2400}" oninput="updateTotals()"></td>
             <td><span class="base-money">0</span></td>
             <td><span class="loss-share">0</span></td>
-            <td class="col-final"><span class="final-total">0đ</span></td>
-        `;
+            <td class="col-final"><span class="final-total">0đ</span></td>`;
     }
 
-    function previewImg(input, tid) {
-        if (input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const maxW = 400; 
-                    canvas.width = maxW; 
-                    canvas.height = img.height * (maxW / img.width);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const b64 = canvas.toDataURL('image/jpeg', 0.7);
-                    if (tid) {
-                        const targetEl = document.getElementById(tid);
-                        targetEl.src = b64; targetEl.style.display = 'block';
-                    } else {
-                        const el = input.parentElement.querySelector('.img-preview');
-                        el.src = b64; el.style.display = 'block';
-                    }
-                    saveToLocal(true);
-                };
-                img.src = e.target.result;
+    function previewImg(input,tid){
+        if(!input.files[0]) return;
+        const reader=new FileReader();
+        reader.onload=e=>{
+            const img=new Image();
+            img.onload=()=>{
+                const c=document.createElement('canvas'),ctx=c.getContext('2d'),mw=400;
+                c.width=mw;c.height=img.height*(mw/img.width);
+                ctx.drawImage(img,0,0,c.width,c.height);
+                const b64=c.toDataURL('image/jpeg',0.7);
+                if(tid){const t=document.getElementById(tid);t.src=b64;t.style.display='block';}
+                else{const el=input.parentElement.querySelector('.img-preview');el.src=b64;el.style.display='block';}
+                saveToLocal(true);
             };
-            reader.readAsDataURL(input.files[0]);
-        }
+            img.src=e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
     }
 
-    function updateTotals() {
-        let tkwh = 0, tmoney = 0;
-        document.querySelectorAll('.data-row').forEach((row, i) => {
-            row.cells[0].innerText = i + 1;
-            const b = parseFloat(row.querySelector('.before').value)||0, a = parseFloat(row.querySelector('.after').value)||0, p = parseFloat(row.querySelector('.price').value)||0;
-            const u = Math.max(0, a-b), m = u*p;
-            row.querySelector('.usage').value = u; row.querySelector('.base-money').innerText = Math.round(m).toLocaleString('vi-VN');
-            row.dataset.u = u; row.dataset.m = m; tkwh += u; tmoney += m;
+    function updateTotals(){
+        let tkwh=0,tmoney=0;
+        document.querySelectorAll('.data-row').forEach((row,i)=>{
+            row.cells[0].innerText=i+1;
+            const b=parseFloat(row.querySelector('.before').value)||0,
+                  a=parseFloat(row.querySelector('.after').value)||0,
+                  p=parseFloat(row.querySelector('.price').value)||0;
+            const u=Math.max(0,a-b),m=u*p;
+            row.querySelector('.usage').value=u;
+            row.querySelector('.base-money').innerText=Math.round(m).toLocaleString('vi-VN');
+            row.dataset.u=u;row.dataset.m=m;tkwh+=u;tmoney+=m;
         });
-        const curT = parseFloat(document.getElementById('tongDHThang').value)||0;
-        const pk = new Date(monthInput.value+'-01'); pk.setMonth(pk.getMonth()-1);
-        const prevT = db[pk.toISOString().substring(0,7)]?.tongDH || 0;
-        const mCons = Math.max(0, curT - prevT), lKwh = Math.max(0, mCons - tkwh), lMoney = lKwh * 2400;
-
-        document.querySelectorAll('.data-row').forEach(row => {
-            const u = parseFloat(row.dataset.u)||0, m = parseFloat(row.dataset.m)||0;
-            const s = tkwh > 0 ? (u/tkwh)*lMoney : 0;
-            row.querySelector('.loss-share').innerText = Math.round(s).toLocaleString('vi-VN');
-            row.querySelector('.final-total').innerText = (Math.round((m+s)/1000)*1000).toLocaleString('vi-VN') + "đ";
+        const curT=parseFloat(document.getElementById('tongDHThang').value)||0;
+        const pk=new Date(monthInput.value+'-01');pk.setMonth(pk.getMonth()-1);
+        const prevT=db[pk.toISOString().substring(0,7)]?.tongDH||0;
+        const mCons=Math.max(0,curT-prevT),lKwh=Math.max(0,mCons-tkwh),lMoney=lKwh*2400;
+        document.querySelectorAll('.data-row').forEach(row=>{
+            const u=parseFloat(row.dataset.u)||0,m=parseFloat(row.dataset.m)||0;
+            const s=tkwh>0?(u/tkwh)*lMoney:0;
+            row.querySelector('.loss-share').innerText=Math.round(s).toLocaleString('vi-VN');
+            row.querySelector('.final-total').innerText=(Math.round((m+s)/1000)*1000).toLocaleString('vi-VN')+'đ';
         });
-        document.getElementById('lblTotalKwh').innerText = tkwh;
-        document.getElementById('lblMainConsumption').innerText = mCons;
-        document.getElementById('lblLossKwh').innerText = lKwh;
-        document.getElementById('lblTotalBaseMoney').innerText = Math.round(tmoney).toLocaleString('vi-VN');
-        document.getElementById('lblLossMoney').innerText = Math.round(lMoney).toLocaleString('vi-VN');
-        document.getElementById('lblGrandTotal').innerText = Math.round(tmoney+lMoney).toLocaleString('vi-VN') + "đ";
+        document.getElementById('lblTotalKwh').innerText=tkwh;
+        document.getElementById('lblMainConsumption').innerText=mCons;
+        document.getElementById('lblLossKwh').innerText=lKwh;
+        document.getElementById('lblTotalBaseMoney').innerText=Math.round(tmoney).toLocaleString('vi-VN');
+        document.getElementById('lblLossMoney').innerText=Math.round(lMoney).toLocaleString('vi-VN');
+        document.getElementById('lblGrandTotal').innerText=Math.round(tmoney+lMoney).toLocaleString('vi-VN')+'đ';
     }
 
-    async function exportToPNG() {
-        const area = document.getElementById('captureArea');
-        const ctrl = document.querySelector('.controls');
-        const scrollWrapper = document.getElementById('tableScrollWrapper');
-
-        area.classList.add('is-capturing');
-        ctrl.classList.add('hide-for-capture');
-        scrollWrapper.style.overflow = "visible"; 
-
-        document.getElementById('titleMonth').colSpan = 9;
-        document.getElementById('footerMain').colSpan = 9;
-        document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 3;
-        document.getElementById('f_col4').colSpan = 4; document.getElementById('f_col5').colSpan = 5; document.getElementById('f_col6').colSpan = 9;
-
-        window.scrollTo(0, 0);
-
-        try {
-            const canvas = await html2canvas(area, { scale: 2, useCORS: true, backgroundColor: "#ffffff", width: 1150 });
-            const link = document.createElement('a');
-            link.download = `EVN_Pro_${monthInput.value}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        } catch (err) {
-            alert("Lỗi xuất ảnh: " + err);
-        } finally {
-            area.classList.remove('is-capturing');
-            ctrl.classList.remove('hide-for-capture');
-            scrollWrapper.style.overflow = "auto";
-            document.getElementById('titleMonth').colSpan = 10;
-            document.getElementById('footerMain').colSpan = 10;
-            document.getElementById('f_col1').colSpan = 3; document.getElementById('f_col2').colSpan = 3; document.getElementById('f_col3').colSpan = 4;
-            document.getElementById('f_col4').colSpan = 5; document.getElementById('f_col5').colSpan = 5; document.getElementById('f_col6').colSpan = 10;
+    async function exportToPNG(){
+        const area=document.getElementById('captureArea'),ctrl=document.querySelector('.controls'),sw=document.getElementById('tableScrollWrapper');
+        area.classList.add('is-capturing');ctrl.classList.add('hide-for-capture');sw.style.overflow='visible';
+        document.getElementById('titleMonth').colSpan=9;document.getElementById('footerMain').colSpan=9;
+        document.getElementById('f_col1').colSpan=3;document.getElementById('f_col2').colSpan=3;document.getElementById('f_col3').colSpan=3;
+        document.getElementById('f_col4').colSpan=4;document.getElementById('f_col5').colSpan=5;document.getElementById('f_col6').colSpan=9;
+        window.scrollTo(0,0);
+        try{
+            const canvas=await html2canvas(area,{scale:2,useCORS:true,backgroundColor:'#ffffff',width:1150});
+            const link=document.createElement('a');link.download=`EVN_Pro_${monthInput.value}.png`;link.href=canvas.toDataURL('image/png');link.click();
+        }catch(err){alert('Lỗi xuất ảnh: '+err);}
+        finally{
+            area.classList.remove('is-capturing');ctrl.classList.remove('hide-for-capture');sw.style.overflow='auto';
+            document.getElementById('titleMonth').colSpan=10;document.getElementById('footerMain').colSpan=10;
+            document.getElementById('f_col1').colSpan=3;document.getElementById('f_col2').colSpan=3;document.getElementById('f_col3').colSpan=4;
+            document.getElementById('f_col4').colSpan=5;document.getElementById('f_col5').colSpan=5;document.getElementById('f_col6').colSpan=10;
         }
     }
 
-    function saveToLocal(s) {
-        const rows = [];
-        document.querySelectorAll('.data-row').forEach(row => {
-            rows.push({ name: row.querySelector('.col-name input').value, img: row.querySelector('.img-preview').src, before: row.querySelector('.before').value, after: row.querySelector('.after').value, price: row.querySelector('.price').value });
+    function saveToLocal(s){
+        const rows=[];
+        document.querySelectorAll('.data-row').forEach(row=>{
+            rows.push({name:row.querySelector('.col-name input').value,img:row.querySelector('.img-preview').src,
+                before:row.querySelector('.before').value,after:row.querySelector('.after').value,price:row.querySelector('.price').value});
         });
-        db[monthInput.value] = { rows, tongDH: document.getElementById('tongDHThang').value, footerMonthLabel: document.getElementById('footerMonthLabel').value, mainMeterImg: document.getElementById('mainMeterImg').src, locked: db[monthInput.value]?.locked || false };
-        localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
-        if (!s) alert('Đã lưu thành công');
+        db[monthInput.value]={rows,tongDH:document.getElementById('tongDHThang').value,
+            footerMonthLabel:document.getElementById('footerMonthLabel').value,
+            mainMeterImg:document.getElementById('mainMeterImg').src,
+            locked:db[monthInput.value]?.locked||false};
+        localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));
+        if(!s) alert('Đã lưu thành công');
     }
-
-    function toggleLock() {
-        const m = monthInput.value;
-        if (!db[m]) saveToLocal(true);
-        db[m].locked = !db[m].locked;
-        localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
-        init();
-    }
-
-    function applyLockUI(isLocked) {
-        const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
-        const allBtns = document.querySelectorAll('.upload-btn');
-        if (isLocked) {
-            document.getElementById('lockBtnText').innerText = "Mở Khóa";
-            document.getElementById('statusArea').innerHTML = '<span style="color:red; font-weight:bold; font-size:10px;">[ĐÃ KHÓA]</span>';
-            allInputs.forEach(i => i.disabled = true);
-            allBtns.forEach(b => b.style.display = 'none');
-        } else {
-            document.getElementById('lockBtnText').innerText = "Khóa tháng";
-            document.getElementById('statusArea').innerHTML = '<span style="color:green; font-weight:bold; font-size:10px;">[ĐANG MỞ]</span>';
-            allInputs.forEach(i => i.disabled = false);
-            allBtns.forEach(b => b.style.display = 'block');
+    function toggleLock(){const m=monthInput.value;if(!db[m])saveToLocal(true);db[m].locked=!db[m].locked;localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));init();}
+    function applyLockUI(isLocked){
+        const allInputs=document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
+        const allBtns=document.querySelectorAll('.upload-btn');
+        if(isLocked){
+            document.getElementById('lockBtnText').innerText='Mở Khóa';
+            document.getElementById('statusArea').innerHTML='<span style="color:red;font-weight:bold;font-size:10px;">[ĐÃ KHÓA]</span>';
+            allInputs.forEach(i=>i.disabled=true);allBtns.forEach(b=>b.style.display='none');
+        }else{
+            document.getElementById('lockBtnText').innerText='Khóa tháng';
+            document.getElementById('statusArea').innerHTML='<span style="color:green;font-weight:bold;font-size:10px;">[ĐANG MỞ]</span>';
+            allInputs.forEach(i=>i.disabled=false);allBtns.forEach(b=>b.style.display='block');
         }
     }
+    function toggleDeleteMode(){
+        const btn=document.getElementById('deleteModeBtn');
+        btn.classList.toggle('active');document.getElementById('captureArea').classList.toggle('delete-active');
+        btn.innerText=btn.classList.contains('active')?'Xóa (Bấm STT)':'Chế Độ Xóa';
+        btn.style.background=btn.classList.contains('active')?'#dc3545':'#6c757d';
+    }
+    function handleRowAction(cell){if(document.getElementById('captureArea').classList.contains('delete-active'))if(confirm('Xóa hộ này?')){cell.parentElement.remove();updateTotals();}}
+    function openImg(s){if(s&&s.includes('data:image')){document.getElementById('modalImg').src=s;document.getElementById('imgModal').style.display='flex';}}
+    function changeMonth(){init();}
+    function exportData(){saveToLocal(true);const b=new Blob([JSON.stringify(db)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='backup_dien.json';a.click();}
+    function importData(e){const r=new FileReader();r.onload=ev=>{db=JSON.parse(ev.target.result);localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));init();alert('Đã nhập thành công!');};r.readAsText(e.target.files[0]);}
 
-    function toggleDeleteMode() {
-        const btn = document.getElementById('deleteModeBtn');
-        btn.classList.toggle('active');
-        document.getElementById('captureArea').classList.toggle('delete-active');
-        btn.innerText = btn.classList.contains('active') ? "Xóa (Bấm STT)" : "Chế Độ Xóa";
-        btn.style.background = btn.classList.contains('active') ? "#dc3545" : "#6c757d";
-    }
-
-    function handleRowAction(cell) {
-        if (document.getElementById('captureArea').classList.contains('delete-active')) {
-            if (confirm("Xóa hộ này?")) { cell.parentElement.remove(); updateTotals(); }
-        }
-    }
-    
-    function openImg(s) { 
-        if (s && s.includes('data:image')) { 
-            document.getElementById('modalImg').src = s; 
-            document.getElementById('imgModal').style.display = 'flex'; 
-        } 
-    }
-    
-    function changeMonth() { init(); }
-    
-    function exportData() { 
-        saveToLocal(true); 
-        const b = new Blob([JSON.stringify(db)], {type:'application/json'}); 
-        const a = document.createElement('a'); 
-        a.href = URL.createObjectURL(b); 
-        a.download = 'backup_dien.json'; 
-        a.click(); 
-    }
-    
-    function importData(e) { 
-        const r = new FileReader(); 
-        r.onload = (ev) => { 
-            db = JSON.parse(ev.target.result); 
-            localStorage.setItem('electricDB_vPhoto', JSON.stringify(db)); 
-            init(); 
-            alert("Đã nhập thành công!"); 
-        }; 
-        r.readAsText(e.target.files[0]); 
-    }
-    
     init();
 </script>
 </body>
