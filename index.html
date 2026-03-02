@@ -148,13 +148,13 @@
             <div id="statusArea"></div>
             
             <button class="btn" id="fitBtn" onclick="toggleFitScreen()" style="background: #000;">Xem Vừa Màn Hình</button>
-            <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa Sổ</span></button>
-            <button class="btn" onclick="addRow()" style="background: #28a745;">+ Hộ</button>
-            <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;">Xóa</button>
-            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu</button>
-            <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup</button>
-            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
-            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh (9 Cột)</button>
+            <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa tháng</span></button>
+            <button class="btn" onclick="addRow()" style="background: #28a745;">+ thêm Hộ</button>
+            <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;"> chế độ Xóa</button>
+            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dliệu</button>
+            <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup Dliệu</button>
+            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập Dliệu<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
+            <button class="btn" style="background: #6c757d;" onclick="exportToPNG()">Xuất Ảnh Nè</button>
         </div>
 
         <div style="width: 100%; overflow-x: auto;">
@@ -167,11 +167,11 @@
                         <th class="col-img">Ảnh ĐH</th>
                         <th>SĐ tháng trước</th>
                         <th>SĐ tháng này</th>
-                        <th class="col-kwh">Số kí(kWh)</th>
-                        <th>Giá(VNĐ)</th>
-                        <th>Tiền điện</th>
-                        <th>Thất thoát</th>
-                        <th class="col-final">PHẢI NỘP</th>
+                        <th class="col-kwh">Số kí tiêu thụ(kWh)</th>
+                        <th>Giá điện(VNĐ)</th>
+                        <th>Tiền điện(VNĐ)</th>
+                        <th>Tiền điện thất thoát(VNĐ)</th>
+                        <th class="col-final">TIỀN PHẢI NỘP</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -193,13 +193,13 @@
                         </td>
                     </tr>
                     <tr class="loss-summary">
-                        <td colspan="3" id="f_col1">Tổng điện hộ: <span id="lblTotalKwh">0</span></td>
-                        <td colspan="3" id="f_col2">Điện tổng: <span id="lblMainConsumption">0</span></td>
-                        <td colspan="4" id="f_col3">Thất thoát: <span id="lblLossKwh">0</span></td>
+                        <td colspan="3" id="f_col1">Tổng điện các hộ tiêu thu trong tháng: <span id="lblTotalKwh">0</span></td>
+                        <td colspan="3" id="f_col2">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span></td>
+                        <td colspan="4" id="f_col3">số điện Thất thoát: <span id="lblLossKwh">0</span></td>
                     </tr>
                     <tr class="loss-summary">
                         <td colspan="5" id="f_col4">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
-                        <td colspan="5" id="f_col5">Tiền thất thoát (x2.400đ): <span id="lblLossMoney">0</span> đ</td>
+                        <td colspan="5" id="f_col5">Tiền điện thất thoát (x2.400đ): <span id="lblLossMoney">0</span> đ</td>
                     </tr>
                     <tr>
                         <td colspan="10" id="f_col6" style="text-align: center; padding: 20px !important;">
@@ -213,10 +213,12 @@
 
         <div class="calculation-guide">
             <h3 style="margin-top:0; color:#0054a5;">Ghi chú cách tính:</h3>
-            <p class="rainbow-text">• Số kí = Số tháng này - Số tháng trước.</p><br>
-            <p class="rainbow-text">• PHẢI NỘP = Tiền điện + Tiền điện thất thoát.</p><br>
-            <p class="rainbow-text">• Thất thoát = (Tổng điện - Tổng hộ) x 2.400đ.</p><br>
-            <p class="rainbow-text">• Tiền thất thoát chia theo tỉ lệ dùng nhiều chịu nhiều.</p>
+            <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
+            <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
+            <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
+            <p class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng để ra số kí thất thoát.</p><br>
+            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</p><br>
+           <p class="rainbow-text">• Công thức thất thoát: Số kí thất thoát x 2400đ.<p><br> 
         </div>
     </div>
 </div>
