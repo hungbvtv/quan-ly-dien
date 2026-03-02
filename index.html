@@ -156,9 +156,9 @@
             <button class="btn" id="lockBtn" onclick="toggleLock()" style="background: #6f42c1;"><span id="lockBtnText">Khóa tháng</span></button>
             <button class="btn" onclick="addRow()" style="background: #28a745;">+ thêm Hộ</button>
             <button class="btn" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background: #6c757d;"> chế độ Xóa</button>
-            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dliệu</button>
-            <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup Dliệu</button>
-            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập Dliệu<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
+            <button class="btn" onclick="saveToLocal()" style="background: #007bff;">Lưu Dữ liệu</button>
+            <button class="btn" style="background: #17a2b8;" onclick="exportData()">Backup file</button>
+            <label class="btn" style="background: #ffc107; color: #000; cursor: pointer;">Nhập file<input type="file" id="importFile" style="display:none" onchange="importData(event)"></label>
             <button class="btn" style="background: #d63384;" onclick="exportToPNG()">Xuất Ảnh Nè</button>
         </div>
 
@@ -198,8 +198,8 @@
                         </td>
                     </tr>
                     <tr class="loss-summary">
-                        <td colspan="3" id="f_col1">Tổng điện hộ: <span id="lblTotalKwh">0</span></td>
-                        <td colspan="3" id="f_col2">Điện tổng tiêu thụ: <span id="lblMainConsumption">0</span></td>
+                        <td colspan="3" id="f_col1">Tổng điện số điện các hộ tiêu thụ trong tháng: <span id="lblTotalKwh">0</span></td>
+                        <td colspan="3" id="f_col2">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span></td>
                         <td colspan="4" id="f_col3">Số kí Thất thoát: <span id="lblLossKwh">0</span></td>
                     </tr>
                     <tr class="loss-summary">
