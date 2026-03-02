@@ -137,10 +137,10 @@
                     <th class="col-img">Ảnh ĐH</th>
                     <th>SĐ tháng trước</th>
                     <th>SĐ tháng này</th>
-                    <th class="col-kwh">Số kí(kWh)</th>
-                    <th>Giá điện</th>
-                    <th>Tiền điện</th>
-                    <th>Thất thoát</th>
+                    <th class="col-kwh">Số kí tiêu thụ(kWh)</th>
+                    <th>Giá điện(VNĐ)</th>
+                    <th>Tiền điện(VNĐ)</th>
+                    <th>tiền điện Thất thoát</th>
                     <th class="col-final">TIỀN PHẢI NỘP</th>
                 </tr>
             </thead>
@@ -162,8 +162,8 @@
                 </tr>
                 <tr class="loss-summary">
                     <td colspan="3" id="f_col1">Tổng điện các hộ: <span id="lblTotalKwh">0</span> Kwh</td>
-                    <td colspan="3" id="f_col2">Điện tổng tiêu thụ: <span id="lblMainConsumption">0</span> Kwh</td>
-                    <td colspan="4" id="f_col3">Số điện thất thoát: <span id="lblLossKwh">0</span> Kwh</td>
+                    <td colspan="3" id="f_col2">Điện tổng tiêu thụ trong tháng: <span id="lblMainConsumption">0</span> Kwh</td>
+                    <td colspan="4" id="f_col3">Số kí điện thất thoát: <span id="lblLossKwh">0</span> Kwh</td>
                 </tr>
                 <tr class="loss-summary">
                     <td colspan="5" id="f_col4">Tổng tiền điện: <span id="lblTotalBaseMoney">0</span> đ</td>
@@ -183,8 +183,9 @@
             <p class="rainbow-text">• Số kí tiêu thụ(kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</p><br>
             <p class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện(2400đ).</p><br>
             <p class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</p><br>
-            <p class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng.</p><br>
-            <p class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ.</p>
+            <p class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng để ra số kí thất thoát.</p><br>
+            <p class="rainbow-text">• Tiền điện thất thoát(từng hộ): Được chia theo tỉ lệ số kí tiêu thụ(hộ dùng ít chịu ít,hộ dùng nhiều chịu nhiều.</p>
+            <p class="rainbow-text">• công thức thất thoát:số kí thất thoát x 2400d     
         </div>
     </div>
 </div>
