@@ -520,27 +520,27 @@
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:280px;border-radius:50%;border:1px solid var(--border-accent);opacity:.2;animation:sp-ring 2s ease-out .4s infinite;pointer-events:none;"></div>
 
     <!-- Icon -->
-    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 20px;box-shadow:0 0 32px var(--accent-glow),0 8px 24px rgba(0,0,0,.5);animation:sp-icon .42s cubic-bezier(.34,1.56,.64,1) .06s both;position:relative;z-index:1;">💾</div>
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 18px;box-shadow:0 0 32px var(--accent-glow),0 8px 24px rgba(0,0,0,.5);animation:sp-icon .42s cubic-bezier(.34,1.56,.64,1) .06s both;position:relative;z-index:1;">💾</div>
 
     <!-- Title -->
-    <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--color-title);text-shadow:0 0 20px var(--accent-glow);margin-bottom:6px;letter-spacing:2px;position:relative;z-index:1;">Đã Lưu!</div>
+    <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:22px;font-weight:900;color:var(--color-title);text-shadow:0 0 20px var(--accent-glow);margin-bottom:8px;letter-spacing:0.3px;position:relative;z-index:1;">✅ Đã lưu thành công!</div>
 
     <!-- Month badge -->
-    <div id="spMonth" style="font-size:12px;font-weight:700;color:var(--accent);background:var(--bg-glass);border:1px solid var(--border-accent);border-radius:20px;padding:4px 18px;display:inline-block;margin-bottom:20px;letter-spacing:.8px;position:relative;z-index:1;"></div>
+    <div id="spMonth" style="font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;color:var(--accent);background:var(--bg-glass);border:1px solid var(--border-accent);border-radius:20px;padding:5px 20px;display:inline-block;margin-bottom:22px;letter-spacing:0.3px;position:relative;z-index:1;"></div>
 
     <!-- Stats cards -->
     <div style="display:flex;gap:10px;margin-bottom:20px;position:relative;z-index:1;">
-      <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
-        <div style="font-size:10px;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">🏠 Số hộ</div>
-        <div id="spRows" style="font-size:24px;font-weight:900;color:var(--accent);font-family:'Orbitron',monospace;line-height:1;">0</div>
+      <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:14px 8px;text-align:center;">
+        <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">🏠 Số hộ</div>
+        <div id="spRows" style="font-family:'Be Vietnam Pro',sans-serif;font-size:28px;font-weight:900;color:var(--accent);line-height:1;">0</div>
       </div>
-      <div style="flex:2;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
-        <div style="font-size:10px;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">💰 Tổng nộp</div>
-        <div id="spTotal" style="font-size:15px;font-weight:800;color:var(--color-final);word-break:break-all;line-height:1.2;">0đ</div>
+      <div style="flex:2;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:14px 10px;text-align:center;">
+        <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">💰 Tổng nộp</div>
+        <div id="spTotal" style="font-family:'Be Vietnam Pro',sans-serif;font-size:16px;font-weight:800;color:var(--color-final);word-break:break-all;line-height:1.4;">0đ</div>
       </div>
-      <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
-        <div style="font-size:10px;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">🕐 Lúc</div>
-        <div id="spTime" style="font-size:11px;font-weight:700;color:var(--color-text);line-height:1.4;">--:--</div>
+      <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:14px 8px;text-align:center;">
+        <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">🕐 Lưu lúc</div>
+        <div id="spTime" style="font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;color:var(--color-text);line-height:1.5;">--:--</div>
       </div>
     </div>
 
@@ -550,7 +550,7 @@
     </div>
 
     <!-- OK button -->
-    <button onclick="closeSavePopup()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:white;font-size:15px;font-weight:800;font-family:'Be Vietnam Pro',sans-serif;padding:14px 48px;cursor:pointer;box-shadow:0 6px 22px var(--accent-glow);transition:filter .15s,transform .12s;letter-spacing:.8px;position:relative;z-index:1;"
+    <button onclick="closeSavePopup()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:white;font-family:'Be Vietnam Pro',sans-serif;font-size:15px;font-weight:800;padding:14px 48px;cursor:pointer;box-shadow:0 6px 22px var(--accent-glow);transition:filter .15s,transform .12s;letter-spacing:.5px;position:relative;z-index:1;"
       onmouseover="this.style.filter='brightness(1.18)';this.style.transform='scale(1.05)'"
       onmouseout="this.style.filter='';this.style.transform=''"
       onmousedown="this.style.transform='scale(0.97)'"
