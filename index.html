@@ -39,7 +39,6 @@
             --color-loss-text: #fbbf24;
             --border-color: rgba(0,180,255,0.18);
             --border-accent: rgba(0,180,255,0.45);
-            --shadow-wrap: 0 0 80px rgba(0,100,255,0.25), 0 0 40px rgba(0,180,255,0.1);
             --gradient-border: linear-gradient(135deg, #00b4ff, #7c3aed, #ff4466, #00b4ff);
         }
         body.theme-2 {
@@ -64,7 +63,6 @@
             --color-loss-text: #7a5900;
             --border-color: rgba(26,92,184,0.15);
             --border-accent: rgba(26,92,184,0.4);
-            --shadow-wrap: 0 10px 60px rgba(26,92,184,0.15);
             --gradient-border: linear-gradient(135deg, #1a5cb8, #56b4e0, #2980b9, #1a5cb8);
         }
         body.theme-3 {
@@ -89,7 +87,6 @@
             --color-loss-text: #69f0ae;
             --border-color: rgba(0,200,80,0.18);
             --border-accent: rgba(0,230,118,0.45);
-            --shadow-wrap: 0 0 80px rgba(0,200,80,0.25);
             --gradient-border: linear-gradient(135deg, #00e676, #69f0ae, #00c853, #00e676);
         }
         body.theme-4 {
@@ -114,7 +111,6 @@
             --color-loss-text: #ffd700;
             --border-color: rgba(255,100,0,0.18);
             --border-accent: rgba(255,107,53,0.45);
-            --shadow-wrap: 0 0 80px rgba(255,80,0,0.28);
             --gradient-border: linear-gradient(135deg, #ff4500, #ff8c00, #ffd700, #ff4500);
         }
         body.theme-5 {
@@ -139,7 +135,6 @@
             --color-loss-text: #f0abfc;
             --border-color: rgba(160,0,255,0.18);
             --border-accent: rgba(192,132,252,0.45);
-            --shadow-wrap: 0 0 80px rgba(160,0,255,0.28);
             --gradient-border: linear-gradient(135deg, #9b59b6, #e056fd, #a29bfe, #c084fc);
         }
 
@@ -756,6 +751,25 @@ document.getElementById('savePopup').addEventListener('click', function(e){
             <td class="col-final"><span class="final-total">0đ</span></td>`;
     }
 
+    // ─── Toast thông báo ───────────────────────────────
+    function showToast(msg, type='success'){
+        let tc = document.getElementById('toast-container');
+        if(!tc){
+            tc = document.createElement('div');
+            tc.id = 'toast-container';
+            tc.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;';
+            document.body.appendChild(tc);
+        }
+        const t = document.createElement('div');
+        const bg = type==='error' ? 'linear-gradient(135deg,#a0000a,#dc3545)' :
+                   type==='warn'  ? 'linear-gradient(135deg,#a06000,#fd7e14)' :
+                                    'linear-gradient(135deg,#0a6a2a,#28a745)';
+        t.style.cssText = `background:${bg};color:white;padding:11px 22px;border-radius:12px;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:sp-pop .3s ease;opacity:1;transition:opacity .4s;`;
+        t.innerText = msg;
+        tc.appendChild(t);
+        setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(), 400); }, 3000);
+    }
+
     function previewImg(input, tid){
         if(!input.files[0]) return;
         const reader = new FileReader();
@@ -768,7 +782,7 @@ document.getElementById('savePopup').addEventListener('click', function(e){
                 const b64 = c.toDataURL('image/jpeg',0.7);
                 if(tid){ const t=document.getElementById(tid); t.src=b64; t.style.display='block'; }
                 else   { const el=input.parentElement.querySelector('.img-preview'); el.src=b64; el.style.display='block'; }
-                saveToLocal(true);
+                // Không auto-save ở đây — người dùng bấm Lưu thủ công
             };
             img.src = e.target.result;
         };
@@ -864,7 +878,7 @@ document.getElementById('savePopup').addEventListener('click', function(e){
             link.download = `EVN_Pro_${monthInput.value}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-        }catch(err){ alert('Lỗi xuất ảnh: '+err); }
+        }catch(err){ showToast('❌ Lỗi xuất ảnh: ' + err.message, 'error'); }
         finally{
             area.querySelectorAll('img').forEach((img,i)=>{ if(imgOrigSrc[i]) img.src=imgOrigSrc[i]; });
             area.classList.remove('is-capturing');
@@ -902,22 +916,31 @@ document.getElementById('savePopup').addEventListener('click', function(e){
                 price: row.querySelector('.price').value
             });
         });
-        db[monthInput.value] = {
+        const m = monthInput.value;
+        db[m] = {
             rows,
             tongDH:           document.getElementById('tongDHThang').value,
             footerMonthLabel: document.getElementById('footerMonthLabel').value,
             mainMeterImg:     document.getElementById('mainMeterImg').src,
-            locked:           db[monthInput.value]?.locked||false
+            locked:           db[m]?.locked || false
         };
-        localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
-        if(!silent) showSavePopup();
+        try {
+            localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
+            if(!silent) showSavePopup();
+        } catch(e) {
+            showToast('⚠️ Bộ nhớ đầy! Hãy xóa bớt ảnh hoặc backup rồi xóa dữ liệu cũ.', 'error');
+        }
     }
 
     function toggleLock(){
         const m = monthInput.value;
         if(!db[m]) saveToLocal(true);
         db[m].locked = !db[m].locked;
-        localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
+        try {
+            localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
+        } catch(e) {
+            showToast('⚠️ Không thể lưu trạng thái khóa — bộ nhớ đầy!', 'error');
+        }
         init();
     }
     function applyLockUI(isLocked){
@@ -983,14 +1006,24 @@ document.getElementById('savePopup').addEventListener('click', function(e){
         a.click();
     }
     function importData(e){
+        const file = e.target.files[0];
+        if(!file) return;
         const r = new FileReader();
         r.onload = ev=>{
-            db = JSON.parse(ev.target.result);
-            localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));
-            init();
-            alert('✅ Đã nhập thành công!');
+            try {
+                const parsed = JSON.parse(ev.target.result);
+                db = parsed;
+                localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
+                init();
+                showToast('✅ Nhập dữ liệu thành công!');
+            } catch(err) {
+                showToast('❌ File không hợp lệ hoặc bị lỗi!', 'error');
+            }
         };
-        r.readAsText(e.target.files[0]);
+        r.onerror = ()=> showToast('❌ Không đọc được file!', 'error');
+        r.readAsText(file);
+        // Reset input để có thể import lại cùng file nếu cần
+        e.target.value = '';
     }
 
     init();
