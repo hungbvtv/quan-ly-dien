@@ -17,9 +17,6 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
-        /* =============================================
-           5 THEMES
-        ============================================= */
         body.theme-1 {
             --bg-page: #060a18;
             --bg-card: rgba(15,20,45,0.97);
@@ -158,7 +155,6 @@
             position: relative;
         }
 
-        /* ===== FX LAYERS ===== */
         #fx-layer-1, #fx-layer-2 {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0; mix-blend-mode: screen;
@@ -208,357 +204,111 @@
         body.effect-12 #fx-layer-2{display:block;width:120%;left:-10%;height:60px;top:0;background:linear-gradient(180deg,transparent,rgba(0,255,150,.4) 50%,transparent);animation:e12beam 3s linear infinite;box-shadow:0 0 30px rgba(0,255,120,.5),0 0 60px rgba(0,255,120,.25);}
         @keyframes e12scan{from{background-position:0 0}to{background-position:0 -6px}}
         @keyframes e12beam{from{top:-60px}to{top:100vh}}
-
         body.no-effects #fx-layer-1, body.no-effects #fx-layer-2 { display: none !important; }
 
-        /* ===== MAIN LAYOUT ===== */
-        .app-wrapper {
-            position: relative;
-            z-index: 1;
-            max-width: 1280px;
-            width: 100%;
-        }
-
-        /* Animated border wrapper */
-        .rainbow-wrapper {
-            position: relative;
-            padding: 3px;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        .rainbow-wrapper::before {
-            content: '';
-            position: absolute;
-            width: 250%; height: 250%;
-            top: -75%; left: -75%;
-            background: var(--rw-bg, conic-gradient(#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff,#ff0000));
-            animation: rotateRainbow 4s linear infinite;
-            z-index: 0;
-        }
+        .app-wrapper { position: relative; z-index: 1; max-width: 1280px; width: 100%; }
+        .rainbow-wrapper { position: relative; padding: 3px; border-radius: 20px; overflow: hidden; }
+        .rainbow-wrapper::before { content: ''; position: absolute; width: 250%; height: 250%; top: -75%; left: -75%; background: var(--rw-bg, conic-gradient(#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff,#ff0000)); animation: rotateRainbow 4s linear infinite; z-index: 0; }
         @keyframes rotateRainbow { 100% { transform: rotate(360deg); } }
+        .main-card { background: var(--bg-card); border-radius: 18px; position: relative; z-index: 1; overflow: hidden; transition: background 0.4s; }
 
-        .main-card {
-            background: var(--bg-card);
-            border-radius: 18px;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-            transition: background 0.4s;
-        }
-
-        /* ===== HEADER ===== */
-        .header-banner {
-            background: var(--bg-header);
-            border-bottom: 1px solid var(--border-color);
-            padding: 24px 28px 20px;
-            text-align: center;
-            position: relative;
-        }
-        .header-banner::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 10%; right: 10%;
-            height: 1px;
-            background: var(--gradient-border);
-            opacity: 0.6;
-        }
+        .header-banner { background: var(--bg-header); border-bottom: 1px solid var(--border-color); padding: 24px 28px 20px; text-align: center; position: relative; }
+        .header-banner::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: var(--gradient-border); opacity: 0.6; }
         .header-icon { font-size: 32px; margin-bottom: 6px; display: block; animation: floatIcon 3s ease-in-out infinite; }
         @keyframes floatIcon { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-        .header-title {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(16px, 2.5vw, 24px);
-            font-weight: 900;
-            color: var(--color-title);
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px var(--accent-glow);
-        }
-        .header-month-tag {
-            display: inline-block;
-            margin-top: 6px;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-accent);
-            border-radius: 20px;
-            padding: 3px 14px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: 1px;
-        }
+        .header-title { font-family: 'Orbitron', monospace; font-size: clamp(16px, 2.5vw, 24px); font-weight: 900; color: var(--color-title); letter-spacing: 2px; text-shadow: 0 0 20px var(--accent-glow); }
+        .header-month-tag { display: inline-block; margin-top: 6px; background: var(--bg-glass); border: 1px solid var(--border-accent); border-radius: 20px; padding: 3px 14px; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
 
-        /* Export-only title — hidden in display */
-        #titleMonth {
-            display: none;
-            font-family: 'Times New Roman', serif;
-            font-size: 20px;
-            font-weight: bold;
-            color: #0054a5;
-            text-align: center;
-            padding: 16px;
-            background: #f0f8ff !important;
-        }
+        #titleMonth { display: none; font-family: 'Times New Roman', serif; font-size: 20px; font-weight: bold; color: #0054a5; text-align: center; padding: 16px; background: #f0f8ff !important; }
         tr.export-title-row { display: none; }
 
-        /* ===== CONTROLS ===== */
-        .controls {
-            display: flex;
-            gap: 7px;
-            padding: 14px 18px;
-            flex-wrap: wrap;
-            align-items: center;
-            background: var(--bg-controls);
-            border-bottom: 1px solid var(--border-color);
-            transition: background 0.4s;
-        }
-        .month-picker {
-            display: flex; align-items: center; gap: 7px;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 5px 12px;
-        }
-        .month-picker input[type="month"] {
-            border: none; background: transparent;
-            font-family: 'Be Vietnam Pro', sans-serif;
-            font-size: 13px; font-weight: 700;
-            color: var(--color-title); outline: none; cursor: pointer;
-        }
+        .controls { display: flex; gap: 7px; padding: 14px 18px; flex-wrap: wrap; align-items: center; background: var(--bg-controls); border-bottom: 1px solid var(--border-color); transition: background 0.4s; }
+        .month-picker { display: flex; align-items: center; gap: 7px; background: var(--bg-glass); border: 1px solid var(--border-color); border-radius: 10px; padding: 5px 12px; }
+        .month-picker input[type="month"] { border: none; background: transparent; font-family: 'Be Vietnam Pro', sans-serif; font-size: 13px; font-weight: 700; color: var(--color-title); outline: none; cursor: pointer; }
         #statusArea { display: flex; align-items: center; }
-        .status-badge {
-            padding: 4px 11px; border-radius: 20px;
-            font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
-        }
+        .status-badge { padding: 4px 11px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
         .status-open   { background: rgba(0,200,80,0.15);  color: #00e676; border: 1px solid rgba(0,200,80,0.3); }
         .status-locked { background: rgba(255,60,60,0.15); color: #ff6b6b; border: 1px solid rgba(255,60,60,0.3); }
 
-        .btn {
-            padding: 8px 13px; cursor: pointer; border: none; border-radius: 10px;
-            font-weight: 700; font-size: 12px;
-            font-family: 'Be Vietnam Pro', sans-serif;
-            display: inline-flex; align-items: center; gap: 5px;
-            min-height: 36px; white-space: nowrap;
-            transition: transform 0.15s, filter 0.15s, box-shadow 0.15s;
-            position: relative; overflow: hidden;
-        }
+        .btn { padding: 8px 13px; cursor: pointer; border: none; border-radius: 10px; font-weight: 700; font-size: 12px; font-family: 'Be Vietnam Pro', sans-serif; display: inline-flex; align-items: center; gap: 5px; min-height: 36px; white-space: nowrap; transition: transform 0.15s, filter 0.15s, box-shadow 0.15s; position: relative; overflow: hidden; }
         .btn::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,.1); opacity:0; transition:opacity .2s; }
         .btn:hover::after { opacity:1; }
         .btn:active { transform: scale(0.95); }
         .btn:hover { filter: brightness(1.12); box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
 
-        /* ===== TABLE ===== */
-        #tableScrollWrapper {
-            width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 16px 18px;
-        }
+        #tableScrollWrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 16px 18px; }
         #tableScrollWrapper::-webkit-scrollbar { height: 5px; }
         #tableScrollWrapper::-webkit-scrollbar-track { background: var(--bg-glass); border-radius: 3px; }
         #tableScrollWrapper::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
 
         table { width: 100%; border-collapse: collapse; min-width: 1159px; table-layout: fixed; }
-
-        thead tr th {
-            background: var(--bg-table-head) !important;
-            color: var(--color-text);
-            font-size: 10px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.8px;
-            padding: 11px 7px;
-            border-bottom: 2px solid var(--border-accent);
-            border-right: 1px solid var(--border-color);
-            white-space: normal;
-            word-break: break-word;
-            text-align: center;
-            transition: background 0.4s, color 0.4s;
-        }
+        thead tr th { background: var(--bg-table-head) !important; color: var(--color-text); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 11px 7px; border-bottom: 2px solid var(--border-accent); border-right: 1px solid var(--border-color); white-space: normal; word-break: break-word; text-align: center; transition: background 0.4s, color 0.4s; }
         thead tr th:last-child { border-right: none; }
-
-        .title-header {
-            font-family: 'Orbitron', monospace !important;
-            font-size: 18px !important;
-            font-weight: 900 !important;
-            color: var(--color-title) !important;
-            text-align: center !important;
-            padding: 18px !important;
-            background: var(--bg-header) !important;
-            border-bottom: 2px solid var(--border-accent) !important;
-            text-shadow: 0 0 16px var(--accent-glow) !important;
-        }
-
-        .data-row td {
-            padding: 7px 5px;
-            border-bottom: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            font-size: 13px; color: var(--color-text);
-            background: var(--bg-table-row) !important;
-            transition: background 0.2s, color 0.4s;
-            vertical-align: middle;
-        }
+        .title-header { font-family: 'Orbitron', monospace !important; font-size: 18px !important; font-weight: 900 !important; color: var(--color-title) !important; text-align: center !important; padding: 18px !important; background: var(--bg-header) !important; border-bottom: 2px solid var(--border-accent) !important; text-shadow: 0 0 16px var(--accent-glow) !important; }
+        .data-row td { padding: 7px 5px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); font-size: 13px; color: var(--color-text); background: var(--bg-table-row) !important; transition: background 0.2s, color 0.4s; vertical-align: middle; }
         .data-row:nth-child(even) td { background: var(--bg-table-row-alt) !important; }
         .data-row:hover td { background: var(--bg-glass-hover) !important; }
         .data-row td:last-child { border-right: none; }
-
         .col-stt   { width:40px; cursor:pointer; text-align:center; font-weight:800; color:var(--accent) !important; }
         .col-name  { width:180px; text-align:left !important; padding-left:10px !important; }
         .col-img   { width:66px; text-align:center; }
         .col-kwh   { background: rgba(0,200,100,0.05) !important; }
         .col-final { font-weight:800; color:var(--color-final) !important; font-size:13px; background:rgba(255,60,80,0.05) !important; }
 
-
-        input {
-            width: 100%; border: none; text-align: center;
-            font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif;
-            outline: none; background: transparent;
-            color: var(--color-text); padding: 3px 0;
-            transition: color 0.3s, border-color 0.2s;
-        }
+        input { width: 100%; border: none; text-align: center; font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif; outline: none; background: transparent; color: var(--color-text); padding: 3px 0; transition: color 0.3s, border-color 0.2s; }
         input:focus { border-bottom: 1px solid var(--accent); }
         input:disabled { color: var(--color-text); opacity: 0.85; -webkit-text-fill-color: var(--color-text); }
-
         .col-name input { text-align: left; font-weight: 600; }
 
-        /* Image cells */
         .img-container { display:flex; flex-direction:column; align-items:center; gap:3px; }
-        .img-preview {
-            width:44px; height:44px; object-fit:cover; border-radius:8px;
-            border:2px solid var(--border-color); display:none; cursor:pointer;
-            transition: border-color 0.2s, transform 0.2s;
-        }
+        .img-preview { width:44px; height:44px; object-fit:cover; border-radius:8px; border:2px solid var(--border-color); display:none; cursor:pointer; transition: border-color 0.2s, transform 0.2s; }
         .img-preview:hover { border-color:var(--accent); transform:scale(1.1); }
-        .upload-btn {
-            font-size:10px; color:var(--accent); cursor:pointer; font-weight:700;
-            background:var(--bg-glass); padding:2px 7px; border-radius:5px;
-            border:1px solid var(--border-color); transition:background 0.2s; white-space:nowrap;
-        }
+        .upload-btn { font-size:10px; color:var(--accent); cursor:pointer; font-weight:700; background:var(--bg-glass); padding:2px 7px; border-radius:5px; border:1px solid var(--border-color); transition:background 0.2s; white-space:nowrap; }
         .upload-btn:hover { background:var(--bg-glass-hover); }
 
-        /* Footer rows */
-        tfoot tr td {
-            color: var(--color-text);
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            padding: 11px 13px;
-            transition: color 0.4s;
-        }
+        tfoot tr td { color: var(--color-text); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 11px 13px; transition: color 0.4s; }
         tfoot tr td:last-child { border-right: none; }
-
         #footerMain td { background: var(--bg-glass) !important; }
-        .footer-kwh-row {
-            display:flex; align-items:center; flex-wrap:wrap; gap:14px;
-            font-size:13px; font-weight:600;
-        }
+        .footer-kwh-row { display:flex; align-items:center; flex-wrap:wrap; gap:14px; font-size:13px; font-weight:600; }
         .footer-kwh-row input { width:80px; display:inline; }
-
-        .loss-summary td {
-            background: var(--bg-loss) !important;
-            color: var(--color-loss-text) !important;
-            font-size:13px; font-weight:600;
-        }
+        .loss-summary td { background: var(--bg-loss) !important; color: var(--color-loss-text) !important; font-size:13px; font-weight:600; }
         .loss-value { color:var(--accent); font-weight:800; font-size:14px; }
-
-        .grand-total-row td {
-            text-align:center; padding:22px !important;
-            background: var(--bg-glass) !important;
-        }
-        .grand-total-label {
-            font-size:13px; font-weight:700; color:var(--color-text-dim);
-            text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;
-        }
-        #lblGrandTotal {
-            font-family:'Orbitron', monospace;
-            color:var(--color-grand); font-weight:900; font-size:clamp(26px,4vw,38px);
-            text-shadow:0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow);
-            display:block; animation:pulseGrand 2.5s ease-in-out infinite;
-        }
+        .grand-total-row td { text-align:center; padding:22px !important; background: var(--bg-glass) !important; }
+        .grand-total-label { font-size:13px; font-weight:700; color:var(--color-text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+        #lblGrandTotal { font-family:'Orbitron', monospace; color:var(--color-grand); font-weight:900; font-size:clamp(26px,4vw,38px); text-shadow:0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow); display:block; animation:pulseGrand 2.5s ease-in-out infinite; }
         @keyframes pulseGrand { 0%,100%{text-shadow:0 0 20px var(--accent-glow)} 50%{text-shadow:0 0 40px var(--accent-glow),0 0 70px var(--accent-glow)} }
 
-        /* Calculation guide */
-        .calculation-guide {
-            margin:16px 18px 20px;
-            padding:18px 22px;
-            background:var(--bg-glass);
-            border:1px solid var(--border-color);
-            border-radius:14px;
-            line-height:2.1; text-align:left; font-size:13px;
-            transition: background 0.4s;
-        }
-        .guide-title {
-            font-size:14px; font-weight:800; color:var(--color-title);
-            margin-bottom:10px; display:flex; align-items:center; gap:7px;
-        }
-        .rainbow-text {
-            display:block; font-weight:600; font-size:13px;
-            background:linear-gradient(to right, #ff6b6b, #ffd700, #00e676, #00b4ff, #c084fc);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-            background-size:300% 100%; animation:moveGradient 4s linear infinite;
-        }
+        .calculation-guide { margin:16px 18px 20px; padding:18px 22px; background:var(--bg-glass); border:1px solid var(--border-color); border-radius:14px; line-height:2.1; text-align:left; font-size:13px; transition: background 0.4s; }
+        .guide-title { font-size:14px; font-weight:800; color:var(--color-title); margin-bottom:10px; display:flex; align-items:center; gap:7px; }
+        .rainbow-text { display:block; font-weight:600; font-size:13px; background:linear-gradient(to right, #ff6b6b, #ffd700, #00e676, #00b4ff, #c084fc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-size:300% 100%; animation:moveGradient 4s linear infinite; }
         @keyframes moveGradient{0%{background-position:0%}100%{background-position:300%}}
 
-        /* Modal */
-        #imgModal {
-            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,.92); z-index:10000;
-            justify-content:center; align-items:center; backdrop-filter:blur(8px);
-        }
+        #imgModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.92); z-index:10000; justify-content:center; align-items:center; backdrop-filter:blur(8px); }
         #imgModal img { max-width:92%; max-height:92%; border-radius:12px; border:2px solid var(--border-accent); }
 
-        /* ===== SETTINGS GEAR ===== */
-        #settingsPanel {
-            position:fixed; bottom:20px; right:16px; z-index:10001;
-            display:flex; flex-direction:column; align-items:flex-end; gap:10px;
-        }
-        #gearBtn {
-            width:52px; height:52px; border-radius:50%; cursor:pointer;
-            background:var(--bg-card);
-            border:2px solid var(--border-accent);
-            color:var(--accent); font-size:22px;
-            display:flex; align-items:center; justify-content:center;
-            box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 18px var(--accent-glow);
-            backdrop-filter:blur(10px);
-            transition:transform 0.35s cubic-bezier(.68,-.55,.27,1.55), box-shadow 0.3s;
-        }
+        #settingsPanel { position:fixed; bottom:20px; right:16px; z-index:10001; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+        #gearBtn { width:52px; height:52px; border-radius:50%; cursor:pointer; background:var(--bg-card); border:2px solid var(--border-accent); color:var(--accent); font-size:22px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 18px var(--accent-glow); backdrop-filter:blur(10px); transition:transform 0.35s cubic-bezier(.68,-.55,.27,1.55), box-shadow 0.3s; }
         #gearBtn:hover { transform:rotate(60deg) scale(1.1); box-shadow:0 4px 30px var(--accent-glow); }
         #gearBtn.open  { transform:rotate(90deg); }
-
-        #settingsPopup {
-            display:none; flex-direction:column; gap:12px;
-            background:var(--bg-card);
-            padding:16px 14px; border-radius:18px;
-            border:1px solid var(--border-accent);
-            backdrop-filter:blur(20px);
-            box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 28px var(--accent-glow);
-            min-width:220px; animation:popIn 0.2s ease-out;
-        }
+        #settingsPopup { display:none; flex-direction:column; gap:12px; background:var(--bg-card); padding:16px 14px; border-radius:18px; border:1px solid var(--border-accent); backdrop-filter:blur(20px); box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 28px var(--accent-glow); min-width:220px; animation:popIn 0.2s ease-out; }
         #settingsPopup.open { display:flex; }
         @keyframes popIn{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-
         .sp-label { font-size:10px; font-weight:700; color:var(--color-text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
-        .sp-btn {
-            width:100%; padding:9px 12px; border-radius:10px; border:none;
-            font-size:12px; font-weight:700; font-family:'Be Vietnam Pro',sans-serif;
-            cursor:pointer; color:white; display:flex; align-items:center; gap:8px;
-            transition:opacity 0.15s, transform 0.1s;
-        }
+        .sp-btn { width:100%; padding:9px 12px; border-radius:10px; border:none; font-size:12px; font-weight:700; font-family:'Be Vietnam Pro',sans-serif; cursor:pointer; color:white; display:flex; align-items:center; gap:8px; transition:opacity 0.15s, transform 0.1s; }
         .sp-btn:active { transform:scale(0.96); }
         .sp-btn:hover  { opacity:0.88; }
-
         .sp-themes { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
-        .theme-dot {
-            width:38px; height:38px; border-radius:50%; cursor:pointer;
-            border:3px solid rgba(255,255,255,0.15);
-            box-shadow:0 2px 10px rgba(0,0,0,.5);
-            transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-            display:flex; align-items:center; justify-content:center; font-size:16px;
-        }
+        .theme-dot { width:38px; height:38px; border-radius:50%; cursor:pointer; border:3px solid rgba(255,255,255,0.15); box-shadow:0 2px 10px rgba(0,0,0,.5); transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s; display:flex; align-items:center; justify-content:center; font-size:16px; }
         .theme-dot:hover  { transform:scale(1.15); }
         .theme-dot.active { border-color:#fff; transform:scale(1.2); box-shadow:0 0 14px rgba(255,255,255,.5); }
         .sp-divider { border:none; border-top:1px solid var(--border-color); margin:0; }
         #effectBadge { font-size:14px; }
 
-        /* Delete mode row highlight */
         .delete-active .data-row td:first-child { background:rgba(220,53,69,0.15) !important; cursor:pointer; }
         .delete-active .data-row td:first-child:hover { background:rgba(220,53,69,0.4) !important; transform: scale(1.1); }
         .delete-active .data-row td:first-child .stt-num { display:none; }
         .delete-active .data-row td:first-child::after { content:'❌'; font-size:16px; }
 
-        /* ===== EXPORT / CAPTURE ===== */
         .is-capturing { overflow:visible !important; width:1280px !important; max-width:none !important; background:white !important; border-radius:0 !important; }
         .is-capturing .col-img { display:none !important; width:0 !important; padding:0 !important; border:none !important; overflow:hidden !important; }
         .is-capturing .header-banner { display:none !important; }
@@ -585,8 +335,6 @@
         .is-capturing .calculation-guide * { color:#2563a8 !important; }
         .is-capturing .guide-title { color:#0054a5 !important; font-weight:800 !important; }
         .hide-for-capture { display:none !important; }
-
-        /* no-effects */
         .no-effects .rainbow-wrapper::before { display:none !important; }
         .no-effects .rainbow-wrapper { padding:0 !important; border:2px solid #999; border-radius:18px; }
 
@@ -605,16 +353,13 @@
 <div id="fx-layer-1"></div>
 <div id="fx-layer-2"></div>
 
-<!-- GEAR SETTINGS PANEL -->
 <div id="settingsPanel">
     <div id="settingsPopup">
-        <!-- THEMES -->
         <div>
             <div class="sp-label">🎨 Giao Diện</div>
             <div class="sp-themes" id="themeDotsContainer"></div>
         </div>
         <hr class="sp-divider">
-        <!-- EFFECTS -->
         <div>
             <div class="sp-label">⚡ Hiệu Ứng</div>
             <button class="sp-btn" id="spToggleEffectsBtn" onclick="toggleEffects()" style="background:linear-gradient(135deg,#d4620a,#fd7e14);">⚡ Tắt Hiệu Ứng</button>
@@ -623,7 +368,6 @@
             <button class="sp-btn" id="spCycleEffectBtn" onclick="cycleEffect()" style="background:linear-gradient(135deg,#6f42c1,#9b59b6);"><span id="effectBadge">⭐</span><span id="effectName">Lấp lánh sao</span></button>
         </div>
         <hr class="sp-divider">
-        <!-- DATA -->
         <div>
             <div class="sp-label">💾 Dữ Liệu</div>
             <button class="sp-btn" onclick="exportData();toggleSettingsPanel()" style="background:linear-gradient(135deg,#0f7a7a,#17a2b8);">📤 Backup file</button>
@@ -640,7 +384,6 @@
 
 <div id="imgModal" onclick="this.style.display='none'"><img id="modalImg" src=""></div>
 
-<!-- DELETE CONFIRM MODAL -->
 <div id="deleteModal" style="display:none;position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);justify-content:center;align-items:center;">
     <div style="background:linear-gradient(135deg,#1a0a0a,#2d0f0f);border:2px solid rgba(220,53,69,0.6);border-radius:20px;padding:32px 36px;text-align:center;min-width:300px;box-shadow:0 0 40px rgba(220,53,69,0.3);">
         <div style="font-size:48px;margin-bottom:12px;">🗑️</div>
@@ -657,14 +400,12 @@
 <div class="rainbow-wrapper" id="rainbowWrapper">
 <div class="main-card" id="captureArea">
 
-    <!-- DISPLAY HEADER (hidden on export) -->
     <div class="header-banner" id="displayHeader">
         <span class="header-icon">⚡</span>
         <div class="header-title">SỔ QUẢN LÝ MUA BÁN ĐIỆN</div>
         <div class="header-month-tag" id="displayMonthTag">THÁNG 03/2026</div>
     </div>
 
-    <!-- CONTROLS (hidden on export) -->
     <div class="controls" id="controlsBar">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <div class="month-picker">
@@ -683,7 +424,6 @@
         </div>
     </div>
 
-    <!-- TABLE -->
     <div id="tableScrollWrapper">
         <table id="mainTable">
             <colgroup>
@@ -764,9 +504,100 @@
         <span class="rainbow-text">• Công thức thất thoát: Số kí thất thoát × 2.400đ.</span>
     </div>
 
-</div><!-- /main-card -->
-</div><!-- /rainbow-wrapper -->
-</div><!-- /app-wrapper -->
+</div>
+</div>
+</div>
+
+<!-- ===== SAVE SUCCESS POPUP ===== -->
+<div id="savePopup" style="display:none;position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,0.7);backdrop-filter:blur(14px);justify-content:center;align-items:center;">
+  <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:26px;padding:38px 40px 32px;text-align:center;min-width:320px;max-width:390px;width:90%;box-shadow:0 0 80px var(--accent-glow),0 24px 60px rgba(0,0,0,.85);animation:sp-pop .38s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;">
+
+    <!-- Glow bg -->
+    <div style="position:absolute;top:-90px;left:50%;transform:translateX(-50%);width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 68%);pointer-events:none;opacity:.4;"></div>
+
+    <!-- Animated rings -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:340px;border-radius:50%;border:1px solid var(--border-accent);opacity:.15;animation:sp-ring 2s ease-out infinite;pointer-events:none;"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:280px;border-radius:50%;border:1px solid var(--border-accent);opacity:.2;animation:sp-ring 2s ease-out .4s infinite;pointer-events:none;"></div>
+
+    <!-- Icon -->
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 20px;box-shadow:0 0 32px var(--accent-glow),0 8px 24px rgba(0,0,0,.5);animation:sp-icon .42s cubic-bezier(.34,1.56,.64,1) .06s both;position:relative;z-index:1;">💾</div>
+
+    <!-- Title -->
+    <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--color-title);text-shadow:0 0 20px var(--accent-glow);margin-bottom:6px;letter-spacing:2px;position:relative;z-index:1;">ĐÃ LƯU!</div>
+
+    <!-- Month badge -->
+    <div id="spMonth" style="font-size:12px;font-weight:700;color:var(--accent);background:var(--bg-glass);border:1px solid var(--border-accent);border-radius:20px;padding:4px 18px;display:inline-block;margin-bottom:20px;letter-spacing:.8px;position:relative;z-index:1;"></div>
+
+    <!-- Stats cards -->
+    <div style="display:flex;gap:10px;margin-bottom:20px;position:relative;z-index:1;">
+      <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
+        <div style="font-size:10px;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">🏠 Số hộ</div>
+        <div id="spRows" style="font-size:24px;font-weight:900;color:var(--accent);font-family:'Orbitron',monospace;line-height:1;">0</div>
+      </div>
+      <div style="flex:2;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
+        <div style="font-size:10px;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">💰 Tổng nộp</div>
+        <div id="spTotal" style="font-size:15px;font-weight:800;color:var(--color-final);word-break:break-all;line-height:1.2;">0đ</div>
+      </div>
+      <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
+        <div style="font-size:10px;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">🕐 Lúc</div>
+        <div id="spTime" style="font-size:11px;font-weight:700;color:var(--color-text);line-height:1.4;">--:--</div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div style="height:5px;border-radius:3px;background:var(--bg-glass);overflow:hidden;margin-bottom:22px;position:relative;z-index:1;">
+      <div id="spBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;border-radius:3px;animation:sp-drain 2.8s linear forwards,sp-shimmer 1.2s linear infinite;"></div>
+    </div>
+
+    <!-- OK button -->
+    <button onclick="closeSavePopup()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:white;font-size:15px;font-weight:800;font-family:'Be Vietnam Pro',sans-serif;padding:14px 48px;cursor:pointer;box-shadow:0 6px 22px var(--accent-glow);transition:filter .15s,transform .12s;letter-spacing:.8px;position:relative;z-index:1;"
+      onmouseover="this.style.filter='brightness(1.18)';this.style.transform='scale(1.05)'"
+      onmouseout="this.style.filter='';this.style.transform=''"
+      onmousedown="this.style.transform='scale(0.97)'"
+      onmouseup="this.style.transform='scale(1.05)'">
+      OK 👍
+    </button>
+  </div>
+</div>
+
+<style>
+@keyframes sp-pop    { from{opacity:0;transform:scale(.65) translateY(28px)} to{opacity:1;transform:scale(1) translateY(0)} }
+@keyframes sp-icon   { from{transform:scale(0) rotate(-30deg)} to{transform:scale(1) rotate(0)} }
+@keyframes sp-drain  { from{width:100%} to{width:0} }
+@keyframes sp-shimmer{ 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+@keyframes sp-ring   { 0%{transform:translate(-50%,-50%) scale(.5);opacity:.4} 100%{transform:translate(-50%,-50%) scale(1.2);opacity:0} }
+</style>
+
+<script>
+function showSavePopup(){
+    const m     = document.getElementById('currentMonth').value;
+    const parts = m.split('-');
+    const rows  = document.querySelectorAll('.data-row').length;
+    const total = document.getElementById('lblGrandTotal').innerText;
+    const now   = new Date();
+    const t     = now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+    document.getElementById('spMonth').innerText = 'THÁNG ' + parts[1] + '/' + parts[0];
+    document.getElementById('spRows').innerText  = rows;
+    document.getElementById('spTotal').innerText = total;
+    document.getElementById('spTime').innerText  = t;
+
+    const bar = document.getElementById('spBar');
+    bar.style.animation = 'none';
+    void bar.offsetHeight;
+    bar.style.animation = 'sp-drain 2.8s linear forwards, sp-shimmer 1.2s linear infinite';
+
+    document.getElementById('savePopup').style.display = 'flex';
+    clearTimeout(window._spTimer);
+    window._spTimer = setTimeout(closeSavePopup, 2800);
+}
+function closeSavePopup(){
+    document.getElementById('savePopup').style.display = 'none';
+}
+document.getElementById('savePopup').addEventListener('click', function(e){
+    if(e.target === this) closeSavePopup();
+});
+</script>
 
 <script>
     const EFFECT_ICONS  = ['','⭐','🫧','💻','🌌','🔥','🌊','🪐','🔮','🌅','❄️','⚡','🟢'];
@@ -808,7 +639,6 @@
     const monthInput = document.getElementById('currentMonth');
     if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0,7);
 
-    /* ===== THEME ===== */
     function buildThemeDots(){
         const c = document.getElementById('themeDotsContainer');
         c.innerHTML = '';
@@ -830,20 +660,13 @@
         const body = document.body;
         for(let i=1;i<=TOTAL_THEMES;i++) body.classList.remove('theme-'+i);
         body.classList.add('theme-'+currentTheme);
-        // Force repaint: temporarily remove then re-add to trigger CSS var re-evaluation
         const bgMap = {1:'#060a18',2:'#eef2ff',3:'#020d05',4:'#100200',5:'#07000f'};
         body.style.background = bgMap[currentTheme];
-        // Force all elements to re-read CSS vars by triggering reflow
         void body.offsetHeight;
         buildThemeDots();
-        // Re-apply input text colors (inputs have explicit color:var(--color-text) but
-        // some browsers cache the computed value - force re-read)
-        document.querySelectorAll('input').forEach(inp => {
-            inp.style.color = '';
-        });
+        document.querySelectorAll('input').forEach(inp => { inp.style.color = ''; });
     }
 
-    /* ===== SETTINGS PANEL ===== */
     function toggleSettingsPanel(){
         const popup = document.getElementById('settingsPopup');
         const gear  = document.getElementById('gearBtn');
@@ -858,7 +681,6 @@
         }
     });
 
-    /* ===== EFFECTS ===== */
     function toggleEffects(){
         effectsEnabled = !effectsEnabled;
         localStorage.setItem('effectsEnabled', effectsEnabled);
@@ -892,7 +714,6 @@
         }
     }
 
-    /* ===== INIT ===== */
     function init(){
         applyThemeUI(); applyEffectsUI();
         const m    = monthInput.value;
@@ -900,23 +721,17 @@
         const pk   = prev.toISOString().substring(0,7);
         let data   = db[m];
         document.getElementById('tableBody').innerHTML = '';
-
-        // Update display header
         const parts = m.split('-');
         document.getElementById('displayMonthTag').innerText = 'THÁNG '+parts[1]+'/'+parts[0];
         document.getElementById('titleMonth').innerText = 'SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG '+parts[1]+'/'+parts[0];
-
         if(data?.rows) data.rows.forEach(item=>addRow(item));
         else if(db[pk]?.rows) db[pk].rows.forEach(old=>addRow({name:old.name,before:old.after,after:0,price:old.price,img:''}));
         else addRow();
-
         document.getElementById('tongDHThang').value    = data?.tongDH||0;
         document.getElementById('footerMonthLabel').value = data?.footerMonthLabel||parts[1];
-
         const mainImg = document.getElementById('mainMeterImg');
         if(data?.mainMeterImg){ mainImg.src=data.mainMeterImg; mainImg.style.display='block'; }
         else mainImg.style.display='none';
-
         applyLockUI(data?.locked||false);
         updateTotals();
     }
@@ -999,31 +814,15 @@
         const sw      = document.getElementById('tableScrollWrapper');
         const hdr     = document.getElementById('displayHeader');
         const expRow  = document.querySelector('.export-title-row');
-
-        // --- STEP 1: Remove img column cells from DOM ---
-        // Collect all col-img cells (th + td) and their next siblings for re-insertion
         const imgCells = Array.from(document.querySelectorAll('#mainTable .col-img'));
-        const imgCellData = imgCells.map(cell => ({
-            cell,
-            parent: cell.parentNode,
-            nextSibling: cell.nextSibling
-        }));
+        const imgCellData = imgCells.map(cell => ({ cell, parent: cell.parentNode, nextSibling: cell.nextSibling }));
         imgCells.forEach(cell => cell.remove());
-
-        // Remove the colgroup col for img (index 2) and store it
         const colgroup = document.querySelector('#mainTable colgroup');
         const allCols = Array.from(colgroup.children);
         const imgCol = allCols[2];
         imgCol.remove();
-
-        // Set capture widths on remaining 9 cols
         const captureWidths = [44, 210, 115, 115, 115, 120, 125, 155, 151];
-        Array.from(colgroup.children).forEach((col, i) => {
-            col._origWidth = col.style.width;
-            col.style.width = captureWidths[i] + 'px';
-        });
-
-        // --- STEP 2: Setup capture styles ---
+        Array.from(colgroup.children).forEach((col, i) => { col._origWidth = col.style.width; col.style.width = captureWidths[i] + 'px'; });
         area.classList.add('is-capturing');
         ctrl.classList.add('hide-for-capture');
         if(hdr) hdr.classList.add('hide-for-capture');
@@ -1035,7 +834,6 @@
         const wrapperOldOverflow = wrapper.style.overflow;
         wrapper.style.overflow = 'visible';
         wrapper.style.padding = '0';
-
         document.getElementById('titleMonth').colSpan=9;
         document.getElementById('footerMain').colSpan=9;
         document.getElementById('f_col1').colSpan=3;
@@ -1045,8 +843,6 @@
         document.getElementById('f_col5').colSpan=5;
         document.getElementById('f_col6').colSpan=9;
         window.scrollTo(0,0);
-
-        // Convert images to base64
         const allImgs = area.querySelectorAll('img');
         const imgOrigSrc = [];
         await Promise.all(Array.from(allImgs).map((img, i) => new Promise(resolve => {
@@ -1062,7 +858,6 @@
             im.onerror = () => resolve();
             im.src = img.src;
         })));
-
         try{
             const canvas = await html2canvas(area,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',width:1280,windowWidth:1400});
             const link   = document.createElement('a');
@@ -1071,10 +866,7 @@
             link.click();
         }catch(err){ alert('Lỗi xuất ảnh: '+err); }
         finally{
-            // Restore image srcs
             area.querySelectorAll('img').forEach((img,i)=>{ if(imgOrigSrc[i]) img.src=imgOrigSrc[i]; });
-
-            // Restore styles
             area.classList.remove('is-capturing');
             ctrl.classList.remove('hide-for-capture');
             if(hdr) hdr.classList.remove('hide-for-capture');
@@ -1084,18 +876,10 @@
             area.style.borderRadius = '';
             wrapper.style.overflow = wrapperOldOverflow;
             wrapper.style.padding = '';
-
-            // Restore colgroup: put img col back at index 2
             Array.from(colgroup.children).forEach((col) => { col.style.width = col._origWidth || ''; });
             const refCol = colgroup.children[2];
             colgroup.insertBefore(imgCol, refCol || null);
-
-            // Restore img cells to their original positions
-            imgCellData.forEach(({ cell, parent, nextSibling }) => {
-                parent.insertBefore(cell, nextSibling);
-            });
-
-            // Restore colspans
+            imgCellData.forEach(({ cell, parent, nextSibling }) => { parent.insertBefore(cell, nextSibling); });
             document.getElementById('titleMonth').colSpan=10;
             document.getElementById('footerMain').colSpan=10;
             document.getElementById('f_col1').colSpan=3;
@@ -1126,7 +910,7 @@
             locked:           db[monthInput.value]?.locked||false
         };
         localStorage.setItem('electricDB_vPhoto', JSON.stringify(db));
-        if(!silent) alert('✅ Đã lưu thành công!');
+        if(!silent) showSavePopup();
     }
 
     function toggleLock(){
