@@ -240,7 +240,7 @@
         thead tr th { background: var(--bg-table-head) !important; color: var(--color-text); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 11px 7px; border-bottom: 2px solid var(--border-accent); border-right: 1px solid var(--border-color); white-space: normal; word-break: break-word; text-align: center; transition: background 0.4s, color 0.4s; }
         thead tr th:last-child { border-right: none; }
         .title-header { font-family: 'Orbitron', monospace !important; font-size: 18px !important; font-weight: 900 !important; color: var(--color-title) !important; text-align: center !important; padding: 18px !important; background: var(--bg-header) !important; border-bottom: 2px solid var(--border-accent) !important; text-shadow: 0 0 16px var(--accent-glow) !important; }
-        .data-row td { padding: 7px 5px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); font-size: 13px; color: var(--color-text); background: var(--bg-table-row) !important; transition: background 0.2s, color 0.4s; vertical-align: middle; }
+        .data-row td { padding: 7px 5px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); font-size: 13px; color: var(--color-text); background: var(--bg-table-row) !important; transition: background 0.2s, color 0.4s; vertical-align: middle; text-align: center; }
         .data-row:nth-child(even) td { background: var(--bg-table-row-alt) !important; }
         .data-row:hover td { background: var(--bg-glass-hover) !important; }
         .data-row td:last-child { border-right: none; }
@@ -249,6 +249,21 @@
         .col-img   { width:66px; text-align:center; }
         .col-kwh   { background: rgba(0,200,100,0.05) !important; }
         .col-final { font-weight:800; color:var(--color-final) !important; font-size:13px; background:rgba(255,60,80,0.05) !important; }
+
+        /* ===== FIX: căn giữa các span tiền trong 3 cột cuối ===== */
+        .base-money, .loss-share, .final-total {
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+        /* ===== FIX: TIỀN PHẢI NỘP luôn đỏ dù bất kỳ theme nào ===== */
+        .final-total {
+            color: #ff2244 !important;
+            font-weight: 800 !important;
+        }
+        th.col-final {
+            color: #ff2244 !important;
+        }
 
         input { width: 100%; border: none; text-align: center; font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif; outline: none; background: transparent; color: var(--color-text); padding: 3px 0; transition: color 0.3s, border-color 0.2s; }
         input:focus { border-bottom: 1px solid var(--accent); }
@@ -506,24 +521,12 @@
 <!-- ===== SAVE SUCCESS POPUP ===== -->
 <div id="savePopup" style="display:none;position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,0.7);backdrop-filter:blur(14px);justify-content:center;align-items:center;">
   <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:26px;padding:38px 40px 32px;text-align:center;min-width:320px;max-width:390px;width:90%;box-shadow:0 0 80px var(--accent-glow),0 24px 60px rgba(0,0,0,.85);animation:sp-pop .38s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;">
-
-    <!-- Glow bg -->
     <div style="position:absolute;top:-90px;left:50%;transform:translateX(-50%);width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 68%);pointer-events:none;opacity:.4;"></div>
-
-    <!-- Animated rings -->
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:340px;border-radius:50%;border:1px solid var(--border-accent);opacity:.15;animation:sp-ring 2s ease-out infinite;pointer-events:none;"></div>
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:280px;border-radius:50%;border:1px solid var(--border-accent);opacity:.2;animation:sp-ring 2s ease-out .4s infinite;pointer-events:none;"></div>
-
-    <!-- Icon -->
     <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 18px;box-shadow:0 0 32px var(--accent-glow),0 8px 24px rgba(0,0,0,.5);animation:sp-icon .42s cubic-bezier(.34,1.56,.64,1) .06s both;position:relative;z-index:1;">💾</div>
-
-    <!-- Title -->
     <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:22px;font-weight:900;color:var(--color-title);text-shadow:0 0 20px var(--accent-glow);margin-bottom:8px;letter-spacing:0.3px;position:relative;z-index:1;">✅ Đã lưu thành công!</div>
-
-    <!-- Month badge -->
     <div id="spMonth" style="font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;color:var(--accent);background:var(--bg-glass);border:1px solid var(--border-accent);border-radius:20px;padding:5px 20px;display:inline-block;margin-bottom:22px;letter-spacing:0.3px;position:relative;z-index:1;"></div>
-
-    <!-- Stats cards -->
     <div style="display:flex;gap:10px;margin-bottom:20px;position:relative;z-index:1;">
       <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:14px 8px;text-align:center;">
         <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">🏠 Số hộ</div>
@@ -538,13 +541,9 @@
         <div id="spTime" style="font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;color:var(--color-text);line-height:1.5;">--:--</div>
       </div>
     </div>
-
-    <!-- Progress bar -->
     <div style="height:5px;border-radius:3px;background:var(--bg-glass);overflow:hidden;margin-bottom:22px;position:relative;z-index:1;">
       <div id="spBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;border-radius:3px;animation:sp-drain 2.8s linear forwards,sp-shimmer 1.2s linear infinite;"></div>
     </div>
-
-    <!-- OK button -->
     <button onclick="closeSavePopup()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:white;font-family:'Be Vietnam Pro',sans-serif;font-size:15px;font-weight:800;padding:14px 48px;cursor:pointer;box-shadow:0 6px 22px var(--accent-glow);transition:filter .15s,transform .12s;letter-spacing:.5px;position:relative;z-index:1;"
       onmouseover="this.style.filter='brightness(1.18)';this.style.transform='scale(1.05)'"
       onmouseout="this.style.filter='';this.style.transform=''"
@@ -571,17 +570,14 @@ function showSavePopup(){
     const total = document.getElementById('lblGrandTotal').innerText;
     const now   = new Date();
     const t     = now.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-
     document.getElementById('spMonth').innerText = 'THÁNG ' + parts[1] + '/' + parts[0];
     document.getElementById('spRows').innerText  = rows;
     document.getElementById('spTotal').innerText = total;
     document.getElementById('spTime').innerText  = t;
-
     const bar = document.getElementById('spBar');
     bar.style.animation = 'none';
     void bar.offsetHeight;
     bar.style.animation = 'sp-drain 2.8s linear forwards, sp-shimmer 1.2s linear infinite';
-
     document.getElementById('savePopup').style.display = 'flex';
     clearTimeout(window._spTimer);
     window._spTimer = setTimeout(closeSavePopup, 2800);
@@ -739,7 +735,6 @@ document.getElementById('savePopup').addEventListener('click', function(e){
     function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
         const row = document.getElementById('tableBody').insertRow();
         row.className = 'data-row';
-        // Escape string fields trước khi inject vào innerHTML
         const safeName  = (data.name||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         const safeImg   = (data.img||'').startsWith('data:image') ? data.img : '';
         const safeBefore = parseFloat(data.before)||0;
@@ -762,7 +757,6 @@ document.getElementById('savePopup').addEventListener('click', function(e){
             <td class="col-final"><span class="final-total">0đ</span></td>`;
     }
 
-    // ─── Toast thông báo ───────────────────────────────
     function showToast(msg, type='success'){
         let tc = document.getElementById('toast-container');
         if(!tc){
@@ -793,7 +787,6 @@ document.getElementById('savePopup').addEventListener('click', function(e){
                 const b64 = c.toDataURL('image/jpeg',0.7);
                 if(tid){ const t=document.getElementById(tid); t.src=b64; t.style.display='block'; }
                 else   { const el=input.parentElement.querySelector('.img-preview'); el.src=b64; el.style.display='block'; }
-                // Không auto-save ở đây — người dùng bấm Lưu thủ công
             };
             img.src = e.target.result;
         };
@@ -946,7 +939,6 @@ document.getElementById('savePopup').addEventListener('click', function(e){
     function toggleLock(){
         const m = monthInput.value;
         if(!db[m]) saveToLocal(true);
-        // saveToLocal có thể thất bại nếu bộ nhớ đầy, kiểm tra lại trước khi dùng
         if(!db[m]) { showToast('⚠️ Không thể khóa — hãy lưu dữ liệu trước!', 'warn'); return; }
         db[m].locked = !db[m].locked;
         try {
