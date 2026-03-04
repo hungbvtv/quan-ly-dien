@@ -250,13 +250,11 @@
         .col-kwh   { background: rgba(0,200,100,0.05) !important; }
         .col-final { font-weight:800; color:var(--color-final) !important; font-size:13px; background:rgba(255,60,80,0.05) !important; }
 
-        /* ===== FIX: căn giữa các span tiền trong 3 cột cuối ===== */
         .base-money, .loss-share, .final-total {
             display: block;
             text-align: center;
             width: 100%;
         }
-        /* ===== FIX: TIỀN PHẢI NỘP luôn đỏ dù bất kỳ theme nào ===== */
         .final-total {
             color: #ff2244 !important;
             font-weight: 800 !important;
@@ -480,7 +478,7 @@
                                 <span style="font-size:11px;color:var(--color-text-dim)">📷 Ảnh Tổng:</span>
                                 <div class="img-container">
                                     <img src="" id="mainMeterImg" class="img-preview" onclick="openImg(this.src)">
-                                    <span class="upload-btn" onclick="document.getElementById('fileMain').click()">Up Ảnh</span>
+                                    <span class="upload-btn" id="mainMeterUploadBtn" onclick="document.getElementById('fileMain').click()">Up Ảnh</span>
                                     <span class="delete-img-btn" id="mainMeterDeleteBtn" onclick="deleteMainImg()">🗑 Xóa</span>
                                     <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this,'mainMeterImg')">
                                 </div>
@@ -790,8 +788,20 @@ document.getElementById('savePopup').addEventListener('click', function(e){
                 ctx.drawImage(img,0,0,c.width,c.height);
                 const b64 = c.toDataURL('image/jpeg',0.7);
                 showImgConfirmPopup(b64, ()=>{
-                    if(tid){ const t=document.getElementById(tid); t.src=b64; t.style.display='block'; }
-                    else   { const el=input.parentElement.querySelector('.img-preview'); el.src=b64; el.style.display='block'; }
+                    if(tid){
+                        const t=document.getElementById(tid);
+                        t.src=b64;
+                        t.style.display='block';
+                        // Hiện nút xóa ảnh tổng
+                        document.getElementById('mainMeterDeleteBtn').style.display='inline';
+                    } else {
+                        const el=input.parentElement.querySelector('.img-preview');
+                        el.src=b64;
+                        el.style.display='block';
+                        // Hiện nút xóa ảnh hộ
+                        const delBtn = input.parentElement.querySelector('.delete-img-btn');
+                        if(delBtn) delBtn.style.display='inline';
+                    }
                 }, ()=>{ input.value=''; });
             };
             img.src = e.target.result;
@@ -802,22 +812,7 @@ document.getElementById('savePopup').addEventListener('click', function(e){
     function showImgConfirmPopup(src, onConfirm, onCancel){
         document.getElementById('imgConfirmPreview').src = src;
         document.getElementById('imgConfirmPopup').style.display = 'flex';
-        window._imgConfirmOK = ()=>{
-            onConfirm();
-            // Hiện nút xóa sau khi xác nhận
-            setTimeout(()=>{
-                document.querySelectorAll('.img-preview').forEach(img=>{
-                    if(img.src && img.src.startsWith('data:image') && img.style.display!=='none'){
-                        const delBtn = img.parentElement.querySelector('.delete-img-btn');
-                        if(delBtn) delBtn.style.display = 'inline';
-                    }
-                });
-                const mainImg = document.getElementById('mainMeterImg');
-                if(mainImg && mainImg.src && mainImg.src.startsWith('data:image') && mainImg.style.display!=='none'){
-                    document.getElementById('mainMeterDeleteBtn').style.display = 'inline';
-                }
-            }, 100);
-        };
+        window._imgConfirmOK = onConfirm;
         window._imgConfirmNo = onCancel;
     }
     function imgConfirmYes(){
@@ -1017,19 +1012,44 @@ document.getElementById('savePopup').addEventListener('click', function(e){
         }
         init();
     }
+
+    // ===== FIX: applyLockUI kiểm soát đúng upload-btn và delete-img-btn =====
     function applyLockUI(isLocked){
-        const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
-        const allBtns   = document.querySelectorAll('.upload-btn');
+        const allInputs    = document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
+        const allUploadBtns = document.querySelectorAll('.upload-btn');
+        const allDeleteImgBtns = document.querySelectorAll('.delete-img-btn');
+
         if(isLocked){
             document.getElementById('lockBtnText').innerText = '🔓 Mở Khóa';
             document.getElementById('statusArea').innerHTML  = '<span class="status-badge status-locked">🔒 ĐÃ KHÓA</span>';
-            allInputs.forEach(i=>i.disabled=true);
-            allBtns.forEach(b=>b.style.display='none');
+            // Disable nhập liệu
+            allInputs.forEach(i => i.disabled = true);
+            // Ẩn nút upload ảnh
+            allUploadBtns.forEach(b => b.style.display = 'none');
+            // Ẩn nút xóa ảnh (không cho xóa khi đã khóa)
+            allDeleteImgBtns.forEach(b => b.style.display = 'none');
         } else {
             document.getElementById('lockBtnText').innerText = '🔒 Khóa tháng';
             document.getElementById('statusArea').innerHTML  = '<span class="status-badge status-open">✅ ĐANG MỞ</span>';
-            allInputs.forEach(i=>i.disabled=false);
-            allBtns.forEach(b=>b.style.display='block');
+            // Enable nhập liệu
+            allInputs.forEach(i => i.disabled = false);
+            // Hiện nút upload ảnh
+            allUploadBtns.forEach(b => b.style.display = 'inline');
+            // Chỉ hiện nút xóa ảnh cho những ảnh đang có (src hợp lệ)
+            allDeleteImgBtns.forEach(btn => {
+                // Tìm ảnh tương ứng trong cùng container
+                const container = btn.closest('.img-container') || btn.parentElement;
+                const img = container ? container.querySelector('.img-preview') : null;
+                const hasImg = img && img.src && img.src.startsWith('data:image') && img.style.display !== 'none';
+                btn.style.display = hasImg ? 'inline' : 'none';
+            });
+            // Xử lý riêng nút xóa ảnh tổng
+            const mainImg = document.getElementById('mainMeterImg');
+            const mainDelBtn = document.getElementById('mainMeterDeleteBtn');
+            if(mainImg && mainDelBtn){
+                const hasMainImg = mainImg.src && mainImg.src.startsWith('data:image') && mainImg.style.display !== 'none';
+                mainDelBtn.style.display = hasMainImg ? 'inline' : 'none';
+            }
         }
     }
 
