@@ -366,28 +366,31 @@
         body {
             background: var(--bg-page);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
             padding: 20px 10px 40px;
             overflow-x: hidden;
             transition: background 0.5s;
         }
 
-        .rainbow-wrapper::before { display: none; }
-
-        .app-wrapper { max-width: 1280px; width: 100%; }
+        .app-wrapper { max-width: 1280px; width: 100%; margin: 0 auto; }
         .rainbow-wrapper {
-            display: block;
-            width: 100%;
-            padding: 3px;
+            display: grid;
             border-radius: 20px;
-            background: conic-gradient(#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8b00ff,#ff0000);
-            animation: rotateRainbow 4s linear infinite;
+            padding: 3px;
+            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff, #ff0000);
+            background-size: 400% 400%;
+            animation: rainbowShift 4s linear infinite;
         }
-        @keyframes rotateRainbow { 0%{ filter:hue-rotate(0deg) } 100%{ filter:hue-rotate(360deg) } }
-        .rainbow-off .rainbow-wrapper { animation: none; background: var(--border-accent) !important; }
-        .main-card { background: var(--bg-card); border-radius: 18px; position: relative; overflow: hidden; transition: background 0.4s; width: 100%; }
+        .rainbow-wrapper::before { display: none !important; }
+        @keyframes rainbowShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .rainbow-off .rainbow-wrapper {
+            animation: none;
+            background: var(--border-accent);
+        }
+        .main-card { background: var(--bg-card); border-radius: 18px; overflow: hidden; transition: background 0.4s; }
 
         .header-banner { background: var(--bg-header); border-bottom: 1px solid var(--border-color); padding: 24px 28px 20px; text-align: center; position: relative; }
         .header-banner::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: var(--gradient-border); opacity: 0.6; }
