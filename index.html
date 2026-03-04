@@ -373,23 +373,13 @@
 
         .app-wrapper { max-width: 1280px; width: 100%; margin: 0 auto; }
         .rainbow-wrapper {
-            display: grid;
             border-radius: 20px;
             padding: 3px;
-            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff, #ff0000);
-            background-size: 400% 400%;
-            animation: rainbowShift 4s linear infinite;
+            background: linear-gradient(135deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff, #ff0000);
         }
-        .rainbow-wrapper::before { display: none !important; }
-        @keyframes rainbowShift {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .rainbow-off .rainbow-wrapper {
-            animation: none;
-            background: var(--border-accent);
-        }
+        #rainbow-bg { display: none; }
+        .main-card { position: relative; z-index: 1; background: var(--bg-card); border-radius: 18px; overflow: hidden; transition: background 0.4s; }
+        .rainbow-off .rainbow-wrapper { background: var(--border-accent); }
         .main-card { background: var(--bg-card); border-radius: 18px; overflow: hidden; transition: background 0.4s; }
 
         .header-banner { background: var(--bg-header); border-bottom: 1px solid var(--border-color); padding: 24px 28px 20px; text-align: center; position: relative; }
@@ -777,7 +767,6 @@ document.getElementById('savePopup').addEventListener('click', function(e){
 </script>
 
 <script>
-    let rainbowEnabled = localStorage.getItem('rainbowEnabled') !== 'false';
 
     const THEME_INFO = [
         { bg:'radial-gradient(circle, #00b4ff 0%, #060a18 100%)', emoji:'🌌', name:'Vũ trụ' },
@@ -896,15 +885,11 @@ document.getElementById('savePopup').addEventListener('click', function(e){
     }
     function applyRainbowUI(){
         const btn = document.getElementById('rainbowToggleBtn');
-        const wrapper = document.getElementById('rainbowWrapper');
         if(rainbowEnabled){
             document.body.classList.remove('rainbow-off');
-            wrapper.style.animation = '';
             if(btn){ btn.innerHTML='🌈 Tắt Viền 7 Màu'; btn.style.background='linear-gradient(135deg,#ff0000,#ff7f00,#ffff00,#00cc00,#0000ff,#8b00ff)'; }
         } else {
             document.body.classList.add('rainbow-off');
-            wrapper.style.animation = 'none';
-            wrapper.style.background = 'var(--border-accent)';
             if(btn){ btn.innerHTML='🌈 Bật Viền 7 Màu'; btn.style.background='linear-gradient(135deg,#4a5568,#6c757d)'; }
         }
     }
