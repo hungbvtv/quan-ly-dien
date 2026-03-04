@@ -847,38 +847,25 @@ document.getElementById('savePopup').addEventListener('click', function(e){
 
     function randomTheme(){
         if(_randomThemeRunning){
-            // Đang chạy → dừng lại
             clearInterval(_randomThemeTimer);
             _randomThemeRunning = false;
             document.getElementById('randomThemeBtn').innerHTML = '🎲 Random Theme';
             document.getElementById('randomThemeBtn').style.background = 'linear-gradient(135deg,#e91e8c,#9c27b0)';
-            showToast('⏹ Đã dừng random theme');
+            showToast('⏹ Đã dừng xoay vòng theme');
         } else {
-            // Bắt đầu chạy random
             _randomThemeRunning = true;
             document.getElementById('randomThemeBtn').innerHTML = '⏹ Dừng Random';
             document.getElementById('randomThemeBtn').style.background = 'linear-gradient(135deg,#c62828,#e53935)';
-            // Chạy ngay lần đầu
-            let prev = currentTheme;
-            function pickRandom(){
-                let n;
-                do { n = Math.floor(Math.random() * TOTAL_THEMES) + 1; } while(n === prev);
-                prev = n;
-                setTheme(n);
+            function nextTheme(){
+                const next = (currentTheme % TOTAL_THEMES) + 1;
+                setTheme(next);
+                const info = THEME_INFO[next - 1];
+                showToast(info.emoji + ' ' + info.name);
             }
-            pickRandom();
-            _randomThemeTimer = setInterval(pickRandom, 5000);
-            showToast('🎲 Đang chạy random theme!');
+            nextTheme();
+            _randomThemeTimer = setInterval(nextTheme, 5000);
+            showToast('🎨 Đang xoay vòng theme!');
         }
-    }
-    function randomTheme(){
-        let next;
-        do { next = Math.floor(Math.random() * TOTAL_THEMES) + 1; } while(next === currentTheme && TOTAL_THEMES > 1);
-        setTheme(next);
-        const info = THEME_INFO[next-1];
-        showToast("🎲 " + info.emoji + " " + info.name);
-        const btn = document.getElementById("randomThemeBtn");
-        if(btn){ btn.style.transition="none"; btn.style.transform="scale(0.9) rotate(-10deg)"; setTimeout(()=>{ btn.style.transition="transform 0.35s cubic-bezier(.34,1.56,.64,1)"; btn.style.transform=""; }, 60); setTimeout(()=>{ btn.style.transition=""; }, 400); }
     }
     function applyThemeUI(){
         const body = document.body;
