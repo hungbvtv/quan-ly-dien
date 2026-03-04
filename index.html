@@ -275,6 +275,8 @@
         .img-preview:hover { border-color:var(--accent); transform:scale(1.1); }
         .upload-btn { font-size:10px; color:var(--accent); cursor:pointer; font-weight:700; background:var(--bg-glass); padding:2px 7px; border-radius:5px; border:1px solid var(--border-color); transition:background 0.2s; white-space:nowrap; }
         .upload-btn:hover { background:var(--bg-glass-hover); }
+        .delete-img-btn { font-size:10px; color:#ff4466; cursor:pointer; font-weight:700; background:rgba(255,60,80,0.08); padding:2px 7px; border-radius:5px; border:1px solid rgba(255,60,80,0.25); transition:background 0.2s; white-space:nowrap; display:none; }
+        .delete-img-btn:hover { background:rgba(255,60,80,0.2); }
 
         tfoot tr td { color: var(--color-text); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 11px 13px; transition: color 0.4s; }
         tfoot tr td:last-child { border-right: none; }
@@ -479,6 +481,7 @@
                                 <div class="img-container">
                                     <img src="" id="mainMeterImg" class="img-preview" onclick="openImg(this.src)">
                                     <span class="upload-btn" onclick="document.getElementById('fileMain').click()">Up Ảnh</span>
+                                    <span class="delete-img-btn" id="mainMeterDeleteBtn" onclick="deleteMainImg()">🗑 Xóa</span>
                                     <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this,'mainMeterImg')">
                                 </div>
                             </div>
@@ -726,8 +729,8 @@ document.getElementById('savePopup').addEventListener('click', function(e){
         document.getElementById('footerMonthLabel').value = data?.footerMonthLabel||parts[1];
         const mainImg = document.getElementById('mainMeterImg');
         const safeMainImg = (data?.mainMeterImg||'').startsWith('data:image') ? data.mainMeterImg : '';
-        if(safeMainImg){ mainImg.src=safeMainImg; mainImg.style.display='block'; }
-        else { mainImg.src=''; mainImg.style.display='none'; }
+        if(safeMainImg){ mainImg.src=safeMainImg; mainImg.style.display='block'; document.getElementById('mainMeterDeleteBtn').style.display='inline'; }
+        else { mainImg.src=''; mainImg.style.display='none'; document.getElementById('mainMeterDeleteBtn').style.display='none'; }
         applyLockUI(data?.locked||false);
         updateTotals();
     }
@@ -745,7 +748,8 @@ document.getElementById('savePopup').addEventListener('click', function(e){
             <td class="col-name"><input type="text" value="${safeName}" placeholder="Tên hộ..."></td>
             <td class="col-img"><div class="img-container">
                 <img src="${safeImg}" class="img-preview" onclick="openImg(this.src)" style="display:${safeImg?'block':'none'}">
-                <span class="upload-btn" onclick="this.nextElementSibling.click()">Up Ảnh</span>
+                <span class="upload-btn" onclick="this.nextElementSibling.nextElementSibling.click()">Up Ảnh</span>
+                <span class="delete-img-btn" style="display:${safeImg?'inline':'none'}" onclick="deleteRowImg(this)">🗑 Xóa</span>
                 <input type="file" hidden accept="image/*" onchange="previewImg(this)">
             </div></td>
             <td><input type="number" class="before" value="${safeBefore}" oninput="updateTotals()"></td>
@@ -798,16 +802,64 @@ document.getElementById('savePopup').addEventListener('click', function(e){
     function showImgConfirmPopup(src, onConfirm, onCancel){
         document.getElementById('imgConfirmPreview').src = src;
         document.getElementById('imgConfirmPopup').style.display = 'flex';
-        window._imgConfirmOK = onConfirm;
+        window._imgConfirmOK = ()=>{
+            onConfirm();
+            // Hiện nút xóa sau khi xác nhận
+            setTimeout(()=>{
+                document.querySelectorAll('.img-preview').forEach(img=>{
+                    if(img.src && img.src.startsWith('data:image') && img.style.display!=='none'){
+                        const delBtn = img.parentElement.querySelector('.delete-img-btn');
+                        if(delBtn) delBtn.style.display = 'inline';
+                    }
+                });
+                const mainImg = document.getElementById('mainMeterImg');
+                if(mainImg && mainImg.src && mainImg.src.startsWith('data:image') && mainImg.style.display!=='none'){
+                    document.getElementById('mainMeterDeleteBtn').style.display = 'inline';
+                }
+            }, 100);
+        };
         window._imgConfirmNo = onCancel;
     }
     function imgConfirmYes(){
         document.getElementById('imgConfirmPopup').style.display = 'none';
         if(window._imgConfirmOK) window._imgConfirmOK();
+        showToast('📷 Đã cập nhật ảnh đồng hồ!');
     }
     function imgConfirmNo(){
         document.getElementById('imgConfirmPopup').style.display = 'none';
         if(window._imgConfirmNo) window._imgConfirmNo();
+    }
+
+    function deleteRowImg(btn){
+        const container = btn.closest('.img-container');
+        showImgDeleteConfirm(()=>{
+            const img = container.querySelector('.img-preview');
+            img.src = ''; img.style.display = 'none';
+            btn.style.display = 'none';
+            const fileInput = container.querySelector('input[type=file]');
+            if(fileInput) fileInput.value = '';
+            showToast('🗑 Đã xóa ảnh đồng hồ!');
+        });
+    }
+    function deleteMainImg(){
+        showImgDeleteConfirm(()=>{
+            const img = document.getElementById('mainMeterImg');
+            img.src = ''; img.style.display = 'none';
+            document.getElementById('mainMeterDeleteBtn').style.display = 'none';
+            document.getElementById('fileMain').value = '';
+            showToast('🗑 Đã xóa ảnh tổng!');
+        });
+    }
+    function showImgDeleteConfirm(onConfirm){
+        document.getElementById('imgDeletePopup').style.display = 'flex';
+        window._imgDeleteOK = onConfirm;
+    }
+    function imgDeleteYes(){
+        document.getElementById('imgDeletePopup').style.display = 'none';
+        if(window._imgDeleteOK) window._imgDeleteOK();
+    }
+    function imgDeleteNo(){
+        document.getElementById('imgDeletePopup').style.display = 'none';
     }
 
     function updateTotals(){
@@ -1057,6 +1109,19 @@ document.getElementById('savePopup').addEventListener('click', function(e){
 
     init();
 </script>
+
+<!-- ===== IMAGE DELETE CONFIRM POPUP ===== -->
+<div id="imgDeletePopup" style="display:none;position:fixed;inset:0;z-index:25001;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);justify-content:center;align-items:center;">
+    <div style="background:var(--bg-card);border:2px solid rgba(220,53,69,0.6);border-radius:22px;padding:32px 36px;text-align:center;min-width:300px;box-shadow:0 0 50px rgba(220,53,69,0.3),0 20px 50px rgba(0,0,0,.8);animation:sp-pop .3s cubic-bezier(.34,1.56,.64,1);">
+        <div style="font-size:48px;margin-bottom:12px;">🗑️</div>
+        <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:18px;font-weight:800;color:#ff6b6b;margin-bottom:8px;">Xóa ảnh đồng hồ?</div>
+        <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:13px;color:rgba(255,200,200,0.7);margin-bottom:24px;">Ảnh sẽ bị xóa và không thể khôi phục.</div>
+        <div style="display:flex;gap:12px;justify-content:center;">
+            <button onclick="imgDeleteYes()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#a0000a,#dc3545);color:white;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:filter .2s;" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter=''">🗑 Xóa</button>
+            <button onclick="imgDeleteNo()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#2d3748,#4a5568);color:white;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:filter .2s;" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter=''">❌ Hủy</button>
+        </div>
+    </div>
+</div>
 
 <!-- ===== IMAGE CONFIRM POPUP ===== -->
 <div id="imgConfirmPopup" style="display:none;position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);justify-content:center;align-items:center;">
