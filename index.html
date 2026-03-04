@@ -164,28 +164,28 @@
         }
         /* theme-7: Đại dương tối */
         body.theme-7 {
-            --bg-page: #000a14;
-            --bg-card: rgba(0,12,24,0.97);
-            --bg-glass: rgba(0,80,160,0.07);
-            --bg-glass-hover: rgba(0,80,160,0.12);
-            --bg-header: linear-gradient(135deg, rgba(0,50,120,0.25), rgba(0,100,180,0.1));
-            --bg-controls: rgba(0,8,18,0.95);
-            --bg-table-head: rgba(0,60,140,0.15);
-            --bg-table-row: rgba(0,80,160,0.03);
-            --bg-table-row-alt: rgba(0,60,130,0.07);
-            --bg-loss: rgba(0,100,180,0.08);
-            --accent: #1e90ff;
-            --accent2: #0050a0;
-            --accent-glow: rgba(30,144,255,0.35);
-            --color-title: #4db8ff;
-            --color-final: #80ccff;
-            --color-grand: #1e90ff;
-            --color-text: #b0d8ff;
-            --color-text-dim: rgba(176,216,255,0.5);
-            --color-loss-text: #80ccff;
-            --border-color: rgba(0,80,160,0.2);
-            --border-accent: rgba(30,144,255,0.42);
-            --gradient-border: linear-gradient(135deg, #003080, #1e90ff, #80ccff, #003080);
+            --bg-page: #05001a;
+            --bg-card: rgba(8,0,30,0.97);
+            --bg-glass: rgba(60,0,200,0.07);
+            --bg-glass-hover: rgba(60,0,200,0.12);
+            --bg-header: linear-gradient(135deg, rgba(40,0,160,0.25), rgba(80,40,220,0.1));
+            --bg-controls: rgba(5,0,18,0.95);
+            --bg-table-head: rgba(50,0,180,0.15);
+            --bg-table-row: rgba(60,0,200,0.03);
+            --bg-table-row-alt: rgba(50,0,160,0.07);
+            --bg-loss: rgba(80,40,220,0.08);
+            --accent: #6644ff;
+            --accent2: #3311cc;
+            --accent-glow: rgba(102,68,255,0.38);
+            --color-title: #8866ff;
+            --color-final: #aa99ff;
+            --color-grand: #6644ff;
+            --color-text: #ccc0ff;
+            --color-text-dim: rgba(204,192,255,0.5);
+            --color-loss-text: #aa99ff;
+            --border-color: rgba(80,40,220,0.2);
+            --border-accent: rgba(102,68,255,0.45);
+            --gradient-border: linear-gradient(135deg, #220088, #6644ff, #aa99ff, #220088);
         }
         /* theme-8: Hoàng kim */
         body.theme-8 {
@@ -825,7 +825,7 @@ document.getElementById('savePopup').addEventListener('click', function(e){
         { bg:'radial-gradient(circle, #ff6b35 0%, #100200 100%)', emoji:'🔥', name:'Lửa' },
         { bg:'radial-gradient(circle, #c084fc 0%, #07000f 100%)', emoji:'🔮', name:'Huyền bí' },
         { bg:'radial-gradient(circle, #ff6eb4 0%, #1a0510 100%)', emoji:'🌸', name:'Hồng Pastel' },
-        { bg:'radial-gradient(circle, #1e90ff 0%, #000a14 100%)', emoji:'🌊', name:'Đại dương' },
+        { bg:'radial-gradient(circle, #6644ff 0%, #05001a 100%)', emoji:'🌊', name:'Đại dương' },
         { bg:'radial-gradient(circle, #ffd700 0%, #0c0800 100%)', emoji:'✨', name:'Hoàng kim' },
         { bg:'radial-gradient(circle, #d4915a 0%, #0d0804 100%)', emoji:'☕', name:'Cà phê' },
         { bg:'radial-gradient(circle, #c0c0c0 0%, #080808 100%)', emoji:'⚫', name:'Obsidian' },
@@ -897,7 +897,7 @@ document.getElementById('savePopup').addEventListener('click', function(e){
         const body = document.body;
         for(let i=1;i<=THEME_INFO.length;i++) body.classList.remove('theme-'+i);
         body.classList.add('theme-'+currentTheme);
-        const bgMap = {1:'#060a18',2:'#eef2ff',3:'#020d05',4:'#100200',5:'#07000f',6:'#1a0510',7:'#000a14',8:'#0c0800',9:'#0d0804',10:'#080808',11:'#0f0508',12:'#00100e',13:'#0e0814',14:'#0e0100'};
+        const bgMap = {1:'#060a18',2:'#eef2ff',3:'#020d05',4:'#100200',5:'#07000f',6:'#1a0510',7:'#05001a',8:'#0c0800',9:'#0d0804',10:'#080808',11:'#0f0508',12:'#00100e',13:'#0e0814',14:'#0e0100'};
         body.style.background = bgMap[currentTheme];
         void body.offsetHeight;
         buildThemeDots();
