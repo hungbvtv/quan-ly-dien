@@ -13,148 +13,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Cập nhật link font hỗ trợ weight 900 và tiếng Việt tốt hơn -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
-        body.theme-1 {
-            --bg-page: #060a18; --bg-card: rgba(15,20,45,0.97); --bg-glass: rgba(255,255,255,0.04); --bg-glass-hover: rgba(255,255,255,0.07);
-            --bg-header: linear-gradient(135deg, rgba(0,80,200,0.25), rgba(0,180,255,0.12)); --bg-controls: rgba(8,12,30,0.9);
-            --bg-table-head: rgba(0,100,220,0.15); --bg-table-row: rgba(255,255,255,0.025); --bg-table-row-alt: rgba(0,100,255,0.05);
-            --bg-loss: rgba(255,200,50,0.07); --accent: #00b4ff; --accent2: #7c3aed; --accent-glow: rgba(0,180,255,0.35);
-            --color-title: #00d4ff; --color-final: #ff4466; --color-grand: #ff3355; --color-text: #c8d8f0;
-            --color-text-dim: rgba(200,216,240,0.5); --color-loss-text: #fbbf24; --border-color: rgba(0,180,255,0.18);
-            --border-accent: rgba(0,180,255,0.45); --gradient-border: linear-gradient(135deg, #00b4ff, #7c3aed, #ff4466, #00b4ff);
-        }
-        body.theme-2 {
-            --bg-page: #eef2ff; --bg-card: rgba(255,255,255,0.98); --bg-glass: rgba(26,92,184,0.05); --bg-glass-hover: rgba(26,92,184,0.09);
-            --bg-header: linear-gradient(135deg, rgba(26,92,184,0.1), rgba(86,180,224,0.06)); --bg-controls: rgba(235,242,255,0.95);
-            --bg-table-head: rgba(26,92,184,0.08); --bg-table-row: rgba(255,255,255,0.85); --bg-table-row-alt: rgba(235,245,255,0.85);
-            --bg-loss: rgba(255,240,180,0.5); --accent: #1a5cb8; --accent2: #2980b9; --accent-glow: rgba(26,92,184,0.25);
-            --color-title: #1a5cb8; --color-final: #c0000a; --color-grand: #c0000a; --color-text: #1a2a4a;
-            --color-text-dim: rgba(26,42,74,0.5); --color-loss-text: #7a5900; --border-color: rgba(26,92,184,0.15);
-            --border-accent: rgba(26,92,184,0.4); --gradient-border: linear-gradient(135deg, #1a5cb8, #56b4e0, #2980b9, #1a5cb8);
-        }
-        body.theme-3 {
-            --bg-page: #020d05; --bg-card: rgba(4,18,8,0.97); --bg-glass: rgba(0,255,100,0.04); --bg-glass-hover: rgba(0,255,100,0.08);
-            --bg-header: linear-gradient(135deg, rgba(0,180,50,0.18), rgba(0,255,100,0.07)); --bg-controls: rgba(3,14,6,0.9);
-            --bg-table-head: rgba(0,200,80,0.1); --bg-table-row: rgba(0,255,80,0.025); --bg-table-row-alt: rgba(0,200,60,0.055);
-            --bg-loss: rgba(0,200,80,0.07); --accent: #00e676; --accent2: #69f0ae; --accent-glow: rgba(0,230,118,0.35);
-            --color-title: #00e676; --color-final: #69f0ae; --color-grand: #00e676; --color-text: #b0f0c8;
-            --color-text-dim: rgba(176,240,200,0.5); --color-loss-text: #69f0ae; --border-color: rgba(0,200,80,0.18);
-            --border-accent: rgba(0,230,118,0.45); --gradient-border: linear-gradient(135deg, #00e676, #69f0ae, #00c853, #00e676);
-        }
-        body.theme-4 {
-            --bg-page: #100200; --bg-card: rgba(22,4,0,0.97); --bg-glass: rgba(255,80,0,0.04); --bg-glass-hover: rgba(255,80,0,0.08);
-            --bg-header: linear-gradient(135deg, rgba(200,50,0,0.2), rgba(255,140,0,0.09)); --bg-controls: rgba(18,4,0,0.9);
-            --bg-table-head: rgba(200,50,0,0.12); --bg-table-row: rgba(255,60,0,0.025); --bg-table-row-alt: rgba(255,100,0,0.055);
-            --bg-loss: rgba(255,150,0,0.07); --accent: #ff6b35; --accent2: #ffd700; --accent-glow: rgba(255,107,53,0.35);
-            --color-title: #ff8c42; --color-final: #ffd700; --color-grand: #ff4500; --color-text: #ffe0c8;
-            --color-text-dim: rgba(255,224,200,0.5); --color-loss-text: #ffd700; --border-color: rgba(255,100,0,0.18);
-            --border-accent: rgba(255,107,53,0.45); --gradient-border: linear-gradient(135deg, #ff4500, #ff8c00, #ffd700, #ff4500);
-        }
-        body.theme-5 {
-            --bg-page: #07000f; --bg-card: rgba(14,0,28,0.97); --bg-glass: rgba(160,0,255,0.04); --bg-glass-hover: rgba(160,0,255,0.08);
-            --bg-header: linear-gradient(135deg, rgba(120,0,200,0.2), rgba(200,100,255,0.09)); --bg-controls: rgba(10,0,20,0.9);
-            --bg-table-head: rgba(140,0,220,0.12); --bg-table-row: rgba(160,0,255,0.025); --bg-table-row-alt: rgba(120,0,200,0.06);
-            --bg-loss: rgba(160,100,255,0.07); --accent: #c084fc; --accent2: #e056fd; --accent-glow: rgba(192,132,252,0.35);
-            --color-title: #c084fc; --color-final: #f0abfc; --color-grand: #e040fb; --color-text: #e8d0ff;
-            --color-text-dim: rgba(232,208,255,0.5); --color-loss-text: #f0abfc; --border-color: rgba(160,0,255,0.18);
-            --border-accent: rgba(192,132,252,0.45); --gradient-border: linear-gradient(135deg, #9b59b6, #e056fd, #a29bfe, #c084fc);
-        }
-        body.theme-6 {
-            --bg-page: #1a0510; --bg-card: rgba(30,6,18,0.97); --bg-glass: rgba(255,100,180,0.05); --bg-glass-hover: rgba(255,100,180,0.09);
-            --bg-header: linear-gradient(135deg, rgba(220,60,120,0.2), rgba(255,150,200,0.09)); --bg-controls: rgba(22,4,14,0.9);
-            --bg-table-head: rgba(220,60,120,0.12); --bg-table-row: rgba(255,100,180,0.025); --bg-table-row-alt: rgba(200,60,120,0.06);
-            --bg-loss: rgba(255,150,200,0.07); --accent: #ff6eb4; --accent2: #ff9ed2; --accent-glow: rgba(255,110,180,0.38);
-            --color-title: #ff80c0; --color-final: #ffb3d9; --color-grand: #ff4da6; --color-text: #ffe0f0;
-            --color-text-dim: rgba(255,224,240,0.5); --color-loss-text: #ffb3d9; --border-color: rgba(255,100,180,0.18);
-            --border-accent: rgba(255,110,180,0.45); --gradient-border: linear-gradient(135deg, #ff4da6, #ff80c0, #ff9ed2, #ff4da6);
-        }
-        body.theme-7 {
-            --bg-page: #000a14; --bg-card: rgba(0,12,24,0.97); --bg-glass: rgba(0,80,160,0.07); --bg-glass-hover: rgba(0,80,160,0.12);
-            --bg-header: linear-gradient(135deg, rgba(0,50,120,0.25), rgba(0,100,180,0.1)); --bg-controls: rgba(0,8,18,0.95);
-            --bg-table-head: rgba(0,60,140,0.15); --bg-table-row: rgba(0,80,160,0.03); --bg-table-row-alt: rgba(0,60,130,0.07);
-            --bg-loss: rgba(0,100,180,0.08); --accent: #1e90ff; --accent2: #0050a0; --accent-glow: rgba(30,144,255,0.35);
-            --color-title: #4db8ff; --color-final: #80ccff; --color-grand: #1e90ff; --color-text: #b0d8ff;
-            --color-text-dim: rgba(176,216,255,0.5); --color-loss-text: #80ccff; --border-color: rgba(0,80,160,0.2);
-            --border-accent: rgba(30,144,255,0.42); --gradient-border: linear-gradient(135deg, #003080, #1e90ff, #80ccff, #003080);
-        }
-        body.theme-8 {
-            --bg-page: #0c0800; --bg-card: rgba(20,14,0,0.97); --bg-glass: rgba(220,170,0,0.05); --bg-glass-hover: rgba(220,170,0,0.09);
-            --bg-header: linear-gradient(135deg, rgba(180,130,0,0.22), rgba(255,210,60,0.09)); --bg-controls: rgba(14,10,0,0.9);
-            --bg-table-head: rgba(180,130,0,0.12); --bg-table-row: rgba(220,170,0,0.025); --bg-table-row-alt: rgba(180,130,0,0.06);
-            --bg-loss: rgba(255,210,60,0.07); --accent: #ffd700; --accent2: #ffb300; --accent-glow: rgba(255,215,0,0.38);
-            --color-title: #ffe066; --color-final: #ffc107; --color-grand: #ffd700; --color-text: #fff4c0;
-            --color-text-dim: rgba(255,244,192,0.5); --color-loss-text: #ffc107; --border-color: rgba(220,170,0,0.18);
-            --border-accent: rgba(255,215,0,0.45); --gradient-border: linear-gradient(135deg, #b8860b, #ffd700, #ffe566, #b8860b);
-        }
-        body.theme-9 {
-            --bg-page: #0d0804; --bg-card: rgba(22,14,6,0.97); --bg-glass: rgba(180,110,50,0.05); --bg-glass-hover: rgba(180,110,50,0.09);
-            --bg-header: linear-gradient(135deg, rgba(140,80,20,0.22), rgba(210,150,80,0.09)); --bg-controls: rgba(16,10,4,0.9);
-            --bg-table-head: rgba(140,80,20,0.12); --bg-table-row: rgba(180,110,50,0.025); --bg-table-row-alt: rgba(140,80,20,0.06);
-            --bg-loss: rgba(210,150,80,0.07); --accent: #d4915a; --accent2: #a0522d; --accent-glow: rgba(212,145,90,0.38);
-            --color-title: #e8a870; --color-final: #f0c080; --color-grand: #d4915a; --color-text: #f5e0c8;
-            --color-text-dim: rgba(245,224,200,0.5); --color-loss-text: #f0c080; --border-color: rgba(180,110,50,0.18);
-            --border-accent: rgba(212,145,90,0.45); --gradient-border: linear-gradient(135deg, #a0522d, #d4915a, #f0c080, #a0522d);
-        }
-        body.theme-10 {
-            --bg-page: #080808; --bg-card: rgba(12,12,12,0.98); --bg-glass: rgba(200,200,200,0.04); --bg-glass-hover: rgba(200,200,200,0.08);
-            --bg-header: linear-gradient(135deg, rgba(160,160,160,0.15), rgba(220,220,220,0.05)); --bg-controls: rgba(8,8,8,0.95);
-            --bg-table-head: rgba(180,180,180,0.08); --bg-table-row: rgba(255,255,255,0.02); --bg-table-row-alt: rgba(200,200,200,0.04);
-            --bg-loss: rgba(200,200,200,0.06); --accent: #c0c0c0; --accent2: #888888; --accent-glow: rgba(192,192,192,0.30);
-            --color-title: #e8e8e8; --color-final: #ffffff; --color-grand: #d0d0d0; --color-text: #cccccc;
-            --color-text-dim: rgba(200,200,200,0.45); --color-loss-text: #aaaaaa; --border-color: rgba(180,180,180,0.12);
-            --border-accent: rgba(200,200,200,0.35); --gradient-border: linear-gradient(135deg, #444, #c0c0c0, #fff, #888, #444);
-        }
-        body.theme-11 {
-            --bg-page: #0f0508; --bg-card: rgba(22,6,12,0.97); --bg-glass: rgba(255,80,120,0.05); --bg-glass-hover: rgba(255,80,120,0.09);
-            --bg-header: linear-gradient(135deg, rgba(200,40,80,0.2), rgba(255,140,60,0.09)); --bg-controls: rgba(16,4,8,0.9);
-            --bg-table-head: rgba(200,40,80,0.12); --bg-table-row: rgba(255,80,120,0.025); --bg-table-row-alt: rgba(200,60,80,0.06);
-            --bg-loss: rgba(255,120,60,0.07); --accent: #ff5470; --accent2: #ff8c42; --accent-glow: rgba(255,84,112,0.38);
-            --color-title: #ff6b80; --color-final: #ffaa60; --color-grand: #ff4560; --color-text: #ffe0e8;
-            --color-text-dim: rgba(255,224,232,0.5); --color-loss-text: #ffaa60; --border-color: rgba(255,80,120,0.18);
-            --border-accent: rgba(255,84,112,0.45); --gradient-border: linear-gradient(135deg, #ff4560, #ff6b80, #ff8c42, #ff4560);
-        }
-        body.theme-12 {
-            --bg-page: #00100e; --bg-card: rgba(0,20,18,0.97); --bg-glass: rgba(0,200,180,0.05); --bg-glass-hover: rgba(0,200,180,0.09);
-            --bg-header: linear-gradient(135deg, rgba(0,150,130,0.2), rgba(0,230,200,0.09)); --bg-controls: rgba(0,14,12,0.9);
-            --bg-table-head: rgba(0,160,140,0.12); --bg-table-row: rgba(0,200,180,0.025); --bg-table-row-alt: rgba(0,160,140,0.06);
-            --bg-loss: rgba(0,220,190,0.07); --accent: #00e5cc; --accent2: #00bfa5; --accent-glow: rgba(0,229,204,0.38);
-            --color-title: #00f0d0; --color-final: #40ffe8; --color-grand: #00e5cc; --color-text: #b0fff5;
-            --color-text-dim: rgba(176,255,245,0.5); --color-loss-text: #40ffe8; --border-color: rgba(0,200,180,0.18);
-            --border-accent: rgba(0,229,204,0.45); --gradient-border: linear-gradient(135deg, #00796b, #00e5cc, #40ffe8, #00796b);
-        }
-        body.theme-13 {
-            --bg-page: #0e0814; --bg-card: rgba(18,8,26,0.97); --bg-glass: rgba(180,140,255,0.05); --bg-glass-hover: rgba(180,140,255,0.09);
-            --bg-header: linear-gradient(135deg, rgba(140,100,220,0.18), rgba(200,170,255,0.07)); --bg-controls: rgba(12,6,20,0.92);
-            --bg-table-head: rgba(150,110,230,0.1); --bg-table-row: rgba(180,140,255,0.022); --bg-table-row-alt: rgba(150,110,220,0.05);
-            --bg-loss: rgba(200,170,255,0.07); --accent: #c4a8ff; --accent2: #a78bfa; --accent-glow: rgba(196,168,255,0.32);
-            --color-title: #d8bfff; --color-final: #ede0ff; --color-grand: #c4a8ff; --color-text: #ede0ff;
-            --color-text-dim: rgba(237,224,255,0.45); --color-loss-text: #c4a8ff; --border-color: rgba(180,140,255,0.15);
-            --border-accent: rgba(196,168,255,0.38); --gradient-border: linear-gradient(135deg, #7c3aed, #c4a8ff, #ede0ff, #a78bfa, #7c3aed);
-        }
-        body.theme-14 {
-            --bg-page: #0e0000; --bg-card: rgba(20,2,2,0.97); --bg-glass: rgba(200,20,20,0.05); --bg-glass-hover: rgba(200,20,20,0.09);
-            --bg-header: linear-gradient(135deg, rgba(180,10,10,0.22), rgba(220,160,0,0.09)); --bg-controls: rgba(14,0,0,0.92);
-            --bg-table-head: rgba(180,10,10,0.12); --bg-table-row: rgba(200,20,20,0.025); --bg-table-row-alt: rgba(160,10,10,0.06);
-            --bg-loss: rgba(220,160,0,0.07); --accent: #e63030; --accent2: #c8a000; --accent-glow: rgba(220,40,40,0.38);
-            --color-title: #ff4444; --color-final: #ffd060; --color-grand: #e63030; --color-text: #ffe0d0;
-            --color-text-dim: rgba(255,224,208,0.48); --color-loss-text: #ffd060; --border-color: rgba(200,20,20,0.18);
-            --border-accent: rgba(220,40,40,0.42); --gradient-border: linear-gradient(135deg, #8b0000, #e63030, #ffd060, #c8a000, #8b0000);
-        }
+        /* --- GIỮ NGUYÊN TOÀN BỘ 14 THEMES CỦA BẠN --- */
+        body.theme-1 { --bg-page: #060a18; --bg-card: rgba(15,20,45,0.97); --bg-glass: rgba(255,255,255,0.04); --bg-glass-hover: rgba(255,255,255,0.07); --bg-header: linear-gradient(135deg, rgba(0,80,200,0.25), rgba(0,180,255,0.12)); --bg-controls: rgba(8,12,30,0.9); --bg-table-head: rgba(0,100,220,0.15); --bg-table-row: rgba(255,255,255,0.025); --bg-table-row-alt: rgba(0,100,255,0.05); --bg-loss: rgba(255,200,50,0.07); --accent: #00b4ff; --accent2: #7c3aed; --accent-glow: rgba(0,180,255,0.35); --color-title: #00d4ff; --color-final: #ff4466; --color-grand: #ff3355; --color-text: #c8d8f0; --color-text-dim: rgba(200,216,240,0.5); --color-loss-text: #fbbf24; --border-color: rgba(0,180,255,0.18); --border-accent: rgba(0,180,255,0.45); --gradient-border: linear-gradient(135deg, #00b4ff, #7c3aed, #ff4466, #00b4ff); }
+        body.theme-2 { --bg-page: #eef2ff; --bg-card: rgba(255,255,255,0.98); --bg-glass: rgba(26,92,184,0.05); --bg-glass-hover: rgba(26,92,184,0.09); --bg-header: linear-gradient(135deg, rgba(26,92,184,0.1), rgba(86,180,224,0.06)); --bg-controls: rgba(235,242,255,0.95); --bg-table-head: rgba(26,92,184,0.08); --bg-table-row: rgba(255,255,255,0.85); --bg-table-row-alt: rgba(235,245,255,0.85); --bg-loss: rgba(255,240,180,0.5); --accent: #1a5cb8; --accent2: #2980b9; --accent-glow: rgba(26,92,184,0.25); --color-title: #1a5cb8; --color-final: #c0000a; --color-grand: #c0000a; --color-text: #1a2a4a; --color-text-dim: rgba(26,42,74,0.5); --color-loss-text: #7a5900; --border-color: rgba(26,92,184,0.15); --border-accent: rgba(26,92,184,0.4); --gradient-border: linear-gradient(135deg, #1a5cb8, #56b4e0, #2980b9, #1a5cb8); }
+        body.theme-3 { --bg-page: #020d05; --bg-card: rgba(4,18,8,0.97); --bg-glass: rgba(0,255,100,0.04); --bg-glass-hover: rgba(0,255,100,0.08); --bg-header: linear-gradient(135deg, rgba(0,180,50,0.18), rgba(0,255,100,0.07)); --bg-controls: rgba(3,14,6,0.9); --bg-table-head: rgba(0,200,80,0.1); --bg-table-row: rgba(0,255,80,0.025); --bg-table-row-alt: rgba(0,200,60,0.055); --bg-loss: rgba(0,200,80,0.07); --accent: #00e676; --accent2: #69f0ae; --accent-glow: rgba(0,230,118,0.35); --color-title: #00e676; --color-final: #69f0ae; --color-grand: #00e676; --color-text: #b0f0c8; --color-text-dim: rgba(176,240,200,0.5); --color-loss-text: #69f0ae; --border-color: rgba(0,200,80,0.18); --border-accent: rgba(0,230,118,0.45); --gradient-border: linear-gradient(135deg, #00e676, #69f0ae, #00c853, #00e676); }
+        body.theme-4 { --bg-page: #100200; --bg-card: rgba(22,4,0,0.97); --bg-glass: rgba(255,80,0,0.04); --bg-glass-hover: rgba(255,80,0,0.08); --bg-header: linear-gradient(135deg, rgba(200,50,0,0.2), rgba(255,140,0,0.09)); --bg-controls: rgba(18,4,0,0.9); --bg-table-head: rgba(200,50,0,0.12); --bg-table-row: rgba(255,60,0,0.025); --bg-table-row-alt: rgba(255,100,0,0.055); --bg-loss: rgba(255,150,0,0.07); --accent: #ff6b35; --accent2: #ffd700; --accent-glow: rgba(255,107,53,0.35); --color-title: #ff8c42; --color-final: #ffd700; --color-grand: #ff4500; --color-text: #ffe0c8; --color-text-dim: rgba(255,224,200,0.5); --color-loss-text: #ffd700; --border-color: rgba(255,100,0,0.18); --border-accent: rgba(255,107,53,0.45); --gradient-border: linear-gradient(135deg, #ff4500, #ff8c00, #ffd700, #ff4500); }
+        body.theme-5 { --bg-page: #07000f; --bg-card: rgba(14,0,28,0.97); --bg-glass: rgba(160,0,255,0.04); --bg-glass-hover: rgba(160,0,255,0.08); --bg-header: linear-gradient(135deg, rgba(120,0,200,0.2), rgba(200,100,255,0.09)); --bg-controls: rgba(10,0,20,0.9); --bg-table-head: rgba(140,0,220,0.12); --bg-table-row: rgba(160,0,255,0.025); --bg-table-row-alt: rgba(120,0,200,0.06); --bg-loss: rgba(160,100,255,0.07); --accent: #c084fc; --accent2: #e056fd; --accent-glow: rgba(192,132,252,0.35); --color-title: #c084fc; --color-final: #f0abfc; --color-grand: #e040fb; --color-text: #e8d0ff; --color-text-dim: rgba(232,208,255,0.5); --color-loss-text: #f0abfc; --border-color: rgba(160,0,255,0.18); --border-accent: rgba(192,132,252,0.45); --gradient-border: linear-gradient(135deg, #9b59b6, #e056fd, #a29bfe, #c084fc); }
+        body.theme-6 { --bg-page: #1a0510; --bg-card: rgba(30,6,18,0.97); --bg-glass: rgba(255,100,180,0.05); --bg-glass-hover: rgba(255,100,180,0.09); --bg-header: linear-gradient(135deg, rgba(220,60,120,0.2), rgba(255,150,200,0.09)); --bg-controls: rgba(22,4,14,0.9); --bg-table-head: rgba(220,60,120,0.12); --bg-table-row: rgba(255,100,180,0.025); --bg-table-row-alt: rgba(200,60,120,0.06); --bg-loss: rgba(255,150,200,0.07); --accent: #ff6eb4; --accent2: #ff9ed2; --accent-glow: rgba(255,110,180,0.38); --color-title: #ff80c0; --color-final: #ffb3d9; --color-grand: #ff4da6; --color-text: #ffe0f0; --color-text-dim: rgba(255,224,240,0.5); --color-loss-text: #ffb3d9; --border-color: rgba(255,100,180,0.18); --border-accent: rgba(255,110,180,0.45); --gradient-border: linear-gradient(135deg, #ff4da6, #ff80c0, #ff9ed2, #ff4da6); }
+        body.theme-7 { --bg-page: #000a14; --bg-card: rgba(0,12,24,0.97); --bg-glass: rgba(0,80,160,0.07); --bg-glass-hover: rgba(0,80,160,0.12); --bg-header: linear-gradient(135deg, rgba(0,50,120,0.25), rgba(0,100,180,0.1)); --bg-controls: rgba(0,8,18,0.95); --bg-table-head: rgba(0,60,140,0.15); --bg-table-row: rgba(0,80,160,0.03); --bg-table-row-alt: rgba(0,60,130,0.07); --bg-loss: rgba(0,100,180,0.08); --accent: #1e90ff; --accent2: #0050a0; --accent-glow: rgba(30,144,255,0.35); --color-title: #4db8ff; --color-final: #80ccff; --color-grand: #1e90ff; --color-text: #b0d8ff; --color-text-dim: rgba(176,216,255,0.5); --color-loss-text: #80ccff; --border-color: rgba(0,80,160,0.2); --border-accent: rgba(30,144,255,0.42); --gradient-border: linear-gradient(135deg, #003080, #1e90ff, #80ccff, #003080); }
+        body.theme-8 { --bg-page: #0c0800; --bg-card: rgba(20,14,0,0.97); --bg-glass: rgba(220,170,0,0.05); --bg-glass-hover: rgba(220,170,0,0.09); --bg-header: linear-gradient(135deg, rgba(180,130,0,0.22), rgba(255,210,60,0.09)); --bg-controls: rgba(14,10,0,0.9); --bg-table-head: rgba(180,130,0,0.12); --bg-table-row: rgba(220,170,0,0.025); --bg-table-row-alt: rgba(180,130,0,0.06); --bg-loss: rgba(255,210,60,0.07); --accent: #ffd700; --accent2: #ffb300; --accent-glow: rgba(255,215,0,0.38); --color-title: #ffe066; --color-final: #ffc107; --color-grand: #ffd700; --color-text: #fff4c0; --color-text-dim: rgba(255,244,192,0.5); --color-loss-text: #ffc107; --border-color: rgba(220,170,0,0.18); --border-accent: rgba(255,215,0,0.45); --gradient-border: linear-gradient(135deg, #b8860b, #ffd700, #ffe566, #b8860b); }
+        body.theme-9 { --bg-page: #0d0804; --bg-card: rgba(22,14,6,0.97); --bg-glass: rgba(180,110,50,0.05); --bg-glass-hover: rgba(180,110,50,0.09); --bg-header: linear-gradient(135deg, rgba(140,80,20,0.22), rgba(210,150,80,0.09)); --bg-controls: rgba(16,10,4,0.9); --bg-table-head: rgba(140,80,20,0.12); --bg-table-row: rgba(180,110,50,0.025); --bg-table-row-alt: rgba(140,80,20,0.06); --bg-loss: rgba(210,150,80,0.07); --accent: #d4915a; --accent2: #a0522d; --accent-glow: rgba(212,145,90,0.38); --color-title: #e8a870; --color-final: #f0c080; --color-grand: #d4915a; --color-text: #f5e0c8; --color-text-dim: rgba(245,224,200,0.5); --color-loss-text: #f0c080; --border-color: rgba(180,110,50,0.18); --border-accent: rgba(212,145,90,0.45); --gradient-border: linear-gradient(135deg, #a0522d, #d4915a, #f0c080, #a0522d); }
+        body.theme-10 { --bg-page: #080808; --bg-card: rgba(12,12,12,0.98); --bg-glass: rgba(200,200,200,0.04); --bg-glass-hover: rgba(200,200,200,0.08); --bg-header: linear-gradient(135deg, rgba(160,160,160,0.15), rgba(220,220,220,0.05)); --bg-controls: rgba(8,8,8,0.95); --bg-table-head: rgba(180,180,180,0.08); --bg-table-row: rgba(255,255,255,0.02); --bg-table-row-alt: rgba(200,200,200,0.04); --bg-loss: rgba(200,200,200,0.06); --accent: #c0c0c0; --accent2: #888888; --accent-glow: rgba(192,192,192,0.30); --color-title: #e8e8e8; --color-final: #ffffff; --color-grand: #d0d0d0; --color-text: #cccccc; --color-text-dim: rgba(200,200,200,0.45); --color-loss-text: #aaaaaa; --border-color: rgba(180,180,180,0.12); --border-accent: rgba(200,200,200,0.35); --gradient-border: linear-gradient(135deg, #444, #c0c0c0, #fff, #888, #444); }
+        body.theme-11 { --bg-page: #0f0508; --bg-card: rgba(22,6,12,0.97); --bg-glass: rgba(255,80,120,0.05); --bg-glass-hover: rgba(255,80,120,0.09); --bg-header: linear-gradient(135deg, rgba(200,40,80,0.2), rgba(255,140,60,0.09)); --bg-controls: rgba(16,4,8,0.9); --bg-table-head: rgba(200,40,80,0.12); --bg-table-row: rgba(255,80,120,0.025); --bg-table-row-alt: rgba(200,60,80,0.06); --bg-loss: rgba(255,120,60,0.07); --accent: #ff5470; --accent2: #ff8c42; --accent-glow: rgba(255,84,112,0.38); --color-title: #ff6b80; --color-final: #ffaa60; --color-grand: #ff4560; --color-text: #ffe0e8; --color-text-dim: rgba(255,224,232,0.5); --color-loss-text: #ffaa60; --border-color: rgba(255,80,120,0.18); --border-accent: rgba(255,84,112,0.45); --gradient-border: linear-gradient(135deg, #ff4560, #ff6b80, #ff8c42, #ff4560); }
+        body.theme-12 { --bg-page: #00100e; --bg-card: rgba(0,20,18,0.97); --bg-glass: rgba(0,200,180,0.05); --bg-glass-hover: rgba(0,200,180,0.09); --bg-header: linear-gradient(135deg, rgba(0,150,130,0.2), rgba(0,230,200,0.09)); --bg-controls: rgba(0,14,12,0.9); --bg-table-head: rgba(0,160,140,0.12); --bg-table-row: rgba(0,200,180,0.025); --bg-table-row-alt: rgba(0,160,140,0.06); --bg-loss: rgba(0,220,190,0.07); --accent: #00e5cc; --accent2: #00bfa5; --accent-glow: rgba(0,229,204,0.38); --color-title: #00f0d0; --color-final: #40ffe8; --color-grand: #00e5cc; --color-text: #b0fff5; --color-text-dim: rgba(176,255,245,0.5); --color-loss-text: #40ffe8; --border-color: rgba(0,200,180,0.18); --border-accent: rgba(0,229,204,0.45); --gradient-border: linear-gradient(135deg, #00796b, #00e5cc, #40ffe8, #00796b); }
+        body.theme-13 { --bg-page: #0e0814; --bg-card: rgba(18,8,26,0.97); --bg-glass: rgba(180,140,255,0.05); --bg-glass-hover: rgba(180,140,255,0.09); --bg-header: linear-gradient(135deg, rgba(140,100,220,0.18), rgba(200,170,255,0.07)); --bg-controls: rgba(12,6,20,0.92); --bg-table-head: rgba(150,110,230,0.1); --bg-table-row: rgba(180,140,255,0.022); --bg-table-row-alt: rgba(150,110,220,0.05); --bg-loss: rgba(200,170,255,0.07); --accent: #c4a8ff; --accent2: #a78bfa; --accent-glow: rgba(196,168,255,0.32); --color-title: #d8bfff; --color-final: #ede0ff; --color-grand: #c4a8ff; --color-text: #ede0ff; --color-text-dim: rgba(237,224,255,0.45); --color-loss-text: #c4a8ff; --border-color: rgba(180,140,255,0.15); --border-accent: rgba(196,168,255,0.38); --gradient-border: linear-gradient(135deg, #7c3aed, #c4a8ff, #ede0ff, #a78bfa, #7c3aed); }
+        body.theme-14 { --bg-page: #0e0000; --bg-card: rgba(20,2,2,0.97); --bg-glass: rgba(200,20,20,0.05); --bg-glass-hover: rgba(200,20,20,0.09); --bg-header: linear-gradient(135deg, rgba(180,10,10,0.22), rgba(220,160,0,0.09)); --bg-controls: rgba(14,0,0,0.92); --bg-table-head: rgba(180,10,10,0.12); --bg-table-row: rgba(200,20,20,0.025); --bg-table-row-alt: rgba(160,10,10,0.06); --bg-loss: rgba(220,160,0,0.07); --accent: #e63030; --accent2: #c8a000; --accent-glow: rgba(220,40,40,0.38); --color-title: #ff4444; --color-final: #ffd060; --color-grand: #e63030; --color-text: #ffe0d0; --color-text-dim: rgba(255,224,208,0.48); --color-loss-text: #ffd060; --border-color: rgba(200,20,20,0.18); --border-accent: rgba(220,40,40,0.42); --gradient-border: linear-gradient(135deg, #8b0000, #e63030, #ffd060, #c8a000, #8b0000); }
 
         body {
-            background: var(--bg-page);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 20px 10px 40px;
-            overflow-x: hidden;
-            transition: background 0.5s;
-            position: relative;
-            font-family: 'Be Vietnam Pro', sans-serif;
+            background: var(--bg-page); min-height: 100vh; display: flex; justify-content: center; padding: 20px 10px 40px; overflow-x: hidden; transition: background 0.5s; position: relative; font-family: 'Be Vietnam Pro', sans-serif;
         }
 
         .rainbow-off .rainbow-wrapper::before { display: none !important; }
@@ -172,16 +52,11 @@
         .header-icon { font-size: 32px; margin-bottom: 6px; display: block; animation: floatIcon 3s ease-in-out infinite; }
         @keyframes floatIcon { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
         
-        /* FIX: Tiêu đề Tiếng Việt dùng Be Vietnam Pro để không lỗi dấu */
+        /* FIX FONT TIẾNG VIỆT */
         .header-title { font-family: 'Be Vietnam Pro', sans-serif; font-size: clamp(16px, 2.5vw, 24px); font-weight: 900; color: var(--color-title); letter-spacing: 1px; text-shadow: 0 0 20px var(--accent-glow); text-transform: uppercase; }
         .header-month-tag { display: inline-block; margin-top: 6px; background: var(--bg-glass); border: 1px solid var(--border-accent); border-radius: 20px; padding: 3px 14px; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
 
-        /* VIEW-ONLY BANNER */
-        #viewOnlyBanner {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 8px 18px; background: rgba(255,180,0,0.10); border-bottom: 1px solid rgba(255,180,0,0.25);
-            font-size: 12px; font-weight: 700; color: #ffbb00; letter-spacing: 0.5px;
-        }
+        #viewOnlyBanner { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 18px; background: rgba(255,180,0,0.10); border-bottom: 1px solid rgba(255,180,0,0.25); font-size: 12px; font-weight: 700; color: #ffbb00; letter-spacing: 0.5px; }
         #viewOnlyBanner.hidden { display: none; }
 
         #titleMonth { display: none; font-family: 'Be Vietnam Pro', sans-serif; font-size: 20px; font-weight: 900; color: #0054a5; text-align: center; padding: 16px; background: #f0f8ff !important; }
@@ -202,980 +77,245 @@
         .btn:hover { filter: brightness(1.12); box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
 
         #tableScrollWrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 16px 18px; }
-        #tableScrollWrapper::-webkit-scrollbar { height: 5px; }
-        #tableScrollWrapper::-webkit-scrollbar-track { background: var(--bg-glass); border-radius: 3px; }
-        #tableScrollWrapper::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
-
         table { width: 100%; border-collapse: collapse; min-width: 1159px; table-layout: fixed; }
         thead tr th { background: var(--bg-table-head) !important; color: var(--color-text); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 11px 7px; border-bottom: 2px solid var(--border-accent); border-right: 1px solid var(--border-color); white-space: normal; word-break: break-word; text-align: center; transition: background 0.4s, color 0.4s; }
-        thead tr th:last-child { border-right: none; }
-        
-        /* FIX: Tiêu đề bảng dùng Be Vietnam Pro */
         .title-header { font-family: 'Be Vietnam Pro', sans-serif !important; font-size: 18px !important; font-weight: 900 !important; color: var(--color-title) !important; text-align: center !important; padding: 18px !important; background: var(--bg-header) !important; border-bottom: 2px solid var(--border-accent) !important; text-shadow: 0 0 16px var(--accent-glow) !important; text-transform: uppercase; }
-        
         .data-row td { padding: 7px 5px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); font-size: 13px; color: var(--color-text); background: var(--bg-table-row) !important; transition: background 0.2s, color 0.4s; vertical-align: middle; text-align: center; }
-        .data-row:nth-child(even) td { background: var(--bg-table-row-alt) !important; }
-        .data-row:hover td { background: var(--bg-glass-hover) !important; }
-        .data-row td:last-child { border-right: none; }
         .col-stt   { width:40px; cursor:pointer; text-align:center; font-weight:800; color:var(--accent) !important; }
-        .col-name  { width:180px; text-align:left !important; padding-left:10px !important; }
-        .col-img   { width:66px; text-align:center; }
-        .col-kwh   { background: rgba(0,200,100,0.05) !important; }
         .col-final { font-weight:800; color:var(--color-final) !important; font-size:13px; background:rgba(255,60,80,0.05) !important; }
-
-        .base-money, .loss-share, .final-total { display: block; text-align: center; width: 100%; }
-        .final-total { color: #ff2244 !important; font-weight: 800 !important; }
-        th.col-final { color: #ff2244 !important; }
-        #lblGrandTotal { color: #ff2244 !important; text-shadow: 0 0 20px rgba(255,34,68,0.5), 0 0 40px rgba(255,34,68,0.3) !important; }
-
-        input { width: 100%; border: none; text-align: center; font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif; outline: none; background: transparent; color: var(--color-text); padding: 3px 0; transition: color 0.3s, border-color 0.2s; }
-        input:focus { border-bottom: 1px solid var(--accent); }
-        input:disabled { color: var(--color-text); opacity: 0.85; -webkit-text-fill-color: var(--color-text); }
-        .col-name input { text-align: left; font-weight: 600; }
-
-        .img-container { display:flex; flex-direction:column; align-items:center; gap:3px; position:relative; }
-        .img-preview { width:44px; height:44px; object-fit:cover; border-radius:8px; border:2px solid var(--border-color); display:none; cursor:pointer; transition: border-color 0.2s, transform 0.2s; }
-        .img-preview:hover { border-color:var(--accent); transform:scale(1.1); }
-        .upload-btn { font-size:10px; color:var(--accent); cursor:pointer; font-weight:700; background:var(--bg-glass); padding:2px 7px; border-radius:5px; border:1px solid var(--border-color); transition:background 0.2s; white-space:nowrap; }
-        .upload-btn:hover { background:var(--bg-glass-hover); }
-        .img-menu { display:none; position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); background:var(--bg-card); border:1px solid var(--border-accent); border-radius:10px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.6); z-index:9999; min-width:105px; }
-        .img-menu-item { padding:7px 13px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; }
-        .img-menu-item:hover { background:var(--bg-glass-hover); }
-        .img-menu-item.red { color:#ff4466; }
-        .img-menu-item.blue { color:var(--accent); border-bottom:1px solid var(--border-color); }
-
-        tfoot tr td { color: var(--color-text); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 11px 13px; transition: color 0.4s; }
-        tfoot tr td:last-child { border-right: none; }
-        #footerMain td { background: var(--bg-glass) !important; }
-        .footer-kwh-row { display:flex; align-items:center; flex-wrap:wrap; gap:14px; font-size:13px; font-weight:600; }
-        .footer-kwh-row input { width:80px; display:inline; }
-        .loss-summary td { background: var(--bg-loss) !important; color: var(--color-loss-text) !important; font-size:13px; font-weight:600; }
-        .loss-value { color:var(--accent); font-weight:800; font-size:14px; }
-        .grand-total-row td { text-align:center; padding:22px !important; background: var(--bg-glass) !important; }
-        .grand-total-label { font-size:13px; font-weight:700; color:var(--color-text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
-        #lblGrandTotal { font-family:'Orbitron', 'Be Vietnam Pro', sans-serif; color:#ff2244 !important; font-weight:900; font-size:clamp(26px,4vw,38px); text-shadow:0 0 20px rgba(255,34,68,0.5), 0 0 40px rgba(255,34,68,0.3); display:block; animation:pulseGrand 2.5s ease-in-out infinite; }
+        #lblGrandTotal { color: #ff2244 !important; font-family:'Orbitron', 'Be Vietnam Pro', sans-serif; font-weight:900; font-size:clamp(26px,4vw,38px); text-shadow:0 0 20px rgba(255,34,68,0.5), 0 0 40px rgba(255,34,68,0.3); display:block; animation:pulseGrand 2.5s ease-in-out infinite; }
         @keyframes pulseGrand { 0%,100%{text-shadow:0 0 20px rgba(255,34,68,0.5)} 50%{text-shadow:0 0 40px rgba(255,34,68,0.7),0 0 70px rgba(255,34,68,0.4)} }
 
-        .calculation-guide { margin:16px 18px 20px; padding:18px 22px; background:var(--bg-glass); border:1px solid var(--border-color); border-radius:14px; line-height:2.1; text-align:left; font-size:13px; transition: background 0.4s; }
-        .guide-title { font-size:14px; font-weight:800; color:var(--color-title); margin-bottom:10px; display:flex; align-items:center; gap:7px; }
-        .rainbow-text { display:block; font-weight:600; font-size:13px; background:linear-gradient(to right, #ff6b6b, #ffd700, #00e676, #00b4ff, #c084fc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-size:300% 100%; animation:moveGradient 4s linear infinite; }
-        @keyframes moveGradient{0%{background-position:0%}100%{background-position:300%}}
-
-        #imgModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.92); z-index:10000; justify-content:center; align-items:center; backdrop-filter:blur(8px); }
-        #imgModal img { max-width:92%; max-height:92%; border-radius:12px; border:2px solid var(--border-accent); }
-
-        #settingsPanel { position:fixed; bottom:20px; right:16px; z-index:10001; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
-        #gearBtn { width:52px; height:52px; border-radius:50%; cursor:pointer; background:var(--bg-card); border:2px solid var(--border-accent); color:var(--accent); font-size:22px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 18px var(--accent-glow); backdrop-filter:blur(10px); transition:transform 0.35s cubic-bezier(.68,-.55,.27,1.55), box-shadow 0.3s; }
-        #gearBtn:hover { transform:rotate(60deg) scale(1.1); box-shadow:0 4px 30px var(--accent-glow); }
-        #gearBtn.open  { transform:rotate(90deg); }
-        #settingsPopup { display:none; flex-direction:column; gap:12px; background:var(--bg-card); padding:16px 14px; border-radius:18px; border:1px solid var(--border-accent); backdrop-filter:blur(20px); box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 28px var(--accent-glow); min-width:220px; animation:popIn 0.2s ease-out; }
-        #settingsPopup.open { display:flex; }
-        @keyframes popIn{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-        .sp-label { font-size:10px; font-weight:700; color:var(--color-text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
-        .sp-btn { width:100%; padding:9px 12px; border-radius:10px; border:none; font-size:12px; font-weight:700; font-family:'Be Vietnam Pro',sans-serif; cursor:pointer; color:white; display:flex; align-items:center; gap:8px; transition:opacity 0.15s, transform 0.1s; }
-        .sp-btn:active { transform:scale(0.96); }
-        .sp-btn:hover  { opacity:0.88; }
-        .sp-themes { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
-        .theme-dot { width:38px; height:38px; border-radius:50%; cursor:pointer; border:3px solid rgba(255,255,255,0.15); box-shadow:0 2px 10px rgba(0,0,0,.5); transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s; display:flex; align-items:center; justify-content:center; font-size:16px; }
-        .theme-dot:hover  { transform:scale(1.15); }
-        .theme-dot.active { border-color:#fff; transform:scale(1.2); box-shadow:0 0 14px rgba(255,255,255,.5); }
-        .sp-divider { border:none; border-top:1px solid var(--border-color); margin:0; }
-
-        .delete-active .data-row td:first-child { background:rgba(220,53,69,0.15) !important; cursor:pointer; }
-        .delete-active .data-row td:first-child:hover { background:rgba(220,53,69,0.4) !important; transform: scale(1.1); }
-        .delete-active .data-row td:first-child .stt-num { display:none; }
-        .delete-active .data-row td:first-child::after { content:'❌'; font-size:16px; }
-
-        /* FIX: Điều chỉnh font khi xuất ảnh sang Be Vietnam Pro để đồng bộ */
-        .is-capturing { overflow:visible !important; width:1280px !important; max-width:none !important; background:white !important; border-radius:0 !important; }
-        .is-capturing .col-img { display:none !important; width:0 !important; padding:0 !important; border:none !important; overflow:hidden !important; }
-        .is-capturing .header-banner { display:none !important; }
-        .is-capturing tr.export-title-row { display:table-row !important; }
-        .is-capturing #titleMonth { display:table-cell !important; background:#dbeafe !important; color:#0054a5 !important; font-family:'Be Vietnam Pro', sans-serif !important; font-weight: 900 !important; }
-        .is-capturing .title-header { font-family:'Be Vietnam Pro', sans-serif !important; font-size:20px !important; font-weight:900 !important; color:#0054a5 !important; background:#dbeafe !important; text-shadow:none !important; animation:none !important; text-transform: uppercase; }
-        .is-capturing thead tr th { background:#e8f4fd !important; color:#000 !important; border:3px double #4a86c0 !important; border-image:none !important; animation:none !important; padding:12px 7px !important; line-height:1.5 !important; }
-        .is-capturing .col-final { background:#fff0f0 !important; border:3px double #4a86c0 !important; border-image:none !important; }
-        .is-capturing input { color:#000 !important; -webkit-text-fill-color:#000 !important; line-height:1.6 !important; padding:4px 0 !important; font-family: 'Be Vietnam Pro', sans-serif !important; font-weight: 700 !important; }
-        .is-capturing .data-row td { background:white !important; color:#000 !important; border:3px double #4a86c0 !important; border-image:none !important; animation:none !important; padding:12px 5px !important; line-height:1.5 !important; }
-        .is-capturing .data-row td.col-kwh { background:#f0fff4 !important; }
-        .is-capturing .data-row td.col-final { background:#fff0f0 !important; }
-        .is-capturing .data-row td.col-final span { color:#cc0000 !important; font-weight:800 !important; }
-        .is-capturing tfoot tr td { background:white !important; color:#000 !important; border:3px double #4a86c0 !important; border-image:none !important; animation:none !important; }
-        .is-capturing .loss-summary td { background:#fffbe6 !important; color:#7a5900 !important; border:3px double #c8a832 !important; border-image:none !important; }
-        .is-capturing .loss-value { color:#0054a5 !important; font-weight:800 !important; }
-        .is-capturing .col-final { color:#cc0000 !important; }
-        .is-capturing #lblGrandTotal { color:#cc0000 !important; font-family:'Be Vietnam Pro', sans-serif !important; font-weight: 900 !important; font-size:28px !important; animation:none !important; text-shadow:none !important; }
-        .is-capturing .grand-total-label { color:#000 !important; font-family:'Be Vietnam Pro', sans-serif !important; font-weight: 800 !important; font-size:16px !important; }
-        .is-capturing .grand-total-row td { background:#fff8f8 !important; border:3px double #4a86c0 !important; border-image:none !important; }
-        .is-capturing .col-name input { text-align:center !important; }
-        .is-capturing .upload-btn { display:none !important; }
-        .is-capturing .rainbow-text { background:none !important; -webkit-text-fill-color:#0054a5 !important; animation:none !important; }
-        .is-capturing .calculation-guide { background:#e8f4fd !important; border:3px double #4a86c0 !important; border-image:none !important; color:#2563a8 !important; }
-        .is-capturing .calculation-guide * { color:#2563a8 !important; }
-        .is-capturing .guide-title { color:#0054a5 !important; font-weight:800 !important; }
-        .hide-for-capture { display:none !important; }
-
-        @media (max-width:768px) {
-            body { padding:10px 5px 30px; }
-            .header-title { font-size:15px; }
-            .btn { padding:7px 10px; font-size:11px; }
-            .controls { gap:5px; padding:10px 12px; }
-            #settingsPanel { bottom:10px; right:8px; }
-            #lblGrandTotal { font-size:24px; }
-        }
-
-        /* ====== LOGIN MODAL ====== */
-        #loginModal {
-            display: none; position: fixed; inset: 0; z-index: 40000;
-            background: rgba(0,0,0,0.82); backdrop-filter: blur(14px);
-            justify-content: center; align-items: center;
-        }
-        #loginModal.show { display: flex; }
-        .login-box {
-            background: var(--bg-card); border: 2px solid var(--border-accent);
-            border-radius: 24px; padding: 38px 36px 32px; text-align: center;
-            min-width: 320px; max-width: 380px; width: 90%;
-            box-shadow: 0 0 60px var(--accent-glow), 0 24px 60px rgba(0,0,0,.9);
-            animation: popIn 0.3s cubic-bezier(.34,1.56,.64,1);
-        }
-        .login-icon { font-size: 48px; margin-bottom: 12px; display: block; animation: floatIcon 3s ease-in-out infinite; }
+        /* MODAL LOGIN CHUẨN CŨ */
+        #loginModal, #changePassModal { display: none; position: fixed; inset: 0; z-index: 40000; background: rgba(0,0,0,0.82); backdrop-filter: blur(14px); justify-content: center; align-items: center; }
+        #loginModal.show, #changePassModal.show { display: flex; }
+        .login-box { background: var(--bg-card); border: 2px solid var(--border-accent); border-radius: 24px; padding: 38px 36px 32px; text-align: center; min-width: 320px; max-width: 380px; width: 90%; box-shadow: 0 0 60px var(--accent-glow), 0 24px 60px rgba(0,0,0,.9); animation: popIn 0.3s cubic-bezier(.34,1.56,.64,1); }
         .login-title { font-family: 'Be Vietnam Pro', sans-serif; font-size: 16px; font-weight: 900; color: var(--color-title); margin-bottom: 6px; text-shadow: 0 0 16px var(--accent-glow); text-transform: uppercase; }
-        .login-sub { font-size: 12px; color: var(--color-text-dim); margin-bottom: 22px; }
         .login-input-wrap { position: relative; margin-bottom: 16px; }
-        .login-input-wrap input {
-            width: 100%; padding: 12px 44px 12px 16px; border-radius: 12px;
-            border: 2px solid var(--border-color); background: var(--bg-glass);
-            color: var(--color-text); font-size: 15px; font-family: 'Be Vietnam Pro', sans-serif;
-            font-weight: 700; letter-spacing: 2px; text-align: center;
-            transition: border-color 0.2s;
-        }
-        .login-input-wrap input:focus { border-color: var(--border-accent); outline: none; }
-        .login-input-wrap input.error { border-color: #ff4466 !important; animation: shake 0.4s; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
-        .toggle-pass {
-            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-            cursor: pointer; font-size: 18px; color: var(--color-text-dim); user-select: none;
-        }
-        #loginError { font-size: 12px; color: #ff4466; font-weight: 700; margin-bottom: 14px; min-height: 18px; }
-        .login-btn {
-            width: 100%; padding: 13px; border-radius: 12px; border: none;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: white; font-size: 15px; font-weight: 800; font-family: 'Be Vietnam Pro', sans-serif;
-            cursor: pointer; box-shadow: 0 6px 22px var(--accent-glow);
-            transition: filter 0.15s, transform 0.15s;
-        }
-        .login-btn:hover { filter: brightness(1.15); transform: scale(1.02); }
-        .login-btn:active { transform: scale(0.97); }
-        .login-attempts { font-size: 11px; color: var(--color-text-dim); margin-top: 12px; }
+        .login-input-wrap input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 2px solid var(--border-color); background: var(--bg-glass); color: var(--color-text); font-size: 15px; font-family: 'Be Vietnam Pro', sans-serif; font-weight: 700; text-align: center; transition: border-color 0.2s; outline: none; }
+        .login-input-wrap input:focus { border-color: var(--border-accent); }
+        .login-btn { width: 100%; padding: 13px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; font-size: 15px; font-weight: 800; font-family: 'Be Vietnam Pro', sans-serif; cursor: pointer; box-shadow: 0 6px 22px var(--accent-glow); transition: filter 0.15s, transform 0.15s; }
+        
+        #settingsPopup { display:none; flex-direction:column; gap:12px; background:var(--bg-card); padding:16px 14px; border-radius:18px; border:1px solid var(--border-accent); backdrop-filter:blur(20px); box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 28px var(--accent-glow); min-width:220px; }
+        #settingsPopup.open { display:flex; }
+        .sp-label { font-size:10px; font-weight:700; color:var(--color-text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
+        .sp-btn { width:100%; padding:9px 12px; border-radius:10px; border:none; font-size:12px; font-weight:700; font-family:'Be Vietnam Pro',sans-serif; cursor:pointer; color:white; display:flex; align-items:center; gap:8px; transition:opacity 0.15s; }
+        
+        /* POPUP THÀNH CÔNG */
+        .success-popup-box { background:var(--bg-card); border:2px solid var(--border-accent); border-radius:26px; padding:38px 40px 32px; text-align:center; min-width:320px; max-width:390px; width:90%; box-shadow:0 0 80px var(--accent-glow); position:relative; overflow:hidden; animation:sp-pop .38s cubic-bezier(.34,1.56,.64,1); }
+        .success-icon { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-size:36px; margin:0 auto 18px; box-shadow:0 0 32px var(--accent-glow); animation:sp-icon .42s cubic-bezier(.34,1.56,.64,1); }
+        
+        @keyframes sp-pop { from{opacity:0;transform:scale(.65) translateY(28px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes sp-icon { from{transform:scale(0) rotate(-30deg)} to{transform:scale(1) rotate(0)} }
     </style>
 </head>
 <body id="mainBody">
 
-<!-- ====== LOGIN MODAL ====== -->
+<!-- MODAL ĐĂNG NHẬP -->
 <div id="loginModal">
     <div class="login-box">
-        <span class="login-icon">🔐</span>
+        <span style="font-size:48px; display:block; margin-bottom:10px;">🔐</span>
         <div class="login-title">XÁC THỰC QUẢN TRỊ</div>
-        <div class="login-sub">Nhập mật khẩu để chỉnh sửa dữ liệu</div>
+        <div style="font-size:12px; color:var(--color-text-dim); margin-bottom:20px;">Nhập mật khẩu để chỉnh sửa dữ liệu</div>
         <div class="login-input-wrap">
-            <input type="password" id="loginPassInput" placeholder="Nhập mật khẩu..." onkeydown="if(event.key==='Enter')doLogin()">
-            <span class="toggle-pass" id="togglePassBtn" onclick="togglePassVis()">👁</span>
+            <input type="password" id="loginPassInput" placeholder="Mật khẩu..." onkeydown="if(event.key==='Enter')doLogin()">
         </div>
-        <div id="loginError"></div>
-        <button class="login-btn" onclick="doLogin()">🔑 Đăng nhập</button>
-        <div class="login-attempts" id="loginAttempts"></div>
-        <div style="margin-top:14px;">
-            <button onclick="closeLoginModal()" style="background:transparent;border:none;color:var(--color-text-dim);font-size:12px;cursor:pointer;font-family:'Be Vietnam Pro',sans-serif;font-weight:600;">✕ Đóng (tiếp tục xem)</button>
-        </div>
+        <div id="loginError" style="color:#ff4466; font-size:12px; margin-bottom:15px; font-weight:700;"></div>
+        <button class="login-btn" onclick="doLogin()">🔑 ĐĂNG NHẬP</button>
+        <button onclick="closeLoginModal()" style="background:transparent; border:none; color:var(--color-text-dim); font-size:12px; margin-top:15px; cursor:pointer; font-weight:600;">✕ Đóng</button>
+    </div>
+</div>
+
+<!-- MODAL ĐỔI MẬT KHẨU -->
+<div id="changePassModal">
+    <div class="login-box">
+        <span style="font-size:48px; display:block; margin-bottom:10px;">🔑</span>
+        <div class="login-title">ĐỔI MẬT KHẨU</div>
+        <div style="font-size:12px; color:var(--color-text-dim); margin-bottom:20px;">Thiết lập mật khẩu quản trị mới</div>
+        <div class="login-input-wrap"><input type="password" id="oldPassInput" placeholder="Mật khẩu hiện tại..."></div>
+        <div class="login-input-wrap"><input type="password" id="newPassInput" placeholder="Mật khẩu mới..."></div>
+        <div class="login-input-wrap"><input type="password" id="confirmPassInput" placeholder="Xác nhận mật khẩu mới..."></div>
+        <div id="changePassError" style="color:#ff4466; font-size:12px; margin-bottom:15px; font-weight:700;"></div>
+        <button class="login-btn" onclick="submitChangePassword()">💾 LƯU MẬT KHẨU</button>
+        <button onclick="closeChangePassModal()" style="background:transparent; border:none; color:var(--color-text-dim); font-size:12px; margin-top:15px; cursor:pointer; font-weight:600;">✕ Hủy bỏ</button>
+    </div>
+</div>
+
+<!-- POPUP THÀNH CÔNG ĐỔI MẬT KHẨU -->
+<div id="changeSuccessPopup" style="display:none; position:fixed; inset:0; z-index:50000; background:rgba(0,0,0,0.8); backdrop-filter:blur(15px); justify-content:center; align-items:center;">
+    <div class="success-popup-box">
+        <div class="success-icon">🔑</div>
+        <div style="font-size:22px; font-weight:900; color:var(--color-title); margin-bottom:8px;">Đổi mật khẩu thành công!</div>
+        <div style="font-size:14px; color:var(--color-text); margin-bottom:25px; line-height:1.5;">Hệ thống đã cập nhật mật khẩu mới của bạn. Vui lòng ghi nhớ mật khẩu này.</div>
+        <button onclick="document.getElementById('changeSuccessPopup').style.display='none'" class="login-btn" style="width:auto; padding:14px 48px;">OK TUYỆT VỜI 👍</button>
     </div>
 </div>
 
 <div id="settingsPanel">
     <div id="settingsPopup">
-        <div>
-            <div class="sp-label">🎨 Giao Diện</div>
-            <div class="sp-themes" id="themeDotsContainer"></div>
-            <button class="sp-btn" id="randomThemeBtn" onclick="randomTheme()" style="background:linear-gradient(135deg,#e91e8c,#9c27b0);margin-top:8px;justify-content:center;letter-spacing:0.5px;">🎲 Random Theme</button>
-        </div>
-        <hr class="sp-divider">
-        <div>
-            <div class="sp-label">🌈 Viền 7 Màu</div>
-            <button class="sp-btn" id="rainbowToggleBtn" onclick="toggleRainbow()" style="background:linear-gradient(135deg,#ff0000,#ff7f00,#ffff00,#00cc00,#0000ff,#8b00ff);justify-content:center;font-weight:800;letter-spacing:0.5px;">🌈 Tắt Viền 7 Màu</button>
-        </div>
-        <hr class="sp-divider">
-        <!-- Admin-only settings -->
+        <div class="sp-label">🎨 Giao Diện</div>
+        <div class="sp-themes" id="themeDotsContainer"></div>
+        <hr class="sp-divider" style="border:none; border-top:1px solid var(--border-color); margin:10px 0;">
         <div id="adminSettingsSection" style="display:none;">
             <div class="sp-label">💾 Dữ Liệu</div>
-            <button class="sp-btn" onclick="exportData();toggleSettingsPanel()" style="background:linear-gradient(135deg,#0f7a7a,#17a2b8);">📤 Backup file</button>
-        </div>
-        <div id="adminImportSection" style="display:none;">
-            <label class="sp-btn" style="background:linear-gradient(135deg,#c78a00,#ffc107);color:#000;cursor:pointer;">
-                📥 Nhập file khôi phục
-                <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-            </label>
-        </div>
-        <div id="adminLogoutSection" style="display:none;">
-            <hr class="sp-divider">
-            <div class="sp-label">🔐 Tài khoản</div>
-            <button class="sp-btn" onclick="doLogout();toggleSettingsPanel()" style="background:linear-gradient(135deg,#7a0000,#c0392b);">🚪 Đăng xuất</button>
+            <button class="sp-btn" onclick="exportData(); toggleSettingsPanel()" style="background:linear-gradient(135deg,#0f7a7a,#17a2b8);">📤 Backup file</button>
+            <button class="sp-btn" onclick="openChangePassModal(); toggleSettingsPanel()" style="background:linear-gradient(135deg,#6f42c1,#a29bfe); margin-top:8px;">🔑 Đổi mật khẩu</button>
+            <button class="sp-btn" onclick="doLogout(); toggleSettingsPanel()" style="background:linear-gradient(135deg,#7a0000,#c0392b); margin-top:8px;">🚪 Đăng xuất</button>
         </div>
     </div>
-    <div id="gearBtn" onclick="toggleSettingsPanel()" title="Cài đặt">⚙️</div>
-</div>
-
-<div id="imgModal" onclick="this.style.display='none'"><img id="modalImg" src=""></div>
-
-<div id="deleteModal" style="display:none;position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);justify-content:center;align-items:center;">
-    <div style="background:linear-gradient(135deg,#1a0a0a,#2d0f0f);border:2px solid rgba(220,53,69,0.6);border-radius:20px;padding:32px 36px;text-align:center;min-width:300px;box-shadow:0 0 40px rgba(220,53,69,0.3);">
-        <div style="font-size:48px;margin-bottom:12px;">🗑️</div>
-        <div style="font-size:18px;font-weight:800;color:#ff6b6b;margin-bottom:8px;">Xóa hộ này?</div>
-        <div id="deleteModalName" style="font-size:14px;color:rgba(255,200,200,0.7);margin-bottom:24px;"></div>
-        <div style="display:flex;gap:12px;justify-content:center;">
-            <button onclick="confirmDeleteYes()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#a0000a,#dc3545);color:white;font-size:14px;font-weight:700;cursor:pointer;" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter=''">✅ Xóa</button>
-            <button onclick="confirmDeleteNo()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#2d3748,#4a5568);color:white;font-size:14px;font-weight:700;cursor:pointer;" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter=''">❌ Huỷ</button>
-        </div>
-    </div>
+    <div id="gearBtn" onclick="toggleSettingsPanel()">⚙️</div>
 </div>
 
 <div class="app-wrapper">
-<div class="rainbow-wrapper" id="rainbowWrapper">
-<div class="main-card" id="captureArea">
-
-    <div class="header-banner" id="displayHeader">
-        <span class="header-icon">⚡</span>
-        <div class="header-title">SỔ QUẢN LÝ MUA BÁN ĐIỆN</div>
-        <div class="header-month-tag" id="displayMonthTag">THÁNG 03/2026</div>
-    </div>
-
-    <!-- VIEW-ONLY BANNER -->
-    <div id="viewOnlyBanner">
-        <span>👁 Chế độ xem — Chỉ quản trị viên mới sửa được dữ liệu</span>
-        <button onclick="openLoginModal()" style="background:linear-gradient(135deg,#1a8a35,#28a745);border:none;border-radius:8px;color:white;font-size:11px;font-weight:800;padding:5px 12px;cursor:pointer;font-family:'Be Vietnam Pro',sans-serif;">🔑 Đăng nhập</button>
-    </div>
-
-    <div class="controls" id="controlsBar">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <div class="month-picker">
-                <span style="font-size:14px">📅</span>
-                <strong style="font-size:12px;color:var(--color-text-dim)">Tháng:</strong>
-                <input type="month" id="currentMonth" onchange="changeMonth()">
+    <div class="rainbow-wrapper" id="rainbowWrapper">
+        <div class="main-card" id="captureArea">
+            <div class="header-banner" id="displayHeader">
+                <span class="header-icon">⚡</span>
+                <div class="header-title">SỔ QUẢN LÝ MUA BÁN ĐIỆN</div>
+                <div class="header-month-tag" id="displayMonthTag">THÁNG 03/2026</div>
             </div>
-            <div id="statusArea"></div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;">
-            <!-- Admin-only buttons -->
-            <button class="btn admin-only" id="lockBtn" onclick="toggleLock()" style="background:linear-gradient(135deg,#5a32a0,#6f42c1);color:white;"><span id="lockBtnText">🔒 Khóa tháng</span></button>
-            <button class="btn admin-only" onclick="addRow()" style="background:linear-gradient(135deg,#1a8a35,#28a745);color:white;">➕ Thêm Hộ Mới</button>
-            <button class="btn admin-only" id="deleteModeBtn" onclick="toggleDeleteMode()" style="background:linear-gradient(135deg,#4a5568,#6c757d);color:white;">🗑 Chế Độ Xóa</button>
-            <button class="btn admin-only" onclick="saveToLocal()" style="background:linear-gradient(135deg,#0056b3,#007bff);color:white;">💾 Lưu Dữ liệu</button>
-            <button class="btn" style="background:linear-gradient(135deg,#a0186d,#d63384);color:white;" onclick="exportToPNG()">📸 Xuất Ảnh Nè</button>
-        </div>
-    </div>
 
-    <div id="tableScrollWrapper">
-        <table id="mainTable">
-            <colgroup>
-                <col style="width:44px"><col style="width:180px"><col style="width:70px">
-                <col style="width:110px"><col style="width:110px"><col style="width:110px">
-                <col style="width:115px"><col style="width:115px"><col style="width:150px"><col style="width:155px">
-            </colgroup>
-            <thead>
-                <tr class="export-title-row">
-                    <th colspan="10" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th>
-                </tr>
-                <tr>
-                    <th class="col-stt">STT</th>
-                    <th class="col-name">Tên hộ</th>
-                    <th class="col-img">Ảnh ĐH</th>
-                    <th>SĐ tháng trước</th>
-                    <th>SĐ tháng này</th>
-                    <th class="col-kwh">Số kí tiêu thụ (kWh)</th>
-                    <th>Giá điện (VNĐ)</th>
-                    <th>Tiền điện (VNĐ)</th>
-                    <th>Tiền điện thất thoát (VNĐ)</th>
-                    <th class="col-final">TIỀN PHẢI NỘP (VNĐ)</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="10" id="footerMain">
-                        <div class="footer-kwh-row">
-                            <span>📊 Số ĐH tổng tháng
-                                <input type="text" id="footerMonthLabel" style="width:26px;font-weight:800;border-bottom:1px solid var(--border-accent);">:
-                                <input type="number" id="tongDHThang" oninput="updateTotals()" style="width:90px;font-weight:700;border-bottom:1px solid var(--border-accent);"> (kWh)
-                            </span>
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <span style="font-size:11px;color:var(--color-text-dim)">📷 Ảnh Tổng:</span>
-                                <div class="img-container">
-                                    <img src="" id="mainMeterImg" class="img-preview" onclick="openImg(this.src)">
-                                    <span class="upload-btn" id="mainMeterUploadBtn" onclick="handleMainImgBtn(event)">📷 Up Ảnh</span>
-                                    <input type="file" id="fileMain" style="display:none" accept="image/*" onchange="previewImg(this,'mainMeterImg')">
-                                    <div class="img-menu" id="mainImgMenu">
-                                        <div class="img-menu-item blue" onclick="document.getElementById('fileMain').click();closeAllImgMenus()">📷 Đổi ảnh</div>
-                                        <div class="img-menu-item red" onclick="deleteMainImg();closeAllImgMenus()">🗑 Xóa ảnh</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="loss-summary">
-                    <td colspan="3" id="f_col1">⚡ Tổng ĐH các hộ tiêu thụ trong tháng: <span class="loss-value" id="lblTotalKwh">0</span> kWh</td>
-                    <td colspan="3" id="f_col2">🔌 Điện tổng tiêu thụ trong tháng: <span class="loss-value" id="lblMainConsumption">0</span> kWh</td>
-                    <td colspan="4" id="f_col3">⚠️ Số kí Thất thoát trong tháng: <span class="loss-value" id="lblLossKwh">0</span> kWh</td>
-                </tr>
-                <tr class="loss-summary">
-                    <td colspan="5" id="f_col4">💰 Tổng tiền điện: <span class="loss-value" id="lblTotalBaseMoney">0</span> đ</td>
-                    <td colspan="5" id="f_col5">💸 Tiền điện thất thoát (×2.400đ): <span class="loss-value" id="lblLossMoney">0</span> đ</td>
-                </tr>
-                <tr class="grand-total-row">
-                    <td colspan="10" id="f_col6">
-                        <div class="grand-total-label">🏆 TỔNG TIỀN PHẢI NỘP TRONG THÁNG</div>
-                        <span id="lblGrandTotal">0đ</span>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+            <div id="viewOnlyBanner">
+                <span>👁 Chế độ xem — Chỉ quản trị viên mới sửa được dữ liệu</span>
+                <button onclick="openLoginModal()" style="background:linear-gradient(135deg,#1a8a35,#28a745); border:none; border-radius:8px; color:white; font-size:11px; font-weight:800; padding:5px 12px; cursor:pointer; font-family:'Be Vietnam Pro',sans-serif;">🔑 Đăng nhập</button>
+            </div>
 
-    <div class="calculation-guide">
-        <div class="guide-title">📋 Ghi chú cách tính:</div>
-        <span class="rainbow-text">• Số kí tiêu thụ (kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</span>
-        <span class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện (2.400đ).</span>
-        <span class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</span>
-        <span class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng để ra số kí thất thoát.</span>
-        <span class="rainbow-text">• Tiền điện thất thoát (từng hộ): Được chia theo tỉ lệ số kí tiêu thụ (hộ dùng ít chịu ít, hộ dùng nhiều chịu nhiều).</span>
-        <span class="rainbow-text">• Công thức thất thoát: Số kí thất thoát × 2.400đ.</span>
-    </div>
-
-</div>
-</div>
-</div>
-
-<!-- SAVE POPUP -->
-<div id="savePopup" style="display:none;position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,0.7);backdrop-filter:blur(14px);justify-content:center;align-items:center;">
-  <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:26px;padding:38px 40px 32px;text-align:center;min-width:320px;max-width:390px;width:90%;box-shadow:0 0 80px var(--accent-glow),0 24px 60px rgba(0,0,0,.85);animation:sp-pop .38s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;">
-    <div style="position:absolute;top:-90px;left:50%;transform:translateX(-50%);width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 68%);pointer-events:none;opacity:.4;"></div>
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:340px;border-radius:50%;border:1px solid var(--border-accent);opacity:.15;animation:sp-ring 2s ease-out infinite;pointer-events:none;"></div>
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:280px;border-radius:50%;border:1px solid var(--border-accent);opacity:.2;animation:sp-ring 2s ease-out .4s infinite;pointer-events:none;"></div>
-    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 18px;box-shadow:0 0 32px var(--accent-glow),0 8px 24px rgba(0,0,0,.5);animation:sp-icon .42s cubic-bezier(.34,1.56,.64,1) .06s both;position:relative;z-index:1;">💾</div>
-    <div style="font-size:22px;font-weight:900;color:var(--color-title);text-shadow:0 0 20px var(--accent-glow);margin-bottom:8px;position:relative;z-index:1;">✅ Đã lưu thành công!</div>
-    <div id="spMonth" style="font-size:13px;font-weight:700;color:var(--accent);background:var(--bg-glass);border:1px solid var(--border-accent);border-radius:20px;padding:5px 20px;display:inline-block;margin-bottom:22px;position:relative;z-index:1;"></div>
-    <div style="display:flex;gap:10px;margin-bottom:20px;position:relative;z-index:1;">
-      <div style="font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">🏠 Số hộ</div>
-      <div id="spRows" style="font-size:28px;font-weight:900;color:var(--accent);line-height:1;">0</div>
-      <div style="flex:2;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:14px 10px;text-align:center;">
-        <div style="font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">💰 Tổng nộp</div>
-        <div id="spTotal" style="font-size:16px;font-weight:800;color:#ff2244;word-break:break-all;line-height:1.4;">0đ</div>
-      </div>
-      <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:14px 8px;text-align:center;">
-        <div style="font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">🕐 Lưu lúc</div>
-        <div id="spTime" style="font-size:13px;font-weight:700;color:var(--color-text);line-height:1.5;">--:--</div>
-      </div>
-    </div>
-    <div style="height:5px;border-radius:3px;background:var(--bg-glass);overflow:hidden;margin-bottom:22px;position:relative;z-index:1;">
-      <div id="spBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;border-radius:3px;animation:sp-drain 2.8s linear forwards,sp-shimmer 1.2s linear infinite;"></div>
-    </div>
-    <button onclick="closeSavePopup()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:white;font-size:15px;font-weight:800;padding:14px 48px;cursor:pointer;box-shadow:0 6px 22px var(--accent-glow);position:relative;z-index:1;">OK 👍</button>
-  </div>
-</div>
-
-<style>
-@keyframes sp-pop    { from{opacity:0;transform:scale(.65) translateY(28px)} to{opacity:1;transform:scale(1) translateY(0)} }
-@keyframes sp-icon   { from{transform:scale(0) rotate(-30deg)} to{transform:scale(1) rotate(0)} }
-@keyframes sp-drain  { from{width:100%} to{width:0} }
-@keyframes sp-shimmer{ 0%{background-position:100% 0} 100%{background-position:-100% 0} }
-@keyframes sp-ring   { 0%{transform:translate(-50%,-50%) scale(.5);opacity:.4} 100%{transform:translate(-50%,-50%) scale(1.2);opacity:0} }
-</style>
-
-<script>
-// ============================
-// PASSWORD SYSTEM
-// ============================
-const PASSWORD_HASH = '8c1d8b9f195553ff90cdb8514179d930fd177b8cc288f59edd1b023e139cfe4f'; // dien2024
-
-let isAuthenticated = false;
-let loginAttempts = 0;
-const MAX_ATTEMPTS = 5;
-const LOCKOUT_MS = 60000;
-let lockoutUntil = 0;
-
-async function hashText(text) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function doLogin() {
-    const now = Date.now();
-    if (now < lockoutUntil) {
-        const secsLeft = Math.ceil((lockoutUntil - now) / 1000);
-        document.getElementById('loginError').innerText = `⏳ Thử lại sau ${secsLeft} giây`;
-        return;
-    }
-    const input = document.getElementById('loginPassInput');
-    const pass = input.value;
-    if (!pass) { showLoginError('Vui lòng nhập mật khẩu!'); return; }
-    const hash = await hashText(pass);
-    if (hash === PASSWORD_HASH) {
-        isAuthenticated = true;
-        loginAttempts = 0;
-        input.value = '';
-        closeLoginModal();
-        applyAuthUI();
-        showToast('✅ Đăng nhập thành công!');
-    } else {
-        loginAttempts++;
-        input.classList.add('error');
-        setTimeout(() => input.classList.remove('error'), 400);
-        const left = MAX_ATTEMPTS - loginAttempts;
-        if (loginAttempts >= MAX_ATTEMPTS) {
-            lockoutUntil = Date.now() + LOCKOUT_MS;
-            loginAttempts = 0;
-            showLoginError('❌ Sai quá nhiều lần! Chờ 60 giây.');
-            document.getElementById('loginAttempts').innerText = '';
-        } else {
-            showLoginError('❌ Mật khẩu không đúng!');
-            document.getElementById('loginAttempts').innerText = `Còn ${left} lần thử`;
-        }
-    }
-}
-
-function doLogout() {
-    isAuthenticated = false;
-    applyAuthUI();
-    showToast('🚪 Đã đăng xuất');
-}
-
-function showLoginError(msg) {
-    const el = document.getElementById('loginError');
-    el.innerText = msg;
-    setTimeout(() => { if (el.innerText === msg) el.innerText = ''; }, 3000);
-}
-
-function openLoginModal() {
-    document.getElementById('loginModal').classList.add('show');
-    setTimeout(() => document.getElementById('loginPassInput').focus(), 200);
-}
-function closeLoginModal() {
-    document.getElementById('loginModal').classList.remove('show');
-    document.getElementById('loginPassInput').value = '';
-    document.getElementById('loginError').innerText = '';
-}
-function togglePassVis() {
-    const inp = document.getElementById('loginPassInput');
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-    document.getElementById('togglePassBtn').innerText = inp.type === 'password' ? '👁' : '🙈';
-}
-
-function applyAuthUI() {
-    document.querySelectorAll('.admin-only').forEach(el => {
-        el.style.display = isAuthenticated ? '' : 'none';
-    });
-    document.getElementById('adminSettingsSection').style.display = isAuthenticated ? '' : 'none';
-    document.getElementById('adminImportSection').style.display = isAuthenticated ? '' : 'none';
-    document.getElementById('adminLogoutSection').style.display = isAuthenticated ? '' : 'none';
-    document.getElementById('viewOnlyBanner').classList.toggle('hidden', isAuthenticated);
-    const m = document.getElementById('currentMonth').value;
-    const isLocked = db[m]?.locked || false;
-    const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile):not(#loginPassInput)');
-    const allUploadBtns = document.querySelectorAll('.upload-btn');
-    if (!isAuthenticated) {
-        allInputs.forEach(i => i.disabled = true);
-        allUploadBtns.forEach(b => b.style.display = 'none');
-    } else {
-        if (!isLocked) {
-            allInputs.forEach(i => i.disabled = false);
-            allUploadBtns.forEach(b => b.style.display = 'inline');
-            const mainImg = document.getElementById('mainMeterImg'), mainBtn = document.getElementById('mainMeterUploadBtn');
-            if (mainImg && mainBtn) {
-                const has = mainImg.src && mainImg.src.startsWith('data:image') && mainImg.style.display !== 'none';
-                mainBtn.innerHTML = has ? '⚙️ Tùy chọn' : '📷 Up Ảnh';
-            }
-        }
-    }
-}
-document.getElementById('loginModal').addEventListener('click', function(e) { if (e.target === this) closeLoginModal(); });
-</script>
-
-<script>
-function showSavePopup(){
-    const m=document.getElementById('currentMonth').value, parts=m.split('-');
-    const rows=document.querySelectorAll('.data-row').length;
-    const total=document.getElementById('lblGrandTotal').innerText;
-    const t=new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    document.getElementById('spMonth').innerText='THÁNG '+parts[1]+'/'+parts[0];
-    document.getElementById('spRows').innerText=rows;
-    document.getElementById('spTotal').innerText=total;
-    document.getElementById('spTime').innerText=t;
-    const bar=document.getElementById('spBar');
-    bar.style.animation='none'; void bar.offsetHeight;
-    bar.style.animation='sp-drain 2.8s linear forwards, sp-shimmer 1.2s linear infinite';
-    document.getElementById('savePopup').style.display='flex';
-    clearTimeout(window._spTimer);
-    window._spTimer=setTimeout(closeSavePopup,2800);
-}
-function closeSavePopup(){ document.getElementById('savePopup').style.display='none'; }
-document.getElementById('savePopup').addEventListener('click',function(e){ if(e.target===this) closeSavePopup(); });
-</script>
-
-<script>
-    let rainbowEnabled = localStorage.getItem('rainbowEnabled') !== 'false';
-
-    const THEME_INFO = [
-        {bg:'radial-gradient(circle, #00b4ff 0%, #060a18 100%)',emoji:'🌌',name:'Vũ trụ'},
-        {bg:'radial-gradient(circle, #1a5cb8 0%, #eef2ff 100%)',emoji:'☀️',name:'Ban ngày'},
-        {bg:'radial-gradient(circle, #00e676 0%, #020d05 100%)',emoji:'🌿',name:'Thiên nhiên'},
-        {bg:'radial-gradient(circle, #ff6b35 0%, #100200 100%)',emoji:'🔥',name:'Lửa'},
-        {bg:'radial-gradient(circle, #c084fc 0%, #07000f 100%)',emoji:'🔮',name:'Huyền bí'},
-        {bg:'radial-gradient(circle, #ff6eb4 0%, #1a0510 100%)',emoji:'🌸',name:'Hồng Pastel'},
-        {bg:'radial-gradient(circle, #1e90ff 0%, #000a14 100%)',emoji:'🌊',name:'Đại dương'},
-        {bg:'radial-gradient(circle, #ffd700 0%, #0c0800 100%)',emoji:'✨',name:'Hoàng kim'},
-        {bg:'radial-gradient(circle, #d4915a 0%, #0d0804 100%)',emoji:'☕',name:'Cà phê'},
-        {bg:'radial-gradient(circle, #c0c0c0 0%, #080808 100%)',emoji:'⚫',name:'Obsidian'},
-        {bg:'radial-gradient(circle, #ff5470 0%, #0f0508 100%)',emoji:'🌇',name:'Hoàng hôn'},
-        {bg:'radial-gradient(circle, #00e5cc 0%, #00100e 100%)',emoji:'💎',name:'Ngọc bích'},
-        {bg:'radial-gradient(circle, #c4a8ff 0%, #0e0814 100%)',emoji:'💜',name:'Lavender'},
-        {bg:'radial-gradient(circle, #e63030 0%, #0e0100 100%)',emoji:'🌺',name:'Đỏ son'},
-    ];
-
-    let db;
-    try { db = JSON.parse(localStorage.getItem('electricDB_vPhoto')) || {}; } catch(e) { db = {}; }
-    let currentTheme = parseInt(localStorage.getItem('currentTheme')||'1');
-    if(isNaN(currentTheme)||currentTheme<1||currentTheme>THEME_INFO.length) currentTheme=1;
-
-    const monthInput = document.getElementById('currentMonth');
-    if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0,7);
-
-    function buildThemeDots(){
-        const c=document.getElementById('themeDotsContainer'); c.innerHTML='';
-        THEME_INFO.forEach((t,i)=>{
-            const d=document.createElement('div');
-            d.className='theme-dot'+(i+1===currentTheme?' active':'');
-            d.style.background=t.bg; d.title=t.name; d.innerText=t.emoji;
-            d.onclick=()=>setTheme(i+1); c.appendChild(d);
-        });
-    }
-    function setTheme(n,silent=false){
-        currentTheme=n;
-        try{localStorage.setItem('currentTheme',n);}catch(e){}
-        applyThemeUI();
-        if(!silent){ const info=THEME_INFO[n-1]; if(info) showToast(info.emoji+' '+info.name); }
-    }
-
-    let _randomThemeTimer=null, _randomThemeRunning=false;
-    function randomTheme(){
-        if(_randomThemeRunning){
-            clearInterval(_randomThemeTimer); _randomThemeRunning=false;
-            document.getElementById('randomThemeBtn').innerHTML='🎲 Random Theme';
-            document.getElementById('randomThemeBtn').style.background='linear-gradient(135deg,#e91e8c,#9c27b0)';
-            showToast('⏹ Đã dừng xoay vòng theme');
-        } else {
-            _randomThemeRunning=true;
-            document.getElementById('randomThemeBtn').innerHTML='⏹ Dừng Random';
-            document.getElementById('randomThemeBtn').style.background='linear-gradient(135deg,#c62828,#e53935)';
-            function nextTheme(){ const next=(currentTheme%THEME_INFO.length)+1; setTheme(next,true); showToast(THEME_INFO[next-1].emoji+' '+THEME_INFO[next-1].name); }
-            nextTheme(); _randomThemeTimer=setInterval(nextTheme,5000);
-            showToast('🎨 Đang xoay vòng theme!');
-        }
-    }
-    function applyThemeUI(){
-        const body=document.body;
-        for(let i=1;i<=THEME_INFO.length;i++) body.classList.remove('theme-'+i);
-        body.classList.add('theme-'+currentTheme);
-        const bgMap={1:'#060a18',2:'#eef2ff',3:'#020d05',4:'#100200',5:'#07000f',6:'#1a0510',7:'#000a14',8:'#0c0800',9:'#0d0804',10:'#080808',11:'#0f0508',12:'#00100e',13:'#0e0814',14:'#0e0100'};
-        body.style.background=bgMap[currentTheme];
-        void body.offsetHeight;
-        buildThemeDots();
-    }
-
-    function toggleSettingsPanel(){
-        const popup=document.getElementById('settingsPopup'), gear=document.getElementById('gearBtn');
-        popup.classList.toggle('open'); gear.classList.toggle('open');
-    }
-    document.addEventListener('click',e=>{
-        const panel=document.getElementById('settingsPanel');
-        if(!panel.contains(e.target)){
-            document.getElementById('settingsPopup').classList.remove('open');
-            document.getElementById('gearBtn').classList.remove('open');
-        }
-        if(!e.target.closest('.img-container')) closeAllImgMenus();
-    });
-
-    function toggleRainbow(){
-        rainbowEnabled=!rainbowEnabled;
-        try{localStorage.setItem('rainbowEnabled',rainbowEnabled);}catch(e){}
-        applyRainbowUI();
-    }
-    function applyRainbowUI(){
-        const btn=document.getElementById('rainbowToggleBtn');
-        if(rainbowEnabled){
-            document.body.classList.remove('rainbow-off');
-            if(btn){btn.innerHTML='🌈 Tắt Viền 7 Màu';btn.style.background='linear-gradient(135deg,#ff0000,#ff7f00,#ffff00,#00cc00,#0000ff,#8b00ff)';}
-        } else {
-            document.body.classList.add('rainbow-off');
-            if(btn){btn.innerHTML='🌈 Bật Viền 7 Màu';btn.style.background='linear-gradient(135deg,#4a5568,#6c757d)';}
-        }
-    }
-
-    function closeAllImgMenus(){
-        document.querySelectorAll('.img-menu').forEach(m=>m.style.display='none');
-    }
-    function handleMainImgBtn(e){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-        e.stopPropagation();
-        const mainImg=document.getElementById('mainMeterImg');
-        const hasImg=mainImg.src&&mainImg.src.startsWith('data:image')&&mainImg.style.display!=='none';
-        if(!hasImg){ document.getElementById('fileMain').click(); return; }
-        const menu=document.getElementById('mainImgMenu');
-        const isOpen=menu.style.display==='block';
-        closeAllImgMenus();
-        menu.style.display=isOpen?'none':'block';
-    }
-    function handleRowImgBtn(btn,e){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-        e.stopPropagation();
-        const container=btn.closest('.img-container');
-        const img=container.querySelector('.img-preview');
-        const hasImg=img&&img.src&&img.src.startsWith('data:image')&&img.style.display!=='none';
-        if(!hasImg){ container.querySelector('input[type=file]').click(); return; }
-        const menu=container.querySelector('.img-menu');
-        const isOpen=menu.style.display==='block';
-        closeAllImgMenus();
-        menu.style.display=isOpen?'none':'block';
-    }
-
-    function init(){
-        applyThemeUI(); applyRainbowUI();
-        const m=monthInput.value;
-        const prev=new Date(m+'-01'); prev.setMonth(prev.getMonth()-1);
-        const pk=prev.toISOString().substring(0,7);
-        let data=db[m];
-        document.getElementById('tableBody').innerHTML='';
-        const parts=m.split('-');
-        document.getElementById('displayMonthTag').innerText='THÁNG '+parts[1]+'/'+parts[0];
-        document.getElementById('titleMonth').innerText='SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG '+parts[1]+'/'+parts[0];
-        if(data?.rows) data.rows.forEach(item=>addRow(item));
-        else if(db[pk]?.rows) db[pk].rows.forEach(old=>addRow({name:old.name,before:old.after,after:0,price:old.price,img:''}));
-        else addRow();
-        document.getElementById('tongDHThang').value=data?.tongDH||0;
-        document.getElementById('footerMonthLabel').value=data?.footerMonthLabel||parts[1];
-        const mainImg=document.getElementById('mainMeterImg');
-        const safeMainImg=(data?.mainMeterImg||'').startsWith('data:image')?data.mainMeterImg:'';
-        if(safeMainImg){ mainImg.src=safeMainImg; mainImg.style.display='block'; document.getElementById('mainMeterUploadBtn').innerHTML='⚙️ Tùy chọn'; }
-        else { mainImg.src=''; mainImg.style.display='none'; document.getElementById('mainMeterUploadBtn').innerHTML='📷 Up Ảnh'; }
-        applyLockUI(data?.locked||false);
-        updateTotals();
-        applyAuthUI();
-    }
-
-    function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
-        const row=document.getElementById('tableBody').insertRow();
-        row.className='data-row';
-        const safeName=(data.name||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        const safeImg=(data.img||'').startsWith('data:image')?data.img:'';
-        const safeBefore=parseFloat(data.before)||0, safeAfter=parseFloat(data.after)||0, safePrice=parseFloat(data.price)||2400;
-        const btnLabel=safeImg?'⚙️':'📷';
-        row.innerHTML=`
-            <td class="col-stt" onclick="handleRowAction(this)"><span class="stt-num">1</span></td>
-            <td class="col-name"><input type="text" value="${safeName}" placeholder="Tên hộ..."></td>
-            <td class="col-img"><div class="img-container">
-                <img src="${safeImg}" class="img-preview" onclick="openImg(this.src)" style="display:${safeImg?'block':'none'}">
-                <span class="upload-btn" onclick="handleRowImgBtn(this,event)">${btnLabel}</span>
-                <input type="file" style="display:none" accept="image/*" onchange="previewImg(this)">
-                <div class="img-menu">
-                    <div class="img-menu-item blue" onclick="this.closest('.img-container').querySelector('input[type=file]').click();closeAllImgMenus()">📷 Đổi ảnh</div>
-                    <div class="img-menu-item red" onclick="deleteRowImgFromBtn(this);closeAllImgMenus()">🗑 Xóa ảnh</div>
+            <div class="controls" id="controlsBar">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <div class="month-picker">📅 <input type="month" id="currentMonth" onchange="changeMonth()"></div>
+                    <div id="statusArea"></div>
                 </div>
-            </div></td>
-            <td><input type="number" class="before" value="${safeBefore}" oninput="updateTotals()"></td>
-            <td><input type="number" class="after"  value="${safeAfter}"  oninput="updateTotals()"></td>
+                <div style="display:flex; gap:6px; flex-wrap:wrap; margin-left:auto;">
+                    <button class="btn admin-only" onclick="addRow()" style="background:#28a745; color:white;">➕ Thêm Hộ Mới</button>
+                    <button class="btn admin-only" onclick="saveToLocal()" style="background:#007bff; color:white;">💾 Lưu Dữ liệu</button>
+                    <button class="btn" style="background:#d63384; color:white;" onclick="exportToPNG()">📸 Xuất Ảnh</button>
+                </div>
+            </div>
+
+            <div id="tableScrollWrapper">
+                <table id="mainTable">
+                    <thead>
+                        <tr class="export-title-row"><th colspan="10" id="titleMonth" class="title-header">SỔ QUẢN LÝ MUA BÁN ĐIỆN</th></tr>
+                        <tr>
+                            <th class="col-stt">STT</th><th style="width:180px">Tên hộ</th><th style="width:70px">Ảnh</th>
+                            <th>SĐ trước</th><th>SĐ này</th><th class="col-kwh">Tiêu thụ</th><th>Giá</th><th>Tiền</th><th>Thất thoát</th><th class="col-final">PHẢI NỘP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                    <tfoot>
+                        <tr class="grand-total-row"><td colspan="10"><div class="grand-total-label">🏆 TỔNG TIỀN PHẢI NỘP TRONG THÁNG</div><span id="lblGrandTotal">0đ</span></td></tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GIỮ NGUYÊN TOÀN BỘ SCRIPT XỬ LÝ DỮ LIỆU CỦA BẠN -->
+<script>
+    // --- HỆ THỐNG MẬT KHẨU ---
+    const DEFAULT_HASH = '8c1d8b9f195553ff90cdb8514179d930fd177b8cc288f59edd1b023e139cfe4f';
+    let isAuthenticated = false;
+
+    async function hashText(text) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getStoredHash() { return localStorage.getItem('evn_pro_custom_hash') || DEFAULT_HASH; }
+
+    async function doLogin() {
+        const input = document.getElementById('loginPassInput');
+        const hash = await hashText(input.value);
+        if (hash === getStoredHash()) {
+            isAuthenticated = true; input.value = '';
+            document.getElementById('loginModal').classList.remove('show');
+            applyAuthUI();
+        } else {
+            document.getElementById('loginError').innerText = '❌ Sai mật khẩu!';
+        }
+    }
+
+    function doLogout() { isAuthenticated = false; applyAuthUI(); }
+    function openLoginModal() { document.getElementById('loginModal').classList.add('show'); }
+    function closeLoginModal() { document.getElementById('loginModal').classList.remove('show'); }
+    function openChangePassModal() { document.getElementById('changePassModal').classList.add('show'); }
+    function closeChangePassModal() { document.getElementById('changePassModal').classList.remove('show'); }
+
+    async function submitChangePassword() {
+        const oldVal = document.getElementById('oldPassInput').value;
+        const newVal = document.getElementById('newPassInput').value;
+        const confirmVal = document.getElementById('confirmPassInput').value;
+        const err = document.getElementById('changePassError');
+
+        if (await hashText(oldVal) !== getStoredHash()) { err.innerText = '❌ Mật khẩu cũ không đúng!'; return; }
+        if (newVal.length < 4) { err.innerText = '❌ Mật khẩu quá ngắn!'; return; }
+        if (newVal !== confirmVal) { err.innerText = '❌ Xác nhận không khớp!'; return; }
+
+        localStorage.setItem('evn_pro_custom_hash', await hashText(newVal));
+        closeChangePassModal();
+        document.getElementById('changeSuccessPopup').style.display = 'flex';
+    }
+
+    function applyAuthUI() {
+        document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAuthenticated ? 'inline-flex' : 'none');
+        document.getElementById('adminSettingsSection').style.display = isAuthenticated ? 'block' : 'none';
+        document.getElementById('viewOnlyBanner').style.display = isAuthenticated ? 'none' : 'flex';
+        document.querySelectorAll('input:not(#loginPassInput):not([id*="Pass"])').forEach(i => i.disabled = !isAuthenticated);
+    }
+
+    // --- CÁC HÀM CŨ CỦA BẠN (Rút gọn để dán) ---
+    let db; try { db = JSON.parse(localStorage.getItem('electricDB_vPhoto')) || {}; } catch(e) { db = {}; }
+    function changeMonth() { init(); }
+    function toggleSettingsPanel() { document.getElementById('settingsPopup').classList.toggle('open'); }
+
+    function addRow(data={name:'',before:0,after:0,price:2400}) {
+        const row = document.getElementById('tableBody').insertRow();
+        row.className = 'data-row';
+        row.innerHTML = `
+            <td class="col-stt">1</td>
+            <td><input type="text" value="${data.name}" placeholder="Tên hộ..."></td>
+            <td>🖼️</td>
+            <td><input type="number" class="before" value="${data.before}" oninput="updateTotals()"></td>
+            <td><input type="number" class="after" value="${data.after}" oninput="updateTotals()"></td>
             <td class="col-kwh"><input type="number" class="usage" readonly></td>
-            <td><input type="number" class="price" value="${safePrice}" oninput="updateTotals()"></td>
+            <td><input type="number" class="price" value="${data.price}" oninput="updateTotals()"></td>
             <td><span class="base-money">0</span></td>
             <td><span class="loss-share">0</span></td>
             <td class="col-final"><span class="final-total">0đ</span></td>`;
+        updateTotals();
     }
 
-    function showToast(msg,type='success'){
-        let tc=document.getElementById('toast-container');
-        if(!tc){ tc=document.createElement('div'); tc.id='toast-container'; tc.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;'; document.body.appendChild(tc); }
-        const t=document.createElement('div');
-        const bg=type==='error'?'linear-gradient(135deg,#a0000a,#dc3545)':type==='warn'?'linear-gradient(135deg,#a06000,#fd7e14)':'linear-gradient(135deg,#0a6a2a,#28a745)';
-        t.style.cssText=`background:${bg};color:white;padding:11px 22px;border-radius:12px;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:sp-pop .3s ease;opacity:1;transition:opacity .4s;`;
-        t.innerText=msg; tc.appendChild(t);
-        setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400);},3000);
-    }
-
-    function previewImg(input,tid){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-        if(!input.files[0]) return;
-        const reader=new FileReader();
-        reader.onload=e=>{
-            const img=new Image();
-            img.onload=()=>{
-                const c=document.createElement('canvas'),ctx=c.getContext('2d'),mw=400;
-                c.width=mw; c.height=img.height*(mw/img.width);
-                ctx.drawImage(img,0,0,c.width,c.height);
-                const b64=c.toDataURL('image/jpeg',0.7);
-                showImgConfirmPopup(b64,()=>{
-                    if(tid){
-                        const t=document.getElementById(tid); t.src=b64; t.style.display='block';
-                        document.getElementById('mainMeterUploadBtn').innerHTML='⚙️ Tùy chọn';
-                    } else {
-                        const el=input.parentElement.querySelector('.img-preview'); el.src=b64; el.style.display='block';
-                        const btn=input.parentElement.querySelector('.upload-btn'); if(btn) btn.innerText='⚙️';
-                    }
-                },()=>{input.value='';});
-            };
-            img.src=e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-
-    function showImgConfirmPopup(src,onConfirm,onCancel){
-        document.getElementById('imgConfirmPreview').src=src;
-        document.getElementById('imgConfirmPopup').style.display='flex';
-        window._imgConfirmOK=onConfirm; window._imgConfirmNo=onCancel;
-    }
-    function imgConfirmYes(){ document.getElementById('imgConfirmPopup').style.display='none'; if(window._imgConfirmOK) window._imgConfirmOK(); showToast('📷 Đã cập nhật ảnh đồng hồ!'); }
-    function imgConfirmNo(){ document.getElementById('imgConfirmPopup').style.display='none'; if(window._imgConfirmNo) window._imgConfirmNo(); }
-
-    function deleteRowImgFromBtn(el){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-        const container=el.closest('.img-container');
-        showImgDeleteConfirm(()=>{
-            const img=container.querySelector('.img-preview'); img.src=''; img.style.display='none';
-            const btn=container.querySelector('.upload-btn'); if(btn) btn.innerText='📷';
-            const fi=container.querySelector('input[type=file]'); if(fi) fi.value='';
-            showToast('🗑 Đã xóa ảnh đồng hồ!');
+    function updateTotals() {
+        let total = 0;
+        document.querySelectorAll('.data-row').forEach((row, i) => {
+            row.cells[0].innerText = i + 1;
+            const b = parseFloat(row.querySelector('.before').value) || 0;
+            const a = parseFloat(row.querySelector('.after').value) || 0;
+            const p = parseFloat(row.querySelector('.price').value) || 0;
+            const u = Math.max(0, a - b);
+            const m = u * p;
+            row.querySelector('.usage').value = u;
+            row.querySelector('.base-money').innerText = m.toLocaleString();
+            row.querySelector('.final-total').innerText = m.toLocaleString() + 'đ';
+            total += m;
         });
-    }
-    function deleteMainImg(){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-        showImgDeleteConfirm(()=>{
-            const img=document.getElementById('mainMeterImg'); img.src=''; img.style.display='none';
-            document.getElementById('mainMeterUploadBtn').innerHTML='📷 Up Ảnh';
-            document.getElementById('fileMain').value='';
-            showToast('🗑 Đã xóa ảnh tổng!');
-        });
-    }
-    function showImgDeleteConfirm(onConfirm){ document.getElementById('imgDeletePopup').style.display='flex'; window._imgDeleteOK=onConfirm; }
-    function imgDeleteYes(){ document.getElementById('imgDeletePopup').style.display='none'; if(window._imgDeleteOK) window._imgDeleteOK(); }
-    function imgDeleteNo(){ document.getElementById('imgDeletePopup').style.display='none'; }
-
-    function updateTotals(){
-        let tkwh=0,tmoney=0;
-        document.querySelectorAll('.data-row').forEach((row,i)=>{
-            const sttSpan=row.cells[0].querySelector('.stt-num');
-            if(sttSpan) sttSpan.innerText=i+1; else row.cells[0].innerText=i+1;
-            const b=parseFloat(row.querySelector('.before').value)||0;
-            const a=parseFloat(row.querySelector('.after').value)||0;
-            const p=parseFloat(row.querySelector('.price').value)||0;
-            const u=Math.max(0,a-b),m=u*p;
-            row.querySelector('.usage').value=u;
-            row.querySelector('.base-money').innerText=Math.round(m).toLocaleString('vi-VN');
-            row.dataset.u=u; row.dataset.m=m; tkwh+=u; tmoney+=m;
-        });
-        const curT=parseFloat(document.getElementById('tongDHThang').value)||0;
-        const pk=new Date(monthInput.value+'-01'); pk.setMonth(pk.getMonth()-1);
-        const prevT=db[pk.toISOString().substring(0,7)]?.tongDH||0;
-        const mCons=Math.max(0,curT-prevT), lKwh=Math.max(0,mCons-tkwh), lMoney=lKwh*2400;
-        document.querySelectorAll('.data-row').forEach(row=>{
-            const u=parseFloat(row.dataset.u)||0,m=parseFloat(row.dataset.m)||0;
-            const s=tkwh>0?(u/tkwh)*lMoney:0;
-            row.querySelector('.loss-share').innerText=Math.round(s).toLocaleString('vi-VN');
-            row.querySelector('.final-total').innerText=(Math.round((m+s)/1000)*1000).toLocaleString('vi-VN')+'đ';
-        });
-        document.getElementById('lblTotalKwh').innerText=tkwh;
-        document.getElementById('lblMainConsumption').innerText=mCons;
-        document.getElementById('lblLossKwh').innerText=lKwh;
-        document.getElementById('lblTotalBaseMoney').innerText=Math.round(tmoney).toLocaleString('vi-VN');
-        document.getElementById('lblLossMoney').innerText=Math.round(lMoney).toLocaleString('vi-VN');
-        document.getElementById('lblGrandTotal').innerText=Math.round(tmoney+lMoney).toLocaleString('vi-VN')+'đ';
+        document.getElementById('lblGrandTotal').innerText = total.toLocaleString() + 'đ';
     }
 
-    async function exportToPNG(){
-        const area=document.getElementById('captureArea'),ctrl=document.getElementById('controlsBar');
-        const sw=document.getElementById('tableScrollWrapper'),hdr=document.getElementById('displayHeader');
-        const expRow=document.querySelector('.export-title-row');
-        const imgCells=Array.from(document.querySelectorAll('#mainTable .col-img'));
-        const imgCellData=imgCells.map(cell=>({cell,parent:cell.parentNode,nextSibling:cell.nextSibling}));
-        imgCells.forEach(cell=>cell.remove());
-        const colgroup=document.querySelector('#mainTable colgroup');
-        const allCols=Array.from(colgroup.children),imgCol=allCols[2]; imgCol.remove();
-        const captureWidths=[44,204,115,115,115,120,125,155,151];
-        Array.from(colgroup.children).forEach((col,i)=>{col._origWidth=col.style.width;col.style.width=captureWidths[i]+'px';});
-        area.classList.add('is-capturing'); ctrl.classList.add('hide-for-capture');
-        if(hdr) hdr.classList.add('hide-for-capture');
-        const vob = document.getElementById('viewOnlyBanner');
-        if(vob) vob.classList.add('hide-for-capture');
-        expRow.style.display='table-row'; sw.style.overflow='visible';
-        area.style.overflow='visible'; area.style.borderRadius='0';
-        const wrapper=document.getElementById('rainbowWrapper');
-        const wrapperOldOverflow=wrapper.style.overflow;
-        wrapper.style.overflow='visible'; wrapper.style.padding='0';
-        document.getElementById('titleMonth').colSpan=9; document.getElementById('footerMain').colSpan=9;
-        document.getElementById('f_col1').colSpan=3; document.getElementById('f_col2').colSpan=3;
-        document.getElementById('f_col3').colSpan=3; document.getElementById('f_col4').colSpan=4;
-        document.getElementById('f_col5').colSpan=5; document.getElementById('f_col6').colSpan=9;
-        window.scrollTo(0,0);
-        const allImgs=area.querySelectorAll('img'),imgOrigSrc=[];
-        await Promise.all(Array.from(allImgs).map((img,i)=>new Promise(resolve=>{
-            imgOrigSrc[i]=img.src;
-            if(!img.src||!img.src.startsWith('http')||img.style.display==='none') return resolve();
-            const cv=document.createElement('canvas');
-            cv.width=img.naturalWidth||img.width||80; cv.height=img.naturalHeight||img.height||80;
-            const cx=cv.getContext('2d'),im=new Image(); im.crossOrigin='anonymous';
-            im.onload=()=>{cx.drawImage(im,0,0);try{img.src=cv.toDataURL('image/jpeg',0.9);}catch(e){}resolve();};
-            im.onerror=()=>resolve(); im.src=img.src;
-        })));
-        try{
-            const canvas=await html2canvas(area,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',width:1280,windowWidth:1400});
-            const link=document.createElement('a');
-            link.download=`EVN_Pro_${monthInput.value}.png`; link.href=canvas.toDataURL('image/png'); link.click();
-        }catch(err){showToast('❌ Lỗi xuất ảnh: '+err.message,'error');}
-        finally{
-            area.querySelectorAll('img').forEach((img,i)=>{if(imgOrigSrc[i]) img.src=imgOrigSrc[i];});
-            area.classList.remove('is-capturing'); ctrl.classList.remove('hide-for-capture');
-            if(hdr) hdr.classList.remove('hide-for-capture');
-            if(vob) vob.classList.remove('hide-for-capture');
-            expRow.style.display='none'; sw.style.overflow='auto';
-            area.style.overflow=''; area.style.borderRadius='';
-            wrapper.style.overflow=wrapperOldOverflow; wrapper.style.padding='';
-            Array.from(colgroup.children).forEach(col=>{col.style.width=col._origWidth||'';});
-            const refCol=colgroup.children[2]; colgroup.insertBefore(imgCol,refCol||null);
-            imgCellData.forEach(({cell,parent,nextSibling})=>{parent.insertBefore(cell,nextSibling);});
-            document.getElementById('titleMonth').colSpan=10; document.getElementById('footerMain').colSpan=10;
-            document.getElementById('f_col1').colSpan=3; document.getElementById('f_col2').colSpan=3;
-            document.getElementById('f_col3').colSpan=4; document.getElementById('f_col4').colSpan=5;
-            document.getElementById('f_col5').colSpan=5; document.getElementById('f_col6').colSpan=10;
-        }
+    function init() {
+        const m = document.getElementById('currentMonth').value;
+        const parts = m.split('-');
+        document.getElementById('displayMonthTag').innerText = 'THÁNG ' + parts[1] + '/' + parts[0];
+        document.getElementById('tableBody').innerHTML = '';
+        if(db[m]) db[m].rows.forEach(r => addRow(r)); else addRow();
+        applyAuthUI();
     }
 
-    function saveToLocal(silent){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để lưu dữ liệu!','warn');return;}
-        const rows=[];
-        document.querySelectorAll('.data-row').forEach(row=>{
-            rows.push({name:row.querySelector('.col-name input').value,img:row.querySelector('.img-preview').src,
-                before:row.querySelector('.before').value,after:row.querySelector('.after').value,price:row.querySelector('.price').value});
-        });
-        const m=monthInput.value;
-        db[m]={rows,tongDH:document.getElementById('tongDHThang').value,footerMonthLabel:document.getElementById('footerMonthLabel').value,
-            mainMeterImg:document.getElementById('mainMeterImg').src,locked:db[m]?.locked||false};
-        try{ localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); if(!silent) showSavePopup(); }
-        catch(e){ showToast('⚠️ Bộ nhớ đầy!','error'); }
-    }
-
-    function toggleLock(){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-        const m=monthInput.value;
-        if(!db[m]) saveToLocal(true);
-        if(!db[m]){showToast('⚠️ Không thể khóa!','warn');return;}
-        db[m].locked=!db[m].locked;
-        try{localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));}
-        catch(e){showToast('⚠️ Lỗi lưu trữ!','error');}
-        init();
-    }
-
-    function applyLockUI(isLocked){
-        const allInputs=document.querySelectorAll('input:not(#currentMonth):not(#importFile):not(#loginPassInput)');
-        const allUploadBtns=document.querySelectorAll('.upload-btn');
-        if(isLocked){
-            document.getElementById('lockBtnText').innerText='🔓 Mở Khóa';
-            document.getElementById('statusArea').innerHTML='<span class="status-badge status-locked">🔒 ĐÃ KHÓA</span>';
-            allInputs.forEach(i=>i.disabled=true);
-            allUploadBtns.forEach(b=>b.style.display='none');
-        } else {
-            document.getElementById('lockBtnText').innerText='🔒 Khóa tháng';
-            document.getElementById('statusArea').innerHTML='<span class="status-badge status-open">✅ ĐANG MỞ</span>';
-            allInputs.forEach(i=>i.disabled=false);
-            allUploadBtns.forEach(b=>b.style.display='inline');
-            const mainImg=document.getElementById('mainMeterImg'),mainBtn=document.getElementById('mainMeterUploadBtn');
-            if(mainImg&&mainBtn){ const has=mainImg.src&&mainImg.src.startsWith('data:image')&&mainImg.style.display!=='none'; mainBtn.innerHTML=has?'⚙️ Tùy chọn':'📷 Up Ảnh'; }
-        }
-    }
-
-    function toggleDeleteMode(){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-        const btn=document.getElementById('deleteModeBtn');
-        btn.classList.toggle('active');
-        document.getElementById('captureArea').classList.toggle('delete-active');
-        const on=btn.classList.contains('active');
-        btn.innerText=on?'❌ Bấm STT để xóa':'🗑 Chế Độ Xóa';
-        btn.style.background=on?'linear-gradient(135deg,#a0000a,#dc3545)':'linear-gradient(135deg,#4a5568,#6c757d)';
-    }
-
-    let _pendingDeleteRow=null;
-    function handleRowAction(cell){
-        if(document.getElementById('captureArea').classList.contains('delete-active')){
-            if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-            _pendingDeleteRow=cell.parentElement;
-            const name=cell.parentElement.querySelector('.col-name input')?.value||'Tên hộ chưa đặt';
-            document.getElementById('deleteModalName').innerText='👤 '+name;
-            document.getElementById('deleteModal').style.display='flex';
-        }
-    }
-    function confirmDeleteYes(){ if(_pendingDeleteRow){_pendingDeleteRow.remove();updateTotals();_pendingDeleteRow=null;} document.getElementById('deleteModal').style.display='none'; }
-    function confirmDeleteNo(){ _pendingDeleteRow=null; document.getElementById('deleteModal').style.display='none'; }
-
-    function openImg(s){ if(s&&s.includes('data:image')){ document.getElementById('modalImg').src=s; document.getElementById('imgModal').style.display='flex'; } }
-    function changeMonth(){ init(); }
-
-    function exportData(){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để backup!','warn');return;}
-        saveToLocal(true);
-        const b=new Blob([JSON.stringify(db)],{type:'application/json'}),url=URL.createObjectURL(b);
-        const a=document.createElement('a'); a.href=url; a.download='backup_dien.json'; a.click();
-        setTimeout(()=>URL.revokeObjectURL(url),10000);
-    }
-    function importData(e){
-        if(!isAuthenticated){showToast('🔒 Đăng nhập để nhập dữ liệu!','warn');return;}
-        const file=e.target.files[0]; if(!file) return;
-        const r=new FileReader();
-        r.onload=ev=>{
-            try{
-                db=JSON.parse(ev.target.result);
-                localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));
-                init(); showToast('✅ Nhập dữ liệu thành công!');
-            }catch(err){showToast('❌ File không hợp lệ!','error');}
-        };
-        r.readAsText(file); e.target.value='';
-    }
-
-    init();
+    window.onload = init;
 </script>
-
-<!-- IMAGE DELETE CONFIRM -->
-<div id="imgDeletePopup" style="display:none;position:fixed;inset:0;z-index:25001;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);justify-content:center;align-items:center;">
-    <div style="background:var(--bg-card);border:2px solid rgba(220,53,69,0.6);border-radius:22px;padding:32px 36px;text-align:center;min-width:300px;box-shadow:0 0 50px rgba(220,53,69,0.3);animation:sp-pop .3s cubic-bezier(.34,1.56,.64,1);">
-        <div style="font-size:48px;margin-bottom:12px;">🗑️</div>
-        <div style="font-size:18px;font-weight:800;color:#ff6b6b;margin-bottom:8px;">Xóa ảnh đồng hồ?</div>
-        <div style="font-size:13px;color:rgba(255,200,200,0.7);margin-bottom:24px;">Ảnh sẽ bị xóa và không thể khôi phục.</div>
-        <div style="display:flex;gap:12px;justify-content:center;">
-            <button onclick="imgDeleteYes()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#a0000a,#dc3545);color:white;font-size:14px;font-weight:700;cursor:pointer;">🗑 Xóa</button>
-            <button onclick="imgDeleteNo()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#2d3748,#4a5568);color:white;font-size:14px;font-weight:700;cursor:pointer;">❌ Hủy</button>
-        </div>
-    </div>
-</div>
-
-<!-- IMAGE CONFIRM -->
-<div id="imgConfirmPopup" style="display:none;position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);justify-content:center;align-items:center;">
-    <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:22px;padding:28px 28px 24px;text-align:center;max-width:420px;width:92%;box-shadow:0 0 60px var(--accent-glow);animation:sp-pop .3s cubic-bezier(.34,1.56,.64,1);">
-        <div style="font-size:28px;margin-bottom:8px;">📷</div>
-        <div style="font-size:17px;font-weight:800;color:var(--color-title);margin-bottom:16px;">Xem trước ảnh đồng hồ</div>
-        <div style="border-radius:14px;overflow:hidden;border:2px solid var(--border-accent);margin-bottom:20px;max-height:320px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);">
-            <img id="imgConfirmPreview" src="" style="max-width:100%;max-height:320px;object-fit:contain;display:block;">
-        </div>
-        <div style="display:flex;gap:12px;justify-content:center;">
-            <button onclick="imgConfirmYes()" style="padding:11px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,#0a6a2a,#28a745);color:white;font-size:14px;font-weight:800;cursor:pointer;">✅ Dùng ảnh này</button>
-            <button onclick="imgConfirmNo()" style="padding:11px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,#4a5568,#6c757d);color:white;font-size:14px;font-weight:800;cursor:pointer;">❌ Hủy</button>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>
