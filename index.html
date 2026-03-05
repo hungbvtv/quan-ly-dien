@@ -261,18 +261,18 @@
         #imgModal img { max-width:92%; max-height:92%; border-radius:12px; border:2px solid var(--border-accent); }
 
         #settingsPanel { position:fixed; bottom:20px; right:16px; z-index:10001; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
-        #gearBtn { width:52px; height:52px; border-radius:50%; cursor:pointer; background:var(--bg-card); border:2px solid var(--border-accent); color:var(--accent); font-size:22px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 18px var(--accent-glow); backdrop-filter:blur(10px); transition:transform 0.35s cubic-bezier(.68,-.55,.27,1.55), box-shadow 0.3s; flex-shrink:0; }
+        #gearBtn { width:52px; height:52px; min-width:52px; min-height:52px; border-radius:50%; cursor:pointer; background:var(--bg-card); border:2px solid var(--border-accent); color:var(--accent); font-size:22px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 18px var(--accent-glow); backdrop-filter:blur(10px); transition:transform 0.35s cubic-bezier(.68,-.55,.27,1.55), box-shadow 0.3s; flex-shrink:0; }
         #gearBtn:hover { transform:rotate(60deg) scale(1.1); box-shadow:0 4px 30px var(--accent-glow); }
         #gearBtn.open  { transform:rotate(90deg); }
-        #settingsPopup { display:none; flex-direction:column; gap:12px; background:var(--bg-card); padding:16px 14px; border-radius:18px; border:1px solid var(--border-accent); backdrop-filter:blur(20px); box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 28px var(--accent-glow); min-width:220px; max-width:calc(100vw - 32px); max-height:calc(100vh - 90px); overflow-y:auto; animation:popIn 0.2s ease-out; }
+        #settingsPopup { display:none; flex-direction:column; gap:12px; background:var(--bg-card); padding:16px 14px; border-radius:18px; border:1px solid var(--border-accent); backdrop-filter:blur(20px); box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 28px var(--accent-glow); width:320px; max-width:calc(100vw - 32px); max-height:calc(100vh - 90px); overflow-y:auto; animation:popIn 0.2s ease-out; }
         #settingsPopup.open { display:flex; }
         @keyframes popIn{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
         .sp-label { font-size:10px; font-weight:700; color:var(--color-text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
         .sp-btn { width:100%; padding:9px 12px; border-radius:10px; border:none; font-size:12px; font-weight:700; font-family:'Be Vietnam Pro',sans-serif; cursor:pointer; color:white; display:flex; align-items:center; gap:8px; transition:opacity 0.15s, transform 0.1s; }
         .sp-btn:active { transform:scale(0.96); }
         .sp-btn:hover  { opacity:0.88; }
-        .sp-themes { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
-        .theme-dot { width:38px; height:38px; border-radius:50%; cursor:pointer; border:3px solid rgba(255,255,255,0.15); box-shadow:0 2px 10px rgba(0,0,0,.5); transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s; display:flex; align-items:center; justify-content:center; font-size:16px; }
+        .sp-themes { display:flex; gap:6px; justify-content:flex-start; flex-wrap:wrap; }
+        .theme-dot { width:34px; height:34px; border-radius:50%; cursor:pointer; border:3px solid rgba(255,255,255,0.15); box-shadow:0 2px 10px rgba(0,0,0,.5); transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
         .theme-dot:hover  { transform:scale(1.15); }
         .theme-dot.active { border-color:#fff; transform:scale(1.2); box-shadow:0 0 14px rgba(255,255,255,.5); }
         .sp-divider { border:none; border-top:1px solid var(--border-color); margin:0; }
@@ -385,7 +385,45 @@
     </div>
 </div>
 
-<!-- ====== CHANGE PASSWORD MODAL ====== -->
+<!-- ====== LOGIN SUCCESS POPUP ====== -->
+<div id="loginSuccessPopup" style="display:none;position:fixed;inset:0;z-index:40003;background:rgba(0,0,0,0.75);backdrop-filter:blur(16px);justify-content:center;align-items:center;">
+    <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:26px;padding:40px 36px 32px;text-align:center;min-width:300px;max-width:360px;width:90%;box-shadow:0 0 80px var(--accent-glow),0 24px 60px rgba(0,0,0,.9);animation:sp-pop .4s cubic-bezier(.34,1.56,.64,1);font-family:'Be Vietnam Pro',sans-serif;position:relative;overflow:hidden;">
+        <!-- Glow bg -->
+        <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 68%);pointer-events:none;opacity:.5;"></div>
+        <!-- Ring animations -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:360px;height:360px;border-radius:50%;border:1px solid var(--border-accent);opacity:.15;animation:sp-ring 2s ease-out infinite;pointer-events:none;"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:290px;height:290px;border-radius:50%;border:1px solid var(--border-accent);opacity:.2;animation:sp-ring 2s ease-out .5s infinite;pointer-events:none;"></div>
+        <!-- Icon -->
+        <div style="width:86px;height:86px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 18px;box-shadow:0 0 36px var(--accent-glow),0 8px 24px rgba(0,0,0,.5);animation:sp-icon .45s cubic-bezier(.34,1.56,.64,1) .05s both;position:relative;z-index:1;">🔓</div>
+        <!-- Title -->
+        <div style="font-family:'Orbitron',monospace;font-size:17px;font-weight:900;color:var(--color-title);text-shadow:0 0 20px var(--accent-glow);margin-bottom:6px;position:relative;z-index:1;">ĐĂNG NHẬP THÀNH CÔNG</div>
+        <div style="font-size:12px;color:var(--color-text-dim);margin-bottom:20px;position:relative;z-index:1;">Chào mừng quản trị viên! Bạn có thể chỉnh sửa dữ liệu.</div>
+        <!-- Info row -->
+        <div style="display:flex;gap:10px;margin-bottom:20px;position:relative;z-index:1;">
+            <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
+                <div style="font-size:10px;font-weight:700;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">🔐 Quyền</div>
+                <div style="font-size:12px;font-weight:800;color:var(--accent);">ADMIN</div>
+            </div>
+            <div style="flex:2;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
+                <div style="font-size:10px;font-weight:700;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">🕐 Đăng nhập lúc</div>
+                <div id="loginSuccessTime" style="font-size:13px;font-weight:800;color:var(--color-text);">--:--</div>
+            </div>
+            <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:12px 8px;text-align:center;">
+                <div style="font-size:10px;font-weight:700;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">✅ Trạng thái</div>
+                <div style="font-size:12px;font-weight:800;color:#00e676;">ONLINE</div>
+            </div>
+        </div>
+        <!-- Progress bar -->
+        <div style="height:5px;border-radius:3px;background:var(--bg-glass);overflow:hidden;margin-bottom:20px;position:relative;z-index:1;">
+            <div id="loginSuccessBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200%;border-radius:3px;animation:sp-drain 2.2s linear forwards,sp-shimmer 1.2s linear infinite;"></div>
+        </div>
+        <button onclick="closeLoginSuccess()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:white;font-size:15px;font-weight:800;font-family:'Be Vietnam Pro',sans-serif;padding:13px 48px;cursor:pointer;box-shadow:0 6px 22px var(--accent-glow);position:relative;z-index:1;transition:filter .15s,transform .15s;"
+            onmouseover="this.style.filter='brightness(1.18)';this.style.transform='scale(1.04)'"
+            onmouseout="this.style.filter='';this.style.transform=''"
+            onmousedown="this.style.transform='scale(0.97)'"
+            onmouseup="this.style.transform='scale(1.04)'">Bắt đầu thôi! 🚀</button>
+    </div>
+</div>
 <div id="changePassModal" style="display:none;position:fixed;inset:0;z-index:40001;background:rgba(0,0,0,0.85);backdrop-filter:blur(16px);justify-content:center;align-items:center;">
     <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:24px;padding:36px 32px 28px;text-align:center;min-width:320px;max-width:380px;width:90%;box-shadow:0 0 70px var(--accent-glow),0 24px 60px rgba(0,0,0,.9);animation:popIn 0.3s cubic-bezier(.34,1.56,.64,1);font-family:'Be Vietnam Pro',sans-serif;">
         <span style="font-size:44px;display:block;margin-bottom:10px;animation:floatIcon 3s ease-in-out infinite;">🔑</span>
@@ -447,6 +485,8 @@
             onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter=''">OK 👍</button>
     </div>
 </div>
+
+<div id="settingsPanel">
     <div id="settingsPopup">
         <div>
             <div class="sp-label">🎨 Giao Diện</div>
@@ -459,7 +499,6 @@
             <button class="sp-btn" id="rainbowToggleBtn" onclick="toggleRainbow()" style="background:linear-gradient(135deg,#ff0000,#ff7f00,#ffff00,#00cc00,#0000ff,#8b00ff);justify-content:center;font-weight:800;letter-spacing:0.5px;">🌈 Tắt Viền 7 Màu</button>
         </div>
         <hr class="sp-divider">
-        <!-- Admin-only settings -->
         <div id="adminSettingsSection" style="display:none;flex-direction:column;gap:6px;">
             <div class="sp-label">💾 Dữ Liệu</div>
             <button class="sp-btn" onclick="exportData();toggleSettingsPanel()" style="background:linear-gradient(135deg,#0f7a7a,#17a2b8);">📤 Backup file</button>
@@ -513,7 +552,15 @@
             <div class="month-picker">
                 <span style="font-size:14px">📅</span>
                 <strong style="font-size:12px;color:var(--color-text-dim)">Tháng:</strong>
-                <input type="month" id="currentMonth" onchange="changeMonth()">
+                <select id="selMonth" onchange="changeMonth()" style="border:none;background:transparent;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;color:var(--color-title);outline:none;cursor:pointer;">
+                    <option value="01">01</option><option value="02">02</option><option value="03">03</option>
+                    <option value="04">04</option><option value="05">05</option><option value="06">06</option>
+                    <option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                    <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                </select>
+                <strong style="font-size:12px;color:var(--color-text-dim)">/</strong>
+                <select id="selYear" onchange="changeMonth()" style="border:none;background:transparent;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;color:var(--color-title);outline:none;cursor:pointer;" id="selYear"></select>
+                <input type="hidden" id="currentMonth">
             </div>
             <div id="statusArea"></div>
         </div>
@@ -691,7 +738,7 @@ async function doLogin() {
         input.value = '';
         closeLoginModal();
         applyAuthUI();
-        showToast('✅ Đăng nhập thành công!');
+        showLoginSuccess();
     } else {
         loginAttempts++;
         input.classList.add('error');
@@ -736,6 +783,23 @@ function togglePassVis() {
     document.getElementById('togglePassBtn').innerText = inp.type === 'password' ? '👁' : '🙈';
 }
 
+function showLoginSuccess() {
+    const t = new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.getElementById('loginSuccessTime').innerText = t;
+    const bar = document.getElementById('loginSuccessBar');
+    bar.style.animation = 'none'; void bar.offsetHeight;
+    bar.style.animation = 'sp-drain 2.2s linear forwards, sp-shimmer 1.2s linear infinite';
+    document.getElementById('loginSuccessPopup').style.display = 'flex';
+    clearTimeout(window._lsTimer);
+    window._lsTimer = setTimeout(closeLoginSuccess, 2200);
+}
+function closeLoginSuccess() {
+    document.getElementById('loginSuccessPopup').style.display = 'none';
+}
+document.getElementById('loginSuccessPopup').addEventListener('click', function(e) {
+    if (e.target === this) closeLoginSuccess();
+});
+
 function applyAuthUI() {
     // Admin-only buttons trong controls bar
     document.querySelectorAll('.admin-only').forEach(el => {
@@ -748,7 +812,7 @@ function applyAuthUI() {
     // View-only banner
     document.getElementById('viewOnlyBanner').classList.toggle('hidden', isAuthenticated);
     // Inputs
-    const m = document.getElementById('currentMonth').value;
+    const m = getMonthValue();
     const isLocked = db[m]?.locked || false;
     const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile):not(#loginPassInput):not(#cpOldPass):not(#cpNewPass):not(#cpConfPass)');
     const allUploadBtns = document.querySelectorAll('.upload-btn');
@@ -879,7 +943,7 @@ document.getElementById('changePassModal').addEventListener('click', function(e)
 
 <script>
 function showSavePopup(){
-    const m=document.getElementById('currentMonth').value, parts=m.split('-');
+    const m=getMonthValue(), parts=m.split('-');
     const rows=document.querySelectorAll('.data-row').length;
     const total=document.getElementById('lblGrandTotal').innerText;
     const t=new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
@@ -923,8 +987,23 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
     let currentTheme = parseInt(localStorage.getItem('currentTheme')||'1');
     if(isNaN(currentTheme)||currentTheme<1||currentTheme>THEME_INFO.length) currentTheme=1;
 
+    // Khởi tạo select tháng/năm
     const monthInput = document.getElementById('currentMonth');
-    if(!monthInput.value) monthInput.value = new Date().toISOString().substring(0,7);
+    const selMonth = document.getElementById('selMonth');
+    const selYear = document.getElementById('selYear');
+    const now = new Date();
+    // Tạo options năm (5 năm trước đến 2 năm sau)
+    for(let y = now.getFullYear()-5; y <= now.getFullYear()+2; y++){
+        const opt = document.createElement('option');
+        opt.value = y; opt.text = y; selYear.appendChild(opt);
+    }
+    selMonth.value = String(now.getMonth()+1).padStart(2,'0');
+    selYear.value = now.getFullYear();
+    monthInput.value = selYear.value+'-'+selMonth.value;
+
+    function getMonthValue(){
+        return selYear.value+'-'+selMonth.value;
+    }
 
     function buildThemeDots(){
         const c=document.getElementById('themeDotsContainer'); c.innerHTML='';
@@ -1030,7 +1109,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         // Đóng settings popup khi load
         document.getElementById('settingsPopup').classList.remove('open');
         document.getElementById('gearBtn').classList.remove('open');
-        const m=monthInput.value;
+        const m=getMonthValue();
         const prev=new Date(m+'-01'); prev.setMonth(prev.getMonth()-1);
         const pk=prev.toISOString().substring(0,7);
         let data=db[m];
@@ -1163,7 +1242,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
             row.dataset.u=u; row.dataset.m=m; tkwh+=u; tmoney+=m;
         });
         const curT=parseFloat(document.getElementById('tongDHThang').value)||0;
-        const pk=new Date(monthInput.value+'-01'); pk.setMonth(pk.getMonth()-1);
+        const pk=new Date(getMonthValue()+'-01'); pk.setMonth(pk.getMonth()-1);
         const prevT=db[pk.toISOString().substring(0,7)]?.tongDH||0;
         const mCons=Math.max(0,curT-prevT), lKwh=Math.max(0,mCons-tkwh), lMoney=lKwh*2400;
         document.querySelectorAll('.data-row').forEach(row=>{
@@ -1219,7 +1298,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         try{
             const canvas=await html2canvas(area,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',width:1280,windowWidth:1400});
             const link=document.createElement('a');
-            link.download=`EVN_Pro_${monthInput.value}.png`; link.href=canvas.toDataURL('image/png'); link.click();
+            link.download=`EVN_Pro_${getMonthValue()}.png`; link.href=canvas.toDataURL('image/png'); link.click();
         }catch(err){showToast('❌ Lỗi xuất ảnh: '+err.message,'error');}
         finally{
             area.querySelectorAll('img').forEach((img,i)=>{if(imgOrigSrc[i]) img.src=imgOrigSrc[i];});
@@ -1246,7 +1325,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
             rows.push({name:row.querySelector('.col-name input').value,img:row.querySelector('.img-preview').src,
                 before:row.querySelector('.before').value,after:row.querySelector('.after').value,price:row.querySelector('.price').value});
         });
-        const m=monthInput.value;
+        const m=getMonthValue();
         db[m]={rows,tongDH:document.getElementById('tongDHThang').value,footerMonthLabel:document.getElementById('footerMonthLabel').value,
             mainMeterImg:document.getElementById('mainMeterImg').src,locked:db[m]?.locked||false};
         try{ localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); if(!silent) showSavePopup(); }
@@ -1255,7 +1334,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
 
     function toggleLock(){
         if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
-        const m=monthInput.value;
+        const m=getMonthValue();
         if(!db[m]) saveToLocal(true);
         if(!db[m]){showToast('⚠️ Không thể khóa — hãy lưu dữ liệu trước!','warn');return;}
         db[m].locked=!db[m].locked;
@@ -1306,7 +1385,10 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
     function confirmDeleteNo(){ _pendingDeleteRow=null; document.getElementById('deleteModal').style.display='none'; }
 
     function openImg(s){ if(s&&s.includes('data:image')){ document.getElementById('modalImg').src=s; document.getElementById('imgModal').style.display='flex'; } }
-    function changeMonth(){ init(); }
+    function changeMonth(){
+        monthInput.value = getMonthValue();
+        init();
+    }
 
     function exportData(){
         if(!isAuthenticated){showToast('🔒 Đăng nhập để backup!','warn');return;}
