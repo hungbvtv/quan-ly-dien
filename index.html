@@ -17,12 +17,6 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; font-family: 'Be Vietnam Pro', sans-serif; }
 
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
         body.theme-1 {
             --bg-page: #060a18; --bg-card: rgba(15,20,45,0.97); --bg-glass: rgba(255,255,255,0.04); --bg-glass-hover: rgba(255,255,255,0.07);
             --bg-header: linear-gradient(135deg, rgba(0,80,200,0.25), rgba(0,180,255,0.12)); --bg-controls: rgba(8,12,30,0.9);
@@ -159,6 +153,9 @@
             overflow-x: hidden;
             transition: background 0.5s;
             position: relative;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .rainbow-off .rainbow-wrapper::before { display: none !important; }
@@ -264,10 +261,10 @@
         #imgModal img { max-width:92%; max-height:92%; border-radius:12px; border:2px solid var(--border-accent); }
 
         #settingsPanel { position:fixed; bottom:20px; right:16px; z-index:10001; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
-        #gearBtn { width:52px; height:52px; border-radius:50%; cursor:pointer; background:var(--bg-card); border:2px solid var(--border-accent); color:var(--accent); font-size:22px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 18px var(--accent-glow); backdrop-filter:blur(10px); transition:transform 0.35s cubic-bezier(.68,-.55,.27,1.55), box-shadow 0.3s; }
+        #gearBtn { width:52px; height:52px; border-radius:50%; cursor:pointer; background:var(--bg-card); border:2px solid var(--border-accent); color:var(--accent); font-size:22px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 18px var(--accent-glow); backdrop-filter:blur(10px); transition:transform 0.35s cubic-bezier(.68,-.55,.27,1.55), box-shadow 0.3s; flex-shrink:0; }
         #gearBtn:hover { transform:rotate(60deg) scale(1.1); box-shadow:0 4px 30px var(--accent-glow); }
         #gearBtn.open  { transform:rotate(90deg); }
-        #settingsPopup { display:none; flex-direction:column; gap:12px; background:var(--bg-card); padding:16px 14px; border-radius:18px; border:1px solid var(--border-accent); backdrop-filter:blur(20px); box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 28px var(--accent-glow); min-width:220px; animation:popIn 0.2s ease-out; }
+        #settingsPopup { display:none; flex-direction:column; gap:12px; background:var(--bg-card); padding:16px 14px; border-radius:18px; border:1px solid var(--border-accent); backdrop-filter:blur(20px); box-shadow:0 8px 40px rgba(0,0,0,.7), 0 0 28px var(--accent-glow); min-width:220px; max-width:calc(100vw - 32px); max-height:calc(100vh - 90px); overflow-y:auto; animation:popIn 0.2s ease-out; }
         #settingsPopup.open { display:flex; }
         @keyframes popIn{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
         .sp-label { font-size:10px; font-weight:700; color:var(--color-text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
@@ -463,17 +460,15 @@
         </div>
         <hr class="sp-divider">
         <!-- Admin-only settings -->
-        <div id="adminSettingsSection" style="display:none;">
+        <div id="adminSettingsSection" style="display:none;flex-direction:column;gap:6px;">
             <div class="sp-label">💾 Dữ Liệu</div>
             <button class="sp-btn" onclick="exportData();toggleSettingsPanel()" style="background:linear-gradient(135deg,#0f7a7a,#17a2b8);">📤 Backup file</button>
-        </div>
-        <div id="adminImportSection" style="display:none;">
             <label class="sp-btn" style="background:linear-gradient(135deg,#c78a00,#ffc107);color:#000;cursor:pointer;">
                 📥 Nhập file khôi phục
                 <input type="file" id="importFile" style="display:none" onchange="importData(event)">
             </label>
         </div>
-        <div id="adminLogoutSection" style="display:none;">
+        <div id="adminLogoutSection" style="display:none;flex-direction:column;gap:6px;">
             <hr class="sp-divider">
             <div class="sp-label">🔐 Tài khoản</div>
             <button class="sp-btn" onclick="openChangePassModal();toggleSettingsPanel()" style="background:linear-gradient(135deg,#0a5a8a,#1a7ab8);">🔑 Đổi mật khẩu</button>
@@ -742,20 +737,20 @@ function togglePassVis() {
 }
 
 function applyAuthUI() {
-    // Admin-only buttons
+    // Admin-only buttons trong controls bar
     document.querySelectorAll('.admin-only').forEach(el => {
         el.style.display = isAuthenticated ? '' : 'none';
     });
-    // Admin sections in settings
-    document.getElementById('adminSettingsSection').style.display = isAuthenticated ? '' : 'none';
-    document.getElementById('adminImportSection').style.display = isAuthenticated ? '' : 'none';
-    document.getElementById('adminLogoutSection').style.display = isAuthenticated ? '' : 'none';
+    // Admin sections trong settings popup
+    const show = isAuthenticated ? 'flex' : 'none';
+    document.getElementById('adminSettingsSection').style.display = show;
+    document.getElementById('adminLogoutSection').style.display = show;
     // View-only banner
     document.getElementById('viewOnlyBanner').classList.toggle('hidden', isAuthenticated);
-    // Inputs - reload lock state
+    // Inputs
     const m = document.getElementById('currentMonth').value;
     const isLocked = db[m]?.locked || false;
-    const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile):not(#loginPassInput)');
+    const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile):not(#loginPassInput):not(#cpOldPass):not(#cpNewPass):not(#cpConfPass)');
     const allUploadBtns = document.querySelectorAll('.upload-btn');
     if (!isAuthenticated) {
         allInputs.forEach(i => i.disabled = true);
@@ -1032,26 +1027,31 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
 
     function init(){
         applyThemeUI(); applyRainbowUI();
+        // Đóng settings popup khi load
+        document.getElementById('settingsPopup').classList.remove('open');
+        document.getElementById('gearBtn').classList.remove('open');
         const m=monthInput.value;
         const prev=new Date(m+'-01'); prev.setMonth(prev.getMonth()-1);
         const pk=prev.toISOString().substring(0,7);
         let data=db[m];
         document.getElementById('tableBody').innerHTML='';
         const parts=m.split('-');
-        document.getElementById('displayMonthTag').innerText='THÁNG '+parts[1]+'/'+parts[0];
-        document.getElementById('titleMonth').innerText='SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG '+parts[1]+'/'+parts[0];
+        // Luôn dùng số tháng/năm, không phụ thuộc locale trình duyệt
+        const mm=parts[1], yyyy=parts[0];
+        document.getElementById('displayMonthTag').innerText='THÁNG '+mm+'/'+yyyy;
+        document.getElementById('titleMonth').innerText='SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG '+mm+'/'+yyyy;
         if(data?.rows) data.rows.forEach(item=>addRow(item));
         else if(db[pk]?.rows) db[pk].rows.forEach(old=>addRow({name:old.name,before:old.after,after:0,price:old.price,img:''}));
         else addRow();
         document.getElementById('tongDHThang').value=data?.tongDH||0;
-        document.getElementById('footerMonthLabel').value=data?.footerMonthLabel||parts[1];
+        document.getElementById('footerMonthLabel').value=data?.footerMonthLabel||mm;
         const mainImg=document.getElementById('mainMeterImg');
         const safeMainImg=(data?.mainMeterImg||'').startsWith('data:image')?data.mainMeterImg:'';
         if(safeMainImg){ mainImg.src=safeMainImg; mainImg.style.display='block'; document.getElementById('mainMeterUploadBtn').innerHTML='⚙️ Tùy chọn'; }
         else { mainImg.src=''; mainImg.style.display='none'; document.getElementById('mainMeterUploadBtn').innerHTML='📷 Up Ảnh'; }
         applyLockUI(data?.locked||false);
         updateTotals();
-        applyAuthUI(); // always apply auth state after init
+        applyAuthUI();
     }
 
     function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
