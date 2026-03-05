@@ -13,10 +13,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Cập nhật link font hỗ trợ weight 900 và tiếng Việt tốt hơn -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; font-family: 'Be Vietnam Pro', sans-serif; }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
         body.theme-1 {
             --bg-page: #060a18; --bg-card: rgba(15,20,45,0.97); --bg-glass: rgba(255,255,255,0.04); --bg-glass-hover: rgba(255,255,255,0.07);
@@ -154,7 +159,6 @@
             overflow-x: hidden;
             transition: background 0.5s;
             position: relative;
-            font-family: 'Be Vietnam Pro', sans-serif;
         }
 
         .rainbow-off .rainbow-wrapper::before { display: none !important; }
@@ -171,9 +175,7 @@
         .header-banner::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px; background: var(--gradient-border); opacity: 0.6; }
         .header-icon { font-size: 32px; margin-bottom: 6px; display: block; animation: floatIcon 3s ease-in-out infinite; }
         @keyframes floatIcon { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-        
-        /* FIX: Tiêu đề Tiếng Việt dùng Be Vietnam Pro để không lỗi dấu */
-        .header-title { font-family: 'Be Vietnam Pro', sans-serif; font-size: clamp(16px, 2.5vw, 24px); font-weight: 900; color: var(--color-title); letter-spacing: 1px; text-shadow: 0 0 20px var(--accent-glow); text-transform: uppercase; }
+        .header-title { font-family: 'Orbitron', monospace; font-size: clamp(16px, 2.5vw, 24px); font-weight: 900; color: var(--color-title); letter-spacing: 2px; text-shadow: 0 0 20px var(--accent-glow); }
         .header-month-tag { display: inline-block; margin-top: 6px; background: var(--bg-glass); border: 1px solid var(--border-accent); border-radius: 20px; padding: 3px 14px; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
 
         /* VIEW-ONLY BANNER */
@@ -184,7 +186,7 @@
         }
         #viewOnlyBanner.hidden { display: none; }
 
-        #titleMonth { display: none; font-family: 'Be Vietnam Pro', sans-serif; font-size: 20px; font-weight: 900; color: #0054a5; text-align: center; padding: 16px; background: #f0f8ff !important; }
+        #titleMonth { display: none; font-family: 'Times New Roman', serif; font-size: 20px; font-weight: bold; color: #0054a5; text-align: center; padding: 16px; background: #f0f8ff !important; }
         tr.export-title-row { display: none; }
 
         .controls { display: flex; gap: 7px; padding: 14px 18px; flex-wrap: wrap; align-items: center; background: var(--bg-controls); border-bottom: 1px solid var(--border-color); transition: background 0.4s; }
@@ -209,10 +211,7 @@
         table { width: 100%; border-collapse: collapse; min-width: 1159px; table-layout: fixed; }
         thead tr th { background: var(--bg-table-head) !important; color: var(--color-text); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 11px 7px; border-bottom: 2px solid var(--border-accent); border-right: 1px solid var(--border-color); white-space: normal; word-break: break-word; text-align: center; transition: background 0.4s, color 0.4s; }
         thead tr th:last-child { border-right: none; }
-        
-        /* FIX: Tiêu đề bảng dùng Be Vietnam Pro */
-        .title-header { font-family: 'Be Vietnam Pro', sans-serif !important; font-size: 18px !important; font-weight: 900 !important; color: var(--color-title) !important; text-align: center !important; padding: 18px !important; background: var(--bg-header) !important; border-bottom: 2px solid var(--border-accent) !important; text-shadow: 0 0 16px var(--accent-glow) !important; text-transform: uppercase; }
-        
+        .title-header { font-family: 'Orbitron', monospace !important; font-size: 18px !important; font-weight: 900 !important; color: var(--color-title) !important; text-align: center !important; padding: 18px !important; background: var(--bg-header) !important; border-bottom: 2px solid var(--border-accent) !important; text-shadow: 0 0 16px var(--accent-glow) !important; }
         .data-row td { padding: 7px 5px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); font-size: 13px; color: var(--color-text); background: var(--bg-table-row) !important; transition: background 0.2s, color 0.4s; vertical-align: middle; text-align: center; }
         .data-row:nth-child(even) td { background: var(--bg-table-row-alt) !important; }
         .data-row:hover td { background: var(--bg-glass-hover) !important; }
@@ -253,7 +252,7 @@
         .loss-value { color:var(--accent); font-weight:800; font-size:14px; }
         .grand-total-row td { text-align:center; padding:22px !important; background: var(--bg-glass) !important; }
         .grand-total-label { font-size:13px; font-weight:700; color:var(--color-text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
-        #lblGrandTotal { font-family:'Orbitron', 'Be Vietnam Pro', sans-serif; color:#ff2244 !important; font-weight:900; font-size:clamp(26px,4vw,38px); text-shadow:0 0 20px rgba(255,34,68,0.5), 0 0 40px rgba(255,34,68,0.3); display:block; animation:pulseGrand 2.5s ease-in-out infinite; }
+        #lblGrandTotal { font-family:'Orbitron', monospace; color:#ff2244 !important; font-weight:900; font-size:clamp(26px,4vw,38px); text-shadow:0 0 20px rgba(255,34,68,0.5), 0 0 40px rgba(255,34,68,0.3); display:block; animation:pulseGrand 2.5s ease-in-out infinite; }
         @keyframes pulseGrand { 0%,100%{text-shadow:0 0 20px rgba(255,34,68,0.5)} 50%{text-shadow:0 0 40px rgba(255,34,68,0.7),0 0 70px rgba(255,34,68,0.4)} }
 
         .calculation-guide { margin:16px 18px 20px; padding:18px 22px; background:var(--bg-glass); border:1px solid var(--border-color); border-radius:14px; line-height:2.1; text-align:left; font-size:13px; transition: background 0.4s; }
@@ -286,16 +285,15 @@
         .delete-active .data-row td:first-child .stt-num { display:none; }
         .delete-active .data-row td:first-child::after { content:'❌'; font-size:16px; }
 
-        /* FIX: Điều chỉnh font khi xuất ảnh sang Be Vietnam Pro để đồng bộ */
         .is-capturing { overflow:visible !important; width:1280px !important; max-width:none !important; background:white !important; border-radius:0 !important; }
         .is-capturing .col-img { display:none !important; width:0 !important; padding:0 !important; border:none !important; overflow:hidden !important; }
         .is-capturing .header-banner { display:none !important; }
         .is-capturing tr.export-title-row { display:table-row !important; }
-        .is-capturing #titleMonth { display:table-cell !important; background:#dbeafe !important; color:#0054a5 !important; font-family:'Be Vietnam Pro', sans-serif !important; font-weight: 900 !important; }
-        .is-capturing .title-header { font-family:'Be Vietnam Pro', sans-serif !important; font-size:20px !important; font-weight:900 !important; color:#0054a5 !important; background:#dbeafe !important; text-shadow:none !important; animation:none !important; text-transform: uppercase; }
+        .is-capturing #titleMonth { display:table-cell !important; background:#dbeafe !important; color:#0054a5 !important; font-family:'Times New Roman',serif !important; }
+        .is-capturing .title-header { font-family:'Times New Roman',serif !important; font-size:20px !important; font-weight:bold !important; color:#0054a5 !important; background:#dbeafe !important; text-shadow:none !important; animation:none !important; }
         .is-capturing thead tr th { background:#e8f4fd !important; color:#000 !important; border:3px double #4a86c0 !important; border-image:none !important; animation:none !important; padding:12px 7px !important; line-height:1.5 !important; }
         .is-capturing .col-final { background:#fff0f0 !important; border:3px double #4a86c0 !important; border-image:none !important; }
-        .is-capturing input { color:#000 !important; -webkit-text-fill-color:#000 !important; line-height:1.6 !important; padding:4px 0 !important; font-family: 'Be Vietnam Pro', sans-serif !important; font-weight: 700 !important; }
+        .is-capturing input { color:#000 !important; -webkit-text-fill-color:#000 !important; line-height:1.6 !important; padding:4px 0 !important; }
         .is-capturing .data-row td { background:white !important; color:#000 !important; border:3px double #4a86c0 !important; border-image:none !important; animation:none !important; padding:12px 5px !important; line-height:1.5 !important; }
         .is-capturing .data-row td.col-kwh { background:#f0fff4 !important; }
         .is-capturing .data-row td.col-final { background:#fff0f0 !important; }
@@ -304,8 +302,8 @@
         .is-capturing .loss-summary td { background:#fffbe6 !important; color:#7a5900 !important; border:3px double #c8a832 !important; border-image:none !important; }
         .is-capturing .loss-value { color:#0054a5 !important; font-weight:800 !important; }
         .is-capturing .col-final { color:#cc0000 !important; }
-        .is-capturing #lblGrandTotal { color:#cc0000 !important; font-family:'Be Vietnam Pro', sans-serif !important; font-weight: 900 !important; font-size:28px !important; animation:none !important; text-shadow:none !important; }
-        .is-capturing .grand-total-label { color:#000 !important; font-family:'Be Vietnam Pro', sans-serif !important; font-weight: 800 !important; font-size:16px !important; }
+        .is-capturing #lblGrandTotal { color:#cc0000 !important; font-family:'Times New Roman',serif !important; font-size:28px !important; animation:none !important; text-shadow:none !important; }
+        .is-capturing .grand-total-label { color:#000 !important; font-family:'Times New Roman',serif !important; font-size:16px !important; }
         .is-capturing .grand-total-row td { background:#fff8f8 !important; border:3px double #4a86c0 !important; border-image:none !important; }
         .is-capturing .col-name input { text-align:center !important; }
         .is-capturing .upload-btn { display:none !important; }
@@ -339,7 +337,7 @@
             animation: popIn 0.3s cubic-bezier(.34,1.56,.64,1);
         }
         .login-icon { font-size: 48px; margin-bottom: 12px; display: block; animation: floatIcon 3s ease-in-out infinite; }
-        .login-title { font-family: 'Be Vietnam Pro', sans-serif; font-size: 16px; font-weight: 900; color: var(--color-title); margin-bottom: 6px; text-shadow: 0 0 16px var(--accent-glow); text-transform: uppercase; }
+        .login-title { font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 900; color: var(--color-title); margin-bottom: 6px; text-shadow: 0 0 16px var(--accent-glow); }
         .login-sub { font-size: 12px; color: var(--color-text-dim); margin-bottom: 22px; }
         .login-input-wrap { position: relative; margin-bottom: 16px; }
         .login-input-wrap input {
@@ -390,7 +388,68 @@
     </div>
 </div>
 
-<div id="settingsPanel">
+<!-- ====== CHANGE PASSWORD MODAL ====== -->
+<div id="changePassModal" style="display:none;position:fixed;inset:0;z-index:40001;background:rgba(0,0,0,0.85);backdrop-filter:blur(16px);justify-content:center;align-items:center;">
+    <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:24px;padding:36px 32px 28px;text-align:center;min-width:320px;max-width:380px;width:90%;box-shadow:0 0 70px var(--accent-glow),0 24px 60px rgba(0,0,0,.9);animation:popIn 0.3s cubic-bezier(.34,1.56,.64,1);font-family:'Be Vietnam Pro',sans-serif;">
+        <span style="font-size:44px;display:block;margin-bottom:10px;animation:floatIcon 3s ease-in-out infinite;">🔑</span>
+        <div style="font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--color-title);margin-bottom:5px;text-shadow:0 0 14px var(--accent-glow);">ĐỔI MẬT KHẨU</div>
+        <div style="font-size:12px;color:var(--color-text-dim);margin-bottom:22px;">Nhập mật khẩu cũ và mật khẩu mới</div>
+
+        <!-- Pass cũ -->
+        <div style="position:relative;margin-bottom:12px;">
+            <input type="password" id="cpOldPass" placeholder="🔒 Mật khẩu hiện tại" onkeydown="if(event.key==='Enter')document.getElementById('cpNewPass').focus()"
+                style="width:100%;padding:11px 42px 11px 14px;border-radius:11px;border:2px solid var(--border-color);background:var(--bg-glass);color:var(--color-text);font-size:14px;font-family:'Be Vietnam Pro',sans-serif;font-weight:600;letter-spacing:1px;text-align:left;transition:border-color 0.2s;outline:none;">
+            <span onclick="toggleCPVis('cpOldPass','cpToggle1')" id="cpToggle1" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:17px;color:var(--color-text-dim);">👁</span>
+        </div>
+        <!-- Pass mới -->
+        <div style="position:relative;margin-bottom:12px;">
+            <input type="password" id="cpNewPass" placeholder="🔑 Mật khẩu mới" onkeydown="if(event.key==='Enter')document.getElementById('cpConfPass').focus()"
+                style="width:100%;padding:11px 42px 11px 14px;border-radius:11px;border:2px solid var(--border-color);background:var(--bg-glass);color:var(--color-text);font-size:14px;font-family:'Be Vietnam Pro',sans-serif;font-weight:600;letter-spacing:1px;text-align:left;transition:border-color 0.2s;outline:none;">
+            <span onclick="toggleCPVis('cpNewPass','cpToggle2')" id="cpToggle2" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:17px;color:var(--color-text-dim);">👁</span>
+        </div>
+        <!-- Xác nhận pass mới -->
+        <div style="position:relative;margin-bottom:6px;">
+            <input type="password" id="cpConfPass" placeholder="✅ Xác nhận mật khẩu mới" onkeydown="if(event.key==='Enter')doChangePass()"
+                style="width:100%;padding:11px 42px 11px 14px;border-radius:11px;border:2px solid var(--border-color);background:var(--bg-glass);color:var(--color-text);font-size:14px;font-family:'Be Vietnam Pro',sans-serif;font-weight:600;letter-spacing:1px;text-align:left;transition:border-color 0.2s;outline:none;">
+            <span onclick="toggleCPVis('cpConfPass','cpToggle3')" id="cpToggle3" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:17px;color:var(--color-text-dim);">👁</span>
+        </div>
+
+        <div id="cpError" style="font-size:12px;color:#ff4466;font-weight:700;min-height:20px;margin-bottom:10px;"></div>
+
+        <!-- Strength bar -->
+        <div style="margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-dim);margin-bottom:4px;">
+                <span>Độ mạnh mật khẩu</span>
+                <span id="cpStrengthLabel">—</span>
+            </div>
+            <div style="height:5px;border-radius:3px;background:var(--bg-glass);overflow:hidden;">
+                <div id="cpStrengthBar" style="height:100%;width:0%;border-radius:3px;transition:width 0.3s,background 0.3s;"></div>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:10px;">
+            <button onclick="doChangePass()" style="flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-size:14px;font-weight:800;font-family:'Be Vietnam Pro',sans-serif;cursor:pointer;box-shadow:0 4px 18px var(--accent-glow);transition:filter 0.15s,transform 0.15s;"
+                onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter=''">💾 Đổi mật khẩu</button>
+            <button onclick="closeChangePassModal()" style="padding:12px 18px;border-radius:12px;border:none;background:var(--bg-glass);color:var(--color-text);font-size:14px;font-weight:700;font-family:'Be Vietnam Pro',sans-serif;cursor:pointer;transition:background 0.15s;"
+                onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background='var(--bg-glass)'">✕ Hủy</button>
+        </div>
+    </div>
+</div>
+
+<!-- ====== CHANGE PASSWORD SUCCESS POPUP ====== -->
+<div id="changePassSuccess" style="display:none;position:fixed;inset:0;z-index:40002;background:rgba(0,0,0,0.8);backdrop-filter:blur(14px);justify-content:center;align-items:center;">
+    <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:24px;padding:40px 36px;text-align:center;min-width:300px;max-width:360px;width:90%;box-shadow:0 0 80px var(--accent-glow),0 24px 60px rgba(0,0,0,.9);animation:sp-pop .38s cubic-bezier(.34,1.56,.64,1);font-family:'Be Vietnam Pro',sans-serif;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;border-radius:50%;border:1px solid var(--border-accent);opacity:.12;animation:sp-ring 2s ease-out infinite;pointer-events:none;"></div>
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00c853,#69f0ae);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 18px;box-shadow:0 0 32px rgba(0,200,80,0.5);animation:sp-icon .42s cubic-bezier(.34,1.56,.64,1) .06s both;position:relative;z-index:1;">🔐</div>
+        <div style="font-size:20px;font-weight:900;color:#00e676;margin-bottom:8px;position:relative;z-index:1;text-shadow:0 0 16px rgba(0,230,118,0.5);">✅ Đổi mật khẩu thành công!</div>
+        <div style="font-size:13px;color:var(--color-text-dim);margin-bottom:24px;position:relative;z-index:1;">Mật khẩu mới đã được lưu.<br>Dùng mật khẩu mới cho lần đăng nhập tiếp theo.</div>
+        <div style="height:4px;border-radius:3px;background:var(--bg-glass);overflow:hidden;margin-bottom:22px;position:relative;z-index:1;">
+            <div id="cpSuccessBar" style="height:100%;background:linear-gradient(90deg,#00c853,#69f0ae,#00c853);background-size:200%;border-radius:3px;animation:sp-drain 2.5s linear forwards,sp-shimmer 1.2s linear infinite;"></div>
+        </div>
+        <button onclick="closeChangePassSuccess()" style="background:linear-gradient(135deg,#00a844,#00e676);border:none;border-radius:12px;color:white;font-size:15px;font-weight:800;font-family:'Be Vietnam Pro',sans-serif;padding:13px 44px;cursor:pointer;box-shadow:0 6px 20px rgba(0,200,80,0.4);position:relative;z-index:1;"
+            onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter=''">OK 👍</button>
+    </div>
+</div>
     <div id="settingsPopup">
         <div>
             <div class="sp-label">🎨 Giao Diện</div>
@@ -417,6 +476,7 @@
         <div id="adminLogoutSection" style="display:none;">
             <hr class="sp-divider">
             <div class="sp-label">🔐 Tài khoản</div>
+            <button class="sp-btn" onclick="openChangePassModal();toggleSettingsPanel()" style="background:linear-gradient(135deg,#0a5a8a,#1a7ab8);">🔑 Đổi mật khẩu</button>
             <button class="sp-btn" onclick="doLogout();toggleSettingsPanel()" style="background:linear-gradient(135deg,#7a0000,#c0392b);">🚪 Đăng xuất</button>
         </div>
     </div>
@@ -563,8 +623,10 @@
     <div style="font-size:22px;font-weight:900;color:var(--color-title);text-shadow:0 0 20px var(--accent-glow);margin-bottom:8px;position:relative;z-index:1;">✅ Đã lưu thành công!</div>
     <div id="spMonth" style="font-size:13px;font-weight:700;color:var(--accent);background:var(--bg-glass);border:1px solid var(--border-accent);border-radius:20px;padding:5px 20px;display:inline-block;margin-bottom:22px;position:relative;z-index:1;"></div>
     <div style="display:flex;gap:10px;margin-bottom:20px;position:relative;z-index:1;">
-      <div style="font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">🏠 Số hộ</div>
-      <div id="spRows" style="font-size:28px;font-weight:900;color:var(--accent);line-height:1;">0</div>
+      <div style="flex:1;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:14px 8px;text-align:center;">
+        <div style="font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">🏠 Số hộ</div>
+        <div id="spRows" style="font-size:28px;font-weight:900;color:var(--accent);line-height:1;">0</div>
+      </div>
       <div style="flex:2;background:var(--bg-glass);border:1px solid var(--border-color);border-radius:14px;padding:14px 10px;text-align:center;">
         <div style="font-size:11px;font-weight:600;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">💰 Tổng nộp</div>
         <div id="spTotal" style="font-size:16px;font-weight:800;color:#ff2244;word-break:break-all;line-height:1.4;">0đ</div>
@@ -577,7 +639,11 @@
     <div style="height:5px;border-radius:3px;background:var(--bg-glass);overflow:hidden;margin-bottom:22px;position:relative;z-index:1;">
       <div id="spBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;border-radius:3px;animation:sp-drain 2.8s linear forwards,sp-shimmer 1.2s linear infinite;"></div>
     </div>
-    <button onclick="closeSavePopup()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:white;font-size:15px;font-weight:800;padding:14px 48px;cursor:pointer;box-shadow:0 6px 22px var(--accent-glow);position:relative;z-index:1;">OK 👍</button>
+    <button onclick="closeSavePopup()" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:white;font-size:15px;font-weight:800;padding:14px 48px;cursor:pointer;box-shadow:0 6px 22px var(--accent-glow);position:relative;z-index:1;"
+      onmouseover="this.style.filter='brightness(1.18)';this.style.transform='scale(1.05)'"
+      onmouseout="this.style.filter='';this.style.transform=''"
+      onmousedown="this.style.transform='scale(0.97)'"
+      onmouseup="this.style.transform='scale(1.05)'">OK 👍</button>
   </div>
 </div>
 
@@ -593,12 +659,16 @@
 // ============================
 // PASSWORD SYSTEM
 // ============================
+// Mật khẩu mặc định: dien2024
+// Để đổi mật khẩu: thay giá trị PASSWORD_HASH bằng SHA-256 của mật khẩu mới
+// Có thể tạo hash tại: https://emn178.github.io/online-tools/sha256.html
 const PASSWORD_HASH = '8c1d8b9f195553ff90cdb8514179d930fd177b8cc288f59edd1b023e139cfe4f'; // dien2024
+// ↑ SHA-256 của "dien2024"
 
 let isAuthenticated = false;
 let loginAttempts = 0;
 const MAX_ATTEMPTS = 5;
-const LOCKOUT_MS = 60000;
+const LOCKOUT_MS = 60000; // 1 phút
 let lockoutUntil = 0;
 
 async function hashText(text) {
@@ -620,7 +690,7 @@ async function doLogin() {
     const pass = input.value;
     if (!pass) { showLoginError('Vui lòng nhập mật khẩu!'); return; }
     const hash = await hashText(pass);
-    if (hash === PASSWORD_HASH) {
+    if (hash === getCurrentHash()) {
         isAuthenticated = true;
         loginAttempts = 0;
         input.value = '';
@@ -672,13 +742,17 @@ function togglePassVis() {
 }
 
 function applyAuthUI() {
+    // Admin-only buttons
     document.querySelectorAll('.admin-only').forEach(el => {
         el.style.display = isAuthenticated ? '' : 'none';
     });
+    // Admin sections in settings
     document.getElementById('adminSettingsSection').style.display = isAuthenticated ? '' : 'none';
     document.getElementById('adminImportSection').style.display = isAuthenticated ? '' : 'none';
     document.getElementById('adminLogoutSection').style.display = isAuthenticated ? '' : 'none';
+    // View-only banner
     document.getElementById('viewOnlyBanner').classList.toggle('hidden', isAuthenticated);
+    // Inputs - reload lock state
     const m = document.getElementById('currentMonth').value;
     const isLocked = db[m]?.locked || false;
     const allInputs = document.querySelectorAll('input:not(#currentMonth):not(#importFile):not(#loginPassInput)');
@@ -698,7 +772,114 @@ function applyAuthUI() {
         }
     }
 }
-document.getElementById('loginModal').addEventListener('click', function(e) { if (e.target === this) closeLoginModal(); });
+
+// Close login modal on backdrop click
+document.getElementById('loginModal').addEventListener('click', function(e) {
+    if (e.target === this) closeLoginModal();
+});
+
+// ============================
+// CHANGE PASSWORD SYSTEM
+// ============================
+// Lưu hash tùy chỉnh vào localStorage (ưu tiên hơn hash mặc định trong code)
+function getCurrentHash() {
+    return localStorage.getItem('pwHash') || PASSWORD_HASH;
+}
+
+function openChangePassModal() {
+    document.getElementById('cpOldPass').value = '';
+    document.getElementById('cpNewPass').value = '';
+    document.getElementById('cpConfPass').value = '';
+    document.getElementById('cpError').innerText = '';
+    document.getElementById('cpStrengthBar').style.width = '0%';
+    document.getElementById('cpStrengthLabel').innerText = '—';
+    document.getElementById('changePassModal').style.display = 'flex';
+    setTimeout(() => document.getElementById('cpOldPass').focus(), 200);
+    // Gắn sự kiện strength bar
+    document.getElementById('cpNewPass').oninput = updateStrengthBar;
+}
+function closeChangePassModal() {
+    document.getElementById('changePassModal').style.display = 'none';
+}
+
+function toggleCPVis(inputId, btnId) {
+    const inp = document.getElementById(inputId);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    document.getElementById(btnId).innerText = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function updateStrengthBar() {
+    const pass = document.getElementById('cpNewPass').value;
+    const bar = document.getElementById('cpStrengthBar');
+    const label = document.getElementById('cpStrengthLabel');
+    let score = 0;
+    if (pass.length >= 6) score++;
+    if (pass.length >= 10) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+    const levels = [
+        { w: '0%',   bg: 'transparent', text: '—' },
+        { w: '25%',  bg: '#ff4444',     text: '😟 Yếu' },
+        { w: '50%',  bg: '#ff8c00',     text: '😐 Trung bình' },
+        { w: '75%',  bg: '#ffd700',     text: '🙂 Khá mạnh' },
+        { w: '90%',  bg: '#00c853',     text: '💪 Mạnh' },
+        { w: '100%', bg: '#00e676',     text: '🔥 Rất mạnh' },
+    ];
+    const lv = pass.length === 0 ? levels[0] : levels[Math.min(score, 5)];
+    bar.style.width = lv.w;
+    bar.style.background = lv.bg;
+    label.innerText = lv.text;
+    label.style.color = lv.bg === 'transparent' ? 'var(--color-text-dim)' : lv.bg;
+}
+
+async function doChangePass() {
+    const oldPass = document.getElementById('cpOldPass').value;
+    const newPass = document.getElementById('cpNewPass').value;
+    const confPass = document.getElementById('cpConfPass').value;
+    const errEl = document.getElementById('cpError');
+
+    if (!oldPass || !newPass || !confPass) { errEl.innerText = '⚠️ Vui lòng điền đầy đủ!'; return; }
+    if (newPass.length < 6) { errEl.innerText = '⚠️ Mật khẩu mới cần ít nhất 6 ký tự!'; return; }
+    if (newPass !== confPass) { errEl.innerText = '❌ Mật khẩu xác nhận không khớp!'; shakeInput('cpConfPass'); return; }
+
+    const oldHash = await hashText(oldPass);
+    if (oldHash !== getCurrentHash()) { errEl.innerText = '❌ Mật khẩu hiện tại không đúng!'; shakeInput('cpOldPass'); return; }
+
+    const newHash = await hashText(newPass);
+    try {
+        localStorage.setItem('pwHash', newHash);
+    } catch(e) {
+        errEl.innerText = '⚠️ Không thể lưu — bộ nhớ đầy!'; return;
+    }
+    closeChangePassModal();
+    showChangePassSuccess();
+}
+
+function shakeInput(id) {
+    const el = document.getElementById(id);
+    el.style.borderColor = '#ff4466';
+    el.style.animation = 'shake 0.4s';
+    setTimeout(() => { el.style.animation = ''; el.style.borderColor = ''; }, 450);
+}
+
+function showChangePassSuccess() {
+    const bar = document.getElementById('cpSuccessBar');
+    bar.style.animation = 'none'; void bar.offsetHeight;
+    bar.style.animation = 'sp-drain 2.5s linear forwards, sp-shimmer 1.2s linear infinite';
+    document.getElementById('changePassSuccess').style.display = 'flex';
+    clearTimeout(window._cpTimer);
+    window._cpTimer = setTimeout(closeChangePassSuccess, 2500);
+}
+function closeChangePassSuccess() {
+    document.getElementById('changePassSuccess').style.display = 'none';
+}
+document.getElementById('changePassSuccess').addEventListener('click', function(e) {
+    if (e.target === this) closeChangePassSuccess();
+});
+document.getElementById('changePassModal').addEventListener('click', function(e) {
+    if (e.target === this) closeChangePassModal();
+});
 </script>
 
 <script>
@@ -790,6 +971,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         body.style.background=bgMap[currentTheme];
         void body.offsetHeight;
         buildThemeDots();
+        document.querySelectorAll('input').forEach(inp=>{inp.style.color='';});
     }
 
     function toggleSettingsPanel(){
@@ -869,7 +1051,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         else { mainImg.src=''; mainImg.style.display='none'; document.getElementById('mainMeterUploadBtn').innerHTML='📷 Up Ảnh'; }
         applyLockUI(data?.locked||false);
         updateTotals();
-        applyAuthUI();
+        applyAuthUI(); // always apply auth state after init
     }
 
     function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
@@ -1011,6 +1193,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         Array.from(colgroup.children).forEach((col,i)=>{col._origWidth=col.style.width;col.style.width=captureWidths[i]+'px';});
         area.classList.add('is-capturing'); ctrl.classList.add('hide-for-capture');
         if(hdr) hdr.classList.add('hide-for-capture');
+        // also hide view-only banner during capture
         const vob = document.getElementById('viewOnlyBanner');
         if(vob) vob.classList.add('hide-for-capture');
         expRow.style.display='table-row'; sw.style.overflow='visible';
@@ -1067,17 +1250,17 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         db[m]={rows,tongDH:document.getElementById('tongDHThang').value,footerMonthLabel:document.getElementById('footerMonthLabel').value,
             mainMeterImg:document.getElementById('mainMeterImg').src,locked:db[m]?.locked||false};
         try{ localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); if(!silent) showSavePopup(); }
-        catch(e){ showToast('⚠️ Bộ nhớ đầy!','error'); }
+        catch(e){ showToast('⚠️ Bộ nhớ đầy! Hãy xóa bớt ảnh hoặc backup rồi xóa dữ liệu cũ.','error'); }
     }
 
     function toggleLock(){
         if(!isAuthenticated){showToast('🔒 Đăng nhập để thực hiện!','warn');return;}
         const m=monthInput.value;
         if(!db[m]) saveToLocal(true);
-        if(!db[m]){showToast('⚠️ Không thể khóa!','warn');return;}
+        if(!db[m]){showToast('⚠️ Không thể khóa — hãy lưu dữ liệu trước!','warn');return;}
         db[m].locked=!db[m].locked;
         try{localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));}
-        catch(e){showToast('⚠️ Lỗi lưu trữ!','error');}
+        catch(e){showToast('⚠️ Không thể lưu trạng thái khóa — bộ nhớ đầy!','error');}
         init();
     }
 
@@ -1139,10 +1322,12 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         r.onload=ev=>{
             try{
                 db=JSON.parse(ev.target.result);
-                localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));
+                try{localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));}
+                catch(storageErr){showToast('⚠️ Dữ liệu nhập thành công nhưng không lưu được — bộ nhớ đầy!','warn');init();return;}
                 init(); showToast('✅ Nhập dữ liệu thành công!');
-            }catch(err){showToast('❌ File không hợp lệ!','error');}
+            }catch(err){showToast('❌ File không hợp lệ hoặc bị lỗi!','error');}
         };
+        r.onerror=()=>showToast('❌ Không đọc được file!','error');
         r.readAsText(file); e.target.value='';
     }
 
@@ -1156,8 +1341,8 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         <div style="font-size:18px;font-weight:800;color:#ff6b6b;margin-bottom:8px;">Xóa ảnh đồng hồ?</div>
         <div style="font-size:13px;color:rgba(255,200,200,0.7);margin-bottom:24px;">Ảnh sẽ bị xóa và không thể khôi phục.</div>
         <div style="display:flex;gap:12px;justify-content:center;">
-            <button onclick="imgDeleteYes()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#a0000a,#dc3545);color:white;font-size:14px;font-weight:700;cursor:pointer;">🗑 Xóa</button>
-            <button onclick="imgDeleteNo()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#2d3748,#4a5568);color:white;font-size:14px;font-weight:700;cursor:pointer;">❌ Hủy</button>
+            <button onclick="imgDeleteYes()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#a0000a,#dc3545);color:white;font-size:14px;font-weight:700;cursor:pointer;" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter=''">🗑 Xóa</button>
+            <button onclick="imgDeleteNo()" style="padding:10px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#2d3748,#4a5568);color:white;font-size:14px;font-weight:700;cursor:pointer;" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter=''">❌ Hủy</button>
         </div>
     </div>
 </div>
@@ -1171,8 +1356,8 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
             <img id="imgConfirmPreview" src="" style="max-width:100%;max-height:320px;object-fit:contain;display:block;">
         </div>
         <div style="display:flex;gap:12px;justify-content:center;">
-            <button onclick="imgConfirmYes()" style="padding:11px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,#0a6a2a,#28a745);color:white;font-size:14px;font-weight:800;cursor:pointer;">✅ Dùng ảnh này</button>
-            <button onclick="imgConfirmNo()" style="padding:11px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,#4a5568,#6c757d);color:white;font-size:14px;font-weight:800;cursor:pointer;">❌ Hủy</button>
+            <button onclick="imgConfirmYes()" style="padding:11px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,#0a6a2a,#28a745);color:white;font-size:14px;font-weight:800;cursor:pointer;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter=''">✅ Dùng ảnh này</button>
+            <button onclick="imgConfirmNo()" style="padding:11px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,#4a5568,#6c757d);color:white;font-size:14px;font-weight:800;cursor:pointer;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter=''">❌ Hủy</button>
         </div>
     </div>
 </div>
