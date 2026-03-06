@@ -360,7 +360,7 @@
                 </td></tr>
                 <tr class="loss-summary">
                     <td colspan="3" id="f_col1">⚡ Tổng ĐH các hộ tiêu thụ trong tháng: <span class="loss-value" id="lblTotalKwh">0</span> kWh</td>
-                    <td colspan="3" id="f_col2">🔌 Điện tổng tiêu thụ thángv trong tháng: <span class="loss-value" id="lblMainConsumption">0</span> kWh</td>
+                    <td colspan="3" id="f_col2">🔌 Điện tổng tiêu thụ trong tháng: <span class="loss-value" id="lblMainConsumption">0</span> kWh</td>
                     <td colspan="4" id="f_col3">⚠️ Số kí thất thoát: <span class="loss-value" id="lblLossKwh">0</span> kWh</td>
                 </tr>
                 <tr class="loss-summary">
@@ -380,7 +380,7 @@
         <span class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện (2.400đ).</span>
         <span class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</span>
         <span class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện các hộ dùng trong tháng để ra số kí thất thoát.</span>
-        <span class="rainbow-text">• Tiền điện thất thoát (từng hộ): Chia theo tỉ lệ số kí tiêu thụ.</span>
+        <span class="rainbow-text">• Tiền điện thất thoát (từng hộ): Chia theo tỉ lệ số kí tiêu thụ(hộ dùng ít chịu ít,hộ dùng nhiều chịu nhiều).</span>
         <span class="rainbow-text">• Công thức thất thoát: Số kí thất thoát × 2.400đ.</span>
     </div>
 </div>
@@ -676,9 +676,6 @@ async function exportToPNG(){
     const cw=[44,210,115,115,115,120,125,155,151];
     Array.from(colgroup.children).forEach((col,i)=>{col._ow=col.style.width;col.style.width=cw[i]+'px';});
     area.classList.add('is-capturing');ctrl.classList.add('hide-for-capture');if(hdr)hdr.classList.add('hide-for-capture');
-    // Force border-collapse khi xuất ảnh để tránh viền đôi
-    const tbl=document.getElementById('mainTable');
-    tbl.style.borderCollapse='collapse';tbl.style.borderSpacing='0';
     expRow.style.display='table-row';sw.style.overflow='visible';area.style.overflow='visible';area.style.borderRadius='0';
     const wrapper=document.getElementById('rainbowWrapper'),woo=wrapper.style.overflow;wrapper.style.overflow='visible';wrapper.classList.add('is-capturing');
     document.getElementById('titleMonth').colSpan=9;document.getElementById('footerMain').colSpan=9;
@@ -701,8 +698,6 @@ async function exportToPNG(){
     finally{
         area.querySelectorAll('img').forEach((img,i)=>{if(origSrc[i])img.src=origSrc[i];});
         area.classList.remove('is-capturing');ctrl.classList.remove('hide-for-capture');if(hdr)hdr.classList.remove('hide-for-capture');
-        // Khôi phục border-separate sau capture
-        tbl.style.borderCollapse='separate';tbl.style.borderSpacing='0';
         expRow.style.display='none';sw.style.overflow='auto';area.style.overflow='';area.style.borderRadius='';
         wrapper.style.overflow=woo;wrapper.classList.remove('is-capturing');
         Array.from(colgroup.children).forEach(col=>{col.style.width=col._ow||'';});
