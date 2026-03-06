@@ -71,7 +71,6 @@
         #tableScrollWrapper::-webkit-scrollbar{height:5px}
         #tableScrollWrapper::-webkit-scrollbar-track{background:var(--bg-glass);border-radius:3px}
         #tableScrollWrapper::-webkit-scrollbar-thumb{background:var(--border-accent);border-radius:3px}
-        /* ======= VIỀN BẢNG 7 MÀU NHẤP NHÁY ======= */
         @keyframes rb7{
             0%  {border-color:#ff0000}
             14% {border-color:#ff7f00}
@@ -118,7 +117,6 @@
             animation:rb7 2s linear infinite
         }
         tfoot tr td:last-child{border-right:none}
-        /* ======= END VIỀN 7 MÀU ======= */
 
         .col-stt{width:40px;cursor:pointer;text-align:center;font-weight:800;color:var(--accent)!important}
         .col-name{width:171px;text-align:center!important}
@@ -126,7 +124,6 @@
         .col-kwh{background:rgba(0,200,100,.05)!important}
         .col-final{font-weight:800;color:#cc0000!important;font-size:13px;background:rgba(255,60,80,.05)!important}
 
-        /* ======= FIX 2: ẨN input[type=file] HOÀN TOÀN trên iOS/Android ======= */
         input{width:100%;border:none;text-align:center;font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none;background:transparent;color:var(--color-text);padding:3px 0;transition:color .3s,border-color .2s}
         input[type="file"]{
             display:none!important;
@@ -140,13 +137,11 @@
         input:disabled{color:var(--color-text);opacity:.85;-webkit-text-fill-color:var(--color-text)}
         .col-name input{text-align:center;font-weight:600}
 
-        /* ======= FIX 3: ẨN ẢNH VỠ khi src rỗng ======= */
         .img-preview{display:none;cursor:pointer;transition:border-color .2s,transform .2s}
         .img-preview[src=""]{display:none!important}
         .img-preview:not([src]){display:none!important}
         .img-preview.has-img{width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);display:block!important}
         .img-preview.has-img:hover{border-color:var(--accent);transform:scale(1.1)}
-        /* ======= END FIX 2&3 ======= */
 
         .img-container{display:flex;flex-direction:column;align-items:center;gap:3px}
         .upload-btn{font-size:10px;color:var(--accent);cursor:pointer;font-weight:700;background:var(--bg-glass);padding:2px 7px;border-radius:5px;border:1px solid var(--border-color);transition:background .2s;white-space:nowrap}
@@ -530,7 +525,6 @@ function init(){
     else addRow();
     document.getElementById('tongDHThang').value=data?.tongDH||0;
     document.getElementById('footerMonthLabel').value=data?.footerMonthLabel||parts[1];
-    // Xóa ảnh tổng cũ
     const oldMi=document.getElementById('mainMeterImg');if(oldMi)oldMi.remove();
     document.getElementById('deleteMainImgBtn').style.display='none';
     if(data?.mainMeterImg&&data.mainMeterImg.includes('data:image')){
@@ -551,7 +545,6 @@ function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
     const hasImg=data.img&&data.img.includes('data:image');
     const row=document.getElementById('tableBody').insertRow();
     row.className='data-row';
-    // Build img element only if has valid image
     const imgHTML=hasImg
         ? `<img src="${data.img}" class="img-preview has-img" onclick="openImg(this.src)" onerror="this.classList.remove('has-img');this.style.display='none';this.nextElementSibling.nextElementSibling.style.display='none'">`
         : '';
@@ -593,7 +586,6 @@ function previewImg(input,tid){
             c.width=mw;c.height=img.height*(mw/img.width);ctx.drawImage(img,0,0,c.width,c.height);
             const b64=c.toDataURL('image/jpeg',.7);
             if(tid){
-                // Ảnh tổng
                 let t=document.getElementById(tid);
                 if(!t){
                     t=document.createElement('img');t.id=tid;t.className='has-img';
@@ -606,7 +598,6 @@ function previewImg(input,tid){
                 t.src=b64;t.style.display='block';
                 const d=document.getElementById('deleteMainImgBtn');if(d)d.style.display='inline-block';
             } else {
-                // Ảnh hộ
                 const container=input.parentElement;
                 let el=container.querySelector('.img-preview');
                 if(!el){
@@ -621,7 +612,6 @@ function previewImg(input,tid){
                 el.src=b64;el.style.display='block';
                 const d=container.querySelector('.delete-img-btn');if(d)d.style.display='inline-block';
             }
-            // Reset input
             input.value='';
         };img.src=e.target.result;
     };reader.readAsDataURL(input.files[0]);
@@ -674,6 +664,11 @@ async function exportToPNG(){
     const cw=[44,210,115,115,115,120,125,155,151];
     Array.from(colgroup.children).forEach((col,i)=>{col._ow=col.style.width;col.style.width=cw[i]+'px';});
     area.classList.add('is-capturing');ctrl.classList.add('hide-for-capture');if(hdr)hdr.classList.add('hide-for-capture');
+
+    // ẨN phần ảnh tổng ĐH khi xuất ảnh
+    const mainImgSection=document.querySelector('.footer-kwh-row > div');
+    if(mainImgSection)mainImgSection.classList.add('hide-for-capture');
+
     expRow.style.display='table-row';sw.style.overflow='visible';area.style.overflow='visible';area.style.borderRadius='0';
     const wrapper=document.getElementById('rainbowWrapper'),woo=wrapper.style.overflow;wrapper.style.overflow='visible';wrapper.classList.add('is-capturing');
     document.getElementById('titleMonth').colSpan=9;document.getElementById('footerMain').colSpan=9;
@@ -696,6 +691,10 @@ async function exportToPNG(){
     finally{
         area.querySelectorAll('img').forEach((img,i)=>{if(origSrc[i])img.src=origSrc[i];});
         area.classList.remove('is-capturing');ctrl.classList.remove('hide-for-capture');if(hdr)hdr.classList.remove('hide-for-capture');
+
+        // HIỆN LẠI phần ảnh tổng ĐH sau khi xuất xong
+        if(mainImgSection)mainImgSection.classList.remove('hide-for-capture');
+
         expRow.style.display='none';sw.style.overflow='auto';area.style.overflow='';area.style.borderRadius='';
         wrapper.style.overflow=woo;wrapper.classList.remove('is-capturing');
         Array.from(colgroup.children).forEach(col=>{col.style.width=col._ow||'';});
