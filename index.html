@@ -157,9 +157,7 @@
         .loss-summary td{background:var(--bg-loss)!important;color:var(--color-loss-text)!important;font-size:13px;font-weight:600}
         .loss-value{color:var(--accent);font-weight:800;font-size:14px}
         #lblLossKwh{color:#cc0000!important}
-        .loss-share{color:#cc0000!important;font-weight:700!important}
-        .grand-total-row td{text-align:center;padding:22px!important;background:var(--bg-glass)!important}
-        .grand-total-label{font-size:13px;font-weight:700;color:var(--color-text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+        .loss-share{font-weight:700!important}
         .final-total{color:#cc0000!important;font-weight:800!important}
         #lblGrandTotal{font-family:'Orbitron',monospace;color:#cc0000!important;font-weight:900;font-size:clamp(26px,4vw,38px);text-shadow:0 0 12px rgba(200,0,0,.5),0 0 30px rgba(200,0,0,.3);display:block;animation:pulseGrand 2.5s ease-in-out infinite}
         @keyframes pulseGrand{0%,100%{text-shadow:0 0 12px rgba(200,0,0,.5),0 0 30px rgba(200,0,0,.3)}50%{text-shadow:0 0 28px rgba(220,0,0,.8),0 0 60px rgba(180,0,0,.5)}}
@@ -225,7 +223,7 @@
         .is-capturing .loss-summary td{background:#fffbe6!important;color:#7a5900!important;border:1.5px solid #e0c96e!important}
         .is-capturing .loss-value{color:#0054a5!important;font-weight:800!important}
         .is-capturing #lblLossKwh{color:#cc0000!important}
-        .is-capturing .loss-share{color:#cc0000!important;font-weight:700!important}
+        .is-capturing .loss-share{font-weight:700!important}
         .is-capturing #lblGrandTotal{color:#cc0000!important;font-family:'Times New Roman',serif!important;font-size:28px!important;animation:none!important;text-shadow:none!important}
         .is-capturing .grand-total-label{color:#000!important;font-family:'Times New Roman',serif!important;font-size:16px!important}
         .is-capturing .grand-total-row td{background:#fff8f8!important;border:1.5px solid #aac4e0!important}
@@ -359,15 +357,15 @@
                     </div>
                 </td></tr>
                 <tr class="loss-summary">
-                    <td colspan="3" id="f_col1">⚡ Tổng ĐH các hộ tiêu thụ trong tháng: <span class="loss-value" id="lblTotalKwh">0</span> kWh</td>
+                    <td colspan="4" id="f_col1">⚡ Tổng ĐH các hộ tiêu thụ trong tháng: <span class="loss-value" id="lblTotalKwh">0</span> kWh</td>
                     <td colspan="3" id="f_col2">🔌 Điện tổng tiêu thụ trong tháng: <span class="loss-value" id="lblMainConsumption">0</span> kWh</td>
-                    <td colspan="4" id="f_col3">⚠️ Số kí thất thoát: <span class="loss-value" id="lblLossKwh">0</span> kWh</td>
+                    <td colspan="3" id="f_col3">⚠️ Số kí thất thoát: <span class="loss-value" id="lblLossKwh">0</span> kWh</td>
                 </tr>
                 <tr class="loss-summary">
                     <td colspan="5" id="f_col4">💰 Tổng tiền điện: <span class="loss-value" id="lblTotalBaseMoney">0</span> đ</td>
                     <td colspan="5" id="f_col5">💸 Tiền điện thất thoát (×2.400đ): <span class="loss-value" id="lblLossMoney">0</span> đ</td>
                 </tr>
-                <tr class="grand-total-row"><td colspan="10" id="f_col6">
+                <tr class="grand-total-row"><td colspan="10" id="f_col6" style="text-align:center!important;padding:22px!important">
                     <div class="grand-total-label">🏆 TỔNG TIỀN PHẢI NỘP TRONG THÁNG</div>
                     <span id="lblGrandTotal">0đ</span>
                 </td></tr>
@@ -704,7 +702,7 @@ async function exportToPNG(){
         const refCol=colgroup.children[2];colgroup.insertBefore(imgCol,refCol||null);
         imgCellData.forEach(({cell,parent,nextSibling})=>{parent.insertBefore(cell,nextSibling);});
         document.getElementById('titleMonth').colSpan=10;document.getElementById('footerMain').colSpan=10;
-        document.getElementById('f_col1').colSpan=3;document.getElementById('f_col2').colSpan=3;document.getElementById('f_col3').colSpan=4;
+        document.getElementById('f_col1').colSpan=4;document.getElementById('f_col2').colSpan=3;document.getElementById('f_col3').colSpan=3;
         document.getElementById('f_col4').colSpan=5;document.getElementById('f_col5').colSpan=5;document.getElementById('f_col6').colSpan=10;
     }
 }
