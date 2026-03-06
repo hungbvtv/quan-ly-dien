@@ -1060,19 +1060,31 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         if(!e.target.closest('.img-container')) closeAllImgMenus();
     });
 
-    // Đảm bảo settingsPanel là con trực tiếp của body
+    // Giữ bánh răng cố định tuyệt đối trên mobile
     (function(){
         const p = document.getElementById('settingsPanel');
         if(p && p.parentElement !== document.body) document.body.appendChild(p);
-        // Dùng scroll listener để giữ cố định trên mobile khi fixed bị lỗi
-        function pinPanel() {
-            p.style.position = 'fixed';
-            p.style.bottom = '20px';
-            p.style.right = '16px';
+        p.style.position = 'fixed';
+        p.style.bottom = '20px';
+        p.style.right = '16px';
+        p.style.zIndex = '99998';
+
+        // Dùng requestAnimationFrame để luôn đúng vị trí
+        function pinLoop() {
+            const vv = window.visualViewport;
+            if(vv) {
+                p.style.position = 'absolute';
+                p.style.top = (vv.offsetTop + vv.height - p.offsetHeight - 20) + 'px';
+                p.style.left = (vv.offsetLeft + vv.width - p.offsetWidth - 16) + 'px';
+                p.style.bottom = 'auto';
+                p.style.right = 'auto';
+            }
+            requestAnimationFrame(pinLoop);
         }
-        pinPanel();
-        window.addEventListener('scroll', pinPanel, {passive:true});
-        window.addEventListener('resize', pinPanel, {passive:true});
+
+        if(window.visualViewport && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            pinLoop();
+        }
     })();
 
     function toggleRainbow(){
