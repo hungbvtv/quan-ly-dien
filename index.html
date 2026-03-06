@@ -32,17 +32,17 @@
         body.theme-14{--bg-page:#1a0a1e;--bg-card:rgba(30,10,38,.97);--bg-glass:rgba(255,100,50,.04);--bg-glass-hover:rgba(255,100,50,.08);--bg-header:linear-gradient(135deg,rgba(180,40,20,.22),rgba(255,120,60,.08));--bg-controls:rgba(22,8,28,.9);--bg-table-head:rgba(160,40,20,.14);--bg-table-row:rgba(255,80,30,.025);--bg-table-row-alt:rgba(180,30,10,.055);--bg-loss:rgba(255,120,60,.07);--accent:#ff6e3c;--accent2:#ff9f6e;--accent-glow:rgba(255,110,60,.35);--color-title:#ff7848;--color-final:#ffb07a;--color-grand:#ff5722;--color-text:#ffe8d8;--color-text-dim:rgba(255,232,216,.5);--color-loss-text:#ffb07a;--border-color:rgba(255,80,30,.18);--border-accent:rgba(255,110,60,.65);--gradient-border:linear-gradient(135deg,#ff5722,#ff9f6e,#ffcc80,#ff5722)}
 
         body{font-family:'Be Vietnam Pro','Times New Roman',sans-serif;background:var(--bg-page);min-height:100vh;display:flex;justify-content:center;padding:20px 10px 40px;overflow-x:hidden;transition:background .5s;position:relative}
-        .app-wrapper{position:relative;z-index:1;max-width:1280px;width:100%}
+        .app-wrapper{position:relative;z-index:1;max-width:1280px;width:100%;overflow-x:hidden}
 
         @property --rb-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
-        .rainbow-wrapper{position:relative;border-radius:20px;overflow:hidden;padding:4px;background:transparent;transition:padding .3s}
+        .rainbow-wrapper{position:relative;border-radius:20px;overflow-x:clip;overflow-y:clip;padding:4px;background:transparent;transition:padding .3s}
         .rainbow-wrapper .rb-spin{position:absolute;inset:-150%;width:400%;height:400%;background:conic-gradient(#ff0000 0deg,#ff7f00 51deg,#ffff00 102deg,#00cc00 153deg,#0000ff 204deg,#8b00ff 255deg,#ff00cc 306deg,#ff0000 360deg);animation:rbRotate 2s linear infinite;pointer-events:none;z-index:0}
         .rainbow-wrapper .rb-inner{position:absolute;inset:4px;border-radius:17px;background:var(--bg-page,#060a18);z-index:0;transition:background .5s}
         .rainbow-wrapper .main-card{position:relative;z-index:1}
         @keyframes rbRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         .rainbow-wrapper.rainbow-off .rb-spin{animation:none;background:rgba(100,100,100,.2)}
         .rainbow-wrapper.rainbow-off .rb-inner{inset:2px;border-radius:19px}
-        .main-card{background:var(--bg-card);border-radius:18px;position:relative;z-index:1;overflow:hidden;transition:background .4s}
+        .main-card{background:var(--bg-card);border-radius:18px;position:relative;z-index:1;overflow-x:clip;overflow-y:visible;transition:background .4s}
 
         .header-banner{background:var(--bg-header);border-bottom:1px solid var(--border-color);padding:24px 28px 20px;text-align:center;position:relative}
         .header-banner::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:var(--gradient-border);opacity:.6}
@@ -67,47 +67,58 @@
         @keyframes btnRainbow{to{--btn-angle:360deg}}
         .btn:active{transform:scale(.95)}.btn:hover{filter:brightness(1.15);box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
-        #tableScrollWrapper{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:16px 18px}
+        #tableScrollWrapper{width:100%;overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;padding:16px 18px;box-sizing:border-box}
         #tableScrollWrapper::-webkit-scrollbar{height:5px}
         #tableScrollWrapper::-webkit-scrollbar-track{background:var(--bg-glass);border-radius:3px}
         #tableScrollWrapper::-webkit-scrollbar-thumb{background:var(--border-accent);border-radius:3px}
-        table{width:100%;border-collapse:collapse;min-width:1159px;table-layout:fixed}
-
-        /* ======= FIX 1: VIỀN BẢNG - dùng CSS variable thay animation ======= */
+        /* ======= VIỀN BẢNG 7 MÀU NHẤP NHÁY ======= */
+        @keyframes rb7{
+            0%  {border-color:#ff0000}
+            14% {border-color:#ff7f00}
+            28% {border-color:#ffff00}
+            42% {border-color:#00cc00}
+            57% {border-color:#00aaff}
+            71% {border-color:#4b0082}
+            85% {border-color:#ee00ff}
+            100%{border-color:#ff0000}
+        }
+        table{width:100%;border-collapse:separate;border-spacing:0;min-width:1159px;table-layout:fixed;border:1px solid;animation:rb7 2s linear infinite}
         thead tr th{
             background:var(--bg-table-head)!important;
             color:var(--color-text);
             font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
             padding:11px 7px;
-            border-bottom:2px solid var(--border-accent)!important;
-            border-right:1px solid var(--border-accent)!important;
+            border-bottom:2px solid;
+            border-right:1px solid;
             white-space:normal;word-break:break-word;text-align:center;
-            transition:background .4s,color .4s,border-color .4s
+            animation:rb7 2s linear infinite
         }
-        thead tr th:last-child{border-right:none!important}
-        .title-header{font-family:'Orbitron',monospace!important;font-size:18px!important;font-weight:900!important;color:var(--color-title)!important;text-align:center!important;padding:18px!important;background:var(--bg-header)!important;border-bottom:2px solid var(--border-accent)!important;text-shadow:0 0 16px var(--accent-glow)!important}
+        thead tr th:last-child{border-right:none}
+        .title-header{font-family:'Orbitron',monospace!important;font-size:18px!important;font-weight:900!important;color:var(--color-title)!important;text-align:center!important;padding:18px!important;background:var(--bg-header)!important;border-right:none!important;text-shadow:0 0 16px var(--accent-glow)!important;animation:rb7 2s linear infinite!important}
         .data-row td{
             padding:7px 5px;
-            border-bottom:1px solid var(--border-accent)!important;
-            border-right:1px solid var(--border-accent)!important;
+            border-bottom:1px solid;
+            border-right:1px solid;
             font-size:13px;color:var(--color-text);
             background:var(--bg-table-row)!important;
-            transition:background .2s,color .4s,border-color .4s;
-            vertical-align:middle
+            transition:background .2s,color .4s;
+            vertical-align:middle;
+            animation:rb7 2s linear infinite
         }
         .data-row:nth-child(even) td{background:var(--bg-table-row-alt)!important}
         .data-row:hover td{background:var(--bg-glass-hover)!important}
-        .data-row td:last-child{border-right:none!important}
+        .data-row td:last-child{border-right:none}
         tfoot tr td{
             color:var(--color-text);
-            border-top:1px solid var(--border-accent)!important;
-            border-bottom:1px solid var(--border-accent)!important;
-            border-right:1px solid var(--border-accent)!important;
+            border-top:1px solid;
+            border-bottom:1px solid;
+            border-right:1px solid;
             padding:11px 13px;
-            transition:color .4s,border-color .4s
+            transition:color .4s;
+            animation:rb7 2s linear infinite
         }
-        tfoot tr td:last-child{border-right:none!important}
-        /* ======= END FIX 1 ======= */
+        tfoot tr td:last-child{border-right:none}
+        /* ======= END VIỀN 7 MÀU ======= */
 
         .col-stt{width:40px;cursor:pointer;text-align:center;font-weight:800;color:var(--accent)!important}
         .col-name{width:171px;text-align:center!important}
@@ -201,8 +212,10 @@
         .is-capturing tr.export-title-row{display:table-row!important}
         .is-capturing #titleMonth{display:table-cell!important;background:#dbeafe!important;color:#0054a5!important;font-family:'Times New Roman',serif!important}
         .is-capturing .title-header{font-family:'Times New Roman',serif!important;font-size:20px!important;font-weight:bold!important;color:#0054a5!important;background:#dbeafe!important;text-shadow:none!important;animation:none!important}
+        .is-capturing table{border-collapse:collapse!important;border-spacing:0!important;border:none!important;animation:none!important}
         .is-capturing thead tr th{background:#e8f4fd!important;color:#000!important;border:1.5px solid #aac4e0!important;animation:none!important;padding:12px 7px!important;line-height:1.5!important}
-        .is-capturing .col-final{background:#fff0f0!important;border:1.5px solid #aac4e0!important}
+        .is-capturing .col-final{background:#fff0f0!important}
+        .is-capturing tfoot tr td{animation:none!important;border:1.5px solid #aac4e0!important}
         .is-capturing input{color:#000!important;-webkit-text-fill-color:#000!important;line-height:1.6!important;padding:4px 0!important}
         .is-capturing .data-row td{background:white!important;color:#000!important;border:1.5px solid #aac4e0!important;animation:none!important;padding:12px 5px!important;line-height:1.5!important}
         .is-capturing .data-row td.col-kwh{background:#f0fff4!important}
@@ -663,6 +676,9 @@ async function exportToPNG(){
     const cw=[44,210,115,115,115,120,125,155,151];
     Array.from(colgroup.children).forEach((col,i)=>{col._ow=col.style.width;col.style.width=cw[i]+'px';});
     area.classList.add('is-capturing');ctrl.classList.add('hide-for-capture');if(hdr)hdr.classList.add('hide-for-capture');
+    // Force border-collapse khi xuất ảnh để tránh viền đôi
+    const tbl=document.getElementById('mainTable');
+    tbl.style.borderCollapse='collapse';tbl.style.borderSpacing='0';
     expRow.style.display='table-row';sw.style.overflow='visible';area.style.overflow='visible';area.style.borderRadius='0';
     const wrapper=document.getElementById('rainbowWrapper'),woo=wrapper.style.overflow;wrapper.style.overflow='visible';wrapper.classList.add('is-capturing');
     document.getElementById('titleMonth').colSpan=9;document.getElementById('footerMain').colSpan=9;
@@ -685,6 +701,8 @@ async function exportToPNG(){
     finally{
         area.querySelectorAll('img').forEach((img,i)=>{if(origSrc[i])img.src=origSrc[i];});
         area.classList.remove('is-capturing');ctrl.classList.remove('hide-for-capture');if(hdr)hdr.classList.remove('hide-for-capture');
+        // Khôi phục border-separate sau capture
+        tbl.style.borderCollapse='separate';tbl.style.borderSpacing='0';
         expRow.style.display='none';sw.style.overflow='auto';area.style.overflow='';area.style.borderRadius='';
         wrapper.style.overflow=woo;wrapper.classList.remove('is-capturing');
         Array.from(colgroup.children).forEach(col=>{col.style.width=col._ow||'';});
