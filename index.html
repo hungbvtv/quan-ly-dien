@@ -256,7 +256,7 @@
         .rainbow-text { display:block; font-weight:600; font-size:13px; background:linear-gradient(to right, #ff6b6b, #ffd700, #00e676, #00b4ff, #c084fc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-size:300% 100%; animation:moveGradient 4s linear infinite; }
         @keyframes moveGradient{0%{background-position:0%}100%{background-position:300%}}
 
-        #imgModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.92); z-index:10000; justify-content:center; align-items:center; backdrop-filter:blur(8px); }
+        #imgModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.92); z-index:10000; justify-content:center; align-items:center; #imgModal-fixed }
         #imgModal img { max-width:92%; max-height:92%; border-radius:12px; border:2px solid var(--border-accent); }
 
         #settingsPanel { position:fixed !important; bottom:20px !important; right:16px !important; z-index:10001; display:flex; flex-direction:column; align-items:flex-end; gap:10px; pointer-events:auto; }
@@ -321,7 +321,7 @@
         /* ====== LOGIN MODAL ====== */
         #loginModal {
             display: none; position: fixed; inset: 0; z-index: 40000;
-            background: rgba(0,0,0,0.82); backdrop-filter: blur(14px);
+            background: rgba(0,0,0,0.82);
             justify-content: center; align-items: center;
         }
         #loginModal.show { display: flex; }
@@ -385,7 +385,7 @@
 </div>
 
 <!-- ====== LOGIN SUCCESS POPUP ====== -->
-<div id="loginSuccessPopup" style="display:none;position:fixed;inset:0;z-index:40003;background:rgba(0,0,0,0.75);backdrop-filter:blur(16px);justify-content:center;align-items:center;">
+<div id="loginSuccessPopup" style="display:none;position:fixed;inset:0;z-index:40003;background:rgba(0,0,0,0.75);justify-content:center;align-items:center;">
     <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:26px;padding:40px 36px 32px;text-align:center;min-width:300px;max-width:360px;width:90%;box-shadow:0 0 80px var(--accent-glow),0 24px 60px rgba(0,0,0,.9);animation:sp-pop .4s cubic-bezier(.34,1.56,.64,1);font-family:'Be Vietnam Pro',sans-serif;position:relative;overflow:hidden;">
         <!-- Glow bg -->
         <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 68%);pointer-events:none;opacity:.5;"></div>
@@ -423,7 +423,7 @@
             onmouseup="this.style.transform='scale(1.04)'">Bắt đầu thôi! 🚀</button>
     </div>
 </div>
-<div id="changePassModal" style="display:none;position:fixed;inset:0;z-index:40001;background:rgba(0,0,0,0.85);backdrop-filter:blur(16px);justify-content:center;align-items:center;">
+<div id="changePassModal" style="display:none;position:fixed;inset:0;z-index:40001;background:rgba(0,0,0,0.75);justify-content:center;align-items:center;">
     <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:24px;padding:36px 32px 28px;text-align:center;min-width:320px;max-width:380px;width:90%;box-shadow:0 0 70px var(--accent-glow),0 24px 60px rgba(0,0,0,.9);animation:popIn 0.3s cubic-bezier(.34,1.56,.64,1);font-family:'Be Vietnam Pro',sans-serif;">
         <span style="font-size:44px;display:block;margin-bottom:10px;animation:floatIcon 3s ease-in-out infinite;">🔑</span>
         <div style="font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--color-title);margin-bottom:5px;text-shadow:0 0 14px var(--accent-glow);">ĐỔI MẬT KHẨU</div>
@@ -471,7 +471,7 @@
 </div>
 
 <!-- ====== CHANGE PASSWORD SUCCESS POPUP ====== -->
-<div id="changePassSuccess" style="display:none;position:fixed;inset:0;z-index:40002;background:rgba(0,0,0,0.8);backdrop-filter:blur(14px);justify-content:center;align-items:center;">
+<div id="changePassSuccess" style="display:none;position:fixed;inset:0;z-index:40002;background:rgba(0,0,0,0.75);justify-content:center;align-items:center;">
     <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:24px;padding:40px 36px;text-align:center;min-width:300px;max-width:360px;width:90%;box-shadow:0 0 80px var(--accent-glow),0 24px 60px rgba(0,0,0,.9);animation:sp-pop .38s cubic-bezier(.34,1.56,.64,1);font-family:'Be Vietnam Pro',sans-serif;position:relative;overflow:hidden;">
         <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;border-radius:50%;border:1px solid var(--border-accent);opacity:.12;animation:sp-ring 2s ease-out infinite;pointer-events:none;"></div>
         <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00c853,#69f0ae);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 18px;box-shadow:0 0 32px rgba(0,200,80,0.5);animation:sp-icon .42s cubic-bezier(.34,1.56,.64,1) .06s both;position:relative;z-index:1;">🔐</div>
@@ -518,7 +518,7 @@
 
 <div id="imgModal" onclick="this.style.display='none'"><img id="modalImg" src=""></div>
 
-<div id="deleteModal" style="display:none;position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);justify-content:center;align-items:center;">
+<div id="deleteModal" style="display:none;position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.75);justify-content:center;align-items:center;">
     <div style="background:linear-gradient(135deg,#1a0a0a,#2d0f0f);border:2px solid rgba(220,53,69,0.6);border-radius:20px;padding:32px 36px;text-align:center;min-width:300px;box-shadow:0 0 40px rgba(220,53,69,0.3);">
         <div style="font-size:48px;margin-bottom:12px;">🗑️</div>
         <div style="font-size:18px;font-weight:800;color:#ff6b6b;margin-bottom:8px;">Xóa hộ này?</div>
@@ -655,7 +655,7 @@
 </div>
 
 <!-- SAVE POPUP -->
-<div id="savePopup" style="display:none;position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,0.7);backdrop-filter:blur(14px);justify-content:center;align-items:center;">
+<div id="savePopup" style="display:none;position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,0.75);justify-content:center;align-items:center;">
   <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:26px;padding:38px 40px 32px;text-align:center;min-width:320px;max-width:390px;width:90%;box-shadow:0 0 80px var(--accent-glow),0 24px 60px rgba(0,0,0,.85);animation:sp-pop .38s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;">
     <div style="position:absolute;top:-90px;left:50%;transform:translateX(-50%);width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow),transparent 68%);pointer-events:none;opacity:.4;"></div>
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:340px;border-radius:50%;border:1px solid var(--border-accent);opacity:.15;animation:sp-ring 2s ease-out infinite;pointer-events:none;"></div>
@@ -1419,7 +1419,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
 </script>
 
 <!-- IMAGE DELETE CONFIRM -->
-<div id="imgDeletePopup" style="display:none;position:fixed;inset:0;z-index:25001;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);justify-content:center;align-items:center;">
+<div id="imgDeletePopup" style="display:none;position:fixed;inset:0;z-index:25001;background:rgba(0,0,0,0.75);justify-content:center;align-items:center;">
     <div style="background:var(--bg-card);border:2px solid rgba(220,53,69,0.6);border-radius:22px;padding:32px 36px;text-align:center;min-width:300px;box-shadow:0 0 50px rgba(220,53,69,0.3);animation:sp-pop .3s cubic-bezier(.34,1.56,.64,1);">
         <div style="font-size:48px;margin-bottom:12px;">🗑️</div>
         <div style="font-size:18px;font-weight:800;color:#ff6b6b;margin-bottom:8px;">Xóa ảnh đồng hồ?</div>
@@ -1432,7 +1432,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
 </div>
 
 <!-- IMAGE CONFIRM -->
-<div id="imgConfirmPopup" style="display:none;position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);justify-content:center;align-items:center;">
+<div id="imgConfirmPopup" style="display:none;position:fixed;inset:0;z-index:25000;background:rgba(0,0,0,0.75);justify-content:center;align-items:center;">
     <div style="background:var(--bg-card);border:2px solid var(--border-accent);border-radius:22px;padding:28px 28px 24px;text-align:center;max-width:420px;width:92%;box-shadow:0 0 60px var(--accent-glow);animation:sp-pop .3s cubic-bezier(.34,1.56,.64,1);">
         <div style="font-size:28px;margin-bottom:8px;">📷</div>
         <div style="font-size:17px;font-weight:800;color:var(--color-title);margin-bottom:16px;">Xem trước ảnh đồng hồ</div>
