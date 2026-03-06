@@ -96,21 +96,13 @@
         input:disabled{color:var(--color-text);opacity:.85;-webkit-text-fill-color:var(--color-text)}
         .col-name input{text-align:center;font-weight:600}
         
-        /* FIX ẢNH BỂ & FIX IPHONE */
-        .img-container{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:44px;justify-content:center;position:relative}
+        /* FIX ẢNH BỂ: Mặc định ẩn 100%, chỉ hiện khi có class 'show-img' */
+        .img-container{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:44px;justify-content:center}
         .img-preview{display:none;width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer;transition:border-color .2s,transform .2s}
-        .img-preview.has-img{display:block!important} /* Chỉ hiện khi thực sự có dữ liệu */
+        .img-preview.show-img{display:block!important}
         .img-preview:hover{border-color:var(--accent);transform:scale(1.1)}
         
-        /* ẨN NÚT MẶC ĐỊNH & CHỮ K TRÊN IPHONE */
-        input[type="file"] {
-            display: none !important;
-            visibility: hidden;
-            width: 0; height: 0;
-            position: absolute;
-        }
-
-        .upload-btn{font-size:10px;color:var(--accent);cursor:pointer;font-weight:700;background:var(--bg-glass);padding:2px 7px;border-radius:5px;border:1px solid var(--border-color);transition:background .2s;white-space:nowrap;user-select:none}
+        .upload-btn{font-size:10px;color:var(--accent);cursor:pointer;font-weight:700;background:var(--bg-glass);padding:2px 7px;border-radius:5px;border:1px solid var(--border-color);transition:background .2s;white-space:nowrap}
         .upload-btn:hover{background:var(--bg-glass-hover)}
         tfoot tr td{color:var(--color-text);border-top:1px solid;border-bottom:1px solid;border-right:1px solid;border-color:#ff0000;padding:11px 13px;transition:color .4s;animation:borderRainbow 3s linear infinite}
         tfoot tr td:last-child{border-right:none}
@@ -331,10 +323,10 @@
                         <div style="display:flex;align-items:center;gap:12px;margin-left:15px">
                             <span style="font-size:11px;color:var(--color-text-dim)">📷 Ảnh Tổng:</span>
                             <div class="img-container">
-                                <!-- Nút custom thay cho input mặc định -->
+                                <!-- FIX: Nút custom thay cho input mặc định và đã xóa chữ K thừa -->
                                 <span class="upload-btn" id="uploadMainBtn" onclick="document.getElementById('fileMain').click()">Up Ảnh</span>
                                 <span class="upload-btn" id="deleteMainImgBtn" style="display:none;background:rgba(220,53,69,.15);color:#ff6b6b;border-color:rgba(220,53,69,.4)" onclick="clearMainImg()">🗑 Xóa</span>
-                                <!-- Input gốc ẩn tuyệt đối, KHÔNG có chữ K thừa -->
+                                <!-- Input gốc ẩn hoàn toàn 100% -->
                                 <input type="file" id="fileMain" style="display:none" accept="image/*" onchange="previewImg(this,'mainMeterImg')">
                             </div>
                         </div>
@@ -492,8 +484,7 @@ function init(){
     const oldMi=document.getElementById('mainMeterImg'); if(oldMi)oldMi.remove(); document.getElementById('deleteMainImgBtn').style.display='none';
     if(data?.mainMeterImg && data.mainMeterImg.startsWith('data:image')){
         const mi=document.createElement('img'); mi.id='mainMeterImg'; mi.src=data.mainMeterImg; mi.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer';
-        mi.onclick=()=>openImg(mi.src); mi.classList.add('has-img'); // Thêm class fix bể
-        const container=document.getElementById('uploadMainBtn').parentElement; container.insertBefore(mi,container.firstChild); document.getElementById('deleteMainImgBtn').style.display='inline-block';
+        mi.onclick=()=>openImg(mi.src); const container=document.getElementById('uploadMainBtn').parentElement; container.insertBefore(mi,container.firstChild); document.getElementById('deleteMainImgBtn').style.display='inline-block';
     }
     applyLockUI(data?.locked||false); updateTotals();
 }
@@ -505,8 +496,8 @@ function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
         <td class="col-stt" onclick="handleRowAction(this)"><span class="stt-num">1</span></td>
         <td class="col-name"><input type="text" value="${data.name||''}" placeholder="Tên hộ..." style="text-align:center"></td>
         <td class="col-img"><div class="img-container">
-            <!-- FIX ẢNH BỂ: Dùng class has-img để ẩn/hiện chính xác -->
-            <img src="${data.img||''}" class="img-preview ${hasImg ? 'has-img' : ''}" onclick="openImg(this.src)">
+            <!-- FIX ẢNH BỂ: Dùng class show-img để ẩn/hiện chính xác -->
+            <img src="${data.img||''}" class="img-preview ${hasImg ? 'show-img' : ''}" onclick="openImg(this.src)">
             <span class="upload-btn" onclick="this.nextElementSibling.nextElementSibling.click()">Up Ảnh</span>
             <span class="upload-btn delete-img-btn" style="display:${hasImg ?'inline-block':'none'};background:rgba(220,53,69,.15);color:#ff6b6b;border-color:rgba(220,53,69,.4)" onclick="clearRowImg(this)">🗑 Xóa</span>
             <input type="file" style="display:none" accept="image/*" onchange="previewImg(this)">
@@ -529,12 +520,12 @@ function previewImg(input,tid){
             const b64=c.toDataURL('image/jpeg',.7);
             if(tid){
                 let t=document.getElementById(tid); if(!t){ t=document.createElement('img'); t.id=tid; t.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer'; t.onclick=()=>openImg(t.src); const container=document.getElementById('uploadMainBtn').parentElement; container.insertBefore(t,container.firstChild); }
-                t.src=b64; t.classList.add('has-img'); document.getElementById('deleteMainImgBtn').style.display='inline-block';
+                t.src=b64; document.getElementById('deleteMainImgBtn').style.display='inline-block';
             }
             else{
                 const el=input.parentElement.querySelector('.img-preview'); 
                 el.src=b64; 
-                el.classList.add('has-img'); // Hiện ảnh khi đã up thành công
+                el.classList.add('show-img'); // Hiện ảnh khi đã up thành công
                 input.parentElement.querySelector('.delete-img-btn').style.display='inline-block';
             }
         }; img.src=e.target.result;
@@ -543,11 +534,11 @@ function previewImg(input,tid){
 
 function clearRowImg(btn){
     const c=btn.parentElement, i=c.querySelector('.img-preview'), f=c.querySelector('input[type="file"]'); 
-    if(i){i.src=''; i.classList.remove('has-img');} // Ẩn ảnh hoàn toàn
+    if(i){i.src=''; i.classList.remove('show-img');} // Ẩn ảnh hoàn toàn
     if(f)f.value=''; btn.style.display='none';
 }
 
-function clearMainImg(){const i=document.getElementById('mainMeterImg'); if(i){i.src=''; i.classList.remove('has-img');} document.getElementById('fileMain').value=''; document.getElementById('deleteMainImgBtn').style.display='none';}
+function clearMainImg(){const i=document.getElementById('mainMeterImg'); if(i)i.remove(); document.getElementById('fileMain').value=''; document.getElementById('deleteMainImgBtn').style.display='none';}
 
 function updateTotals(){
     let tkwh=0, tmoney=0;
@@ -583,7 +574,7 @@ function applyLockUI(isLocked){
     } else {
         document.getElementById('lockBtnText').innerText='🔒 Khóa tháng'; document.getElementById('statusArea').innerHTML='<span class="status-badge status-open">✅ ĐANG MỞ</span>';
         allInputs.forEach(i=>i.disabled=false); upBtns.forEach(b=>b.style.display='inline-block'); document.getElementById('uploadMainBtn').style.display='inline-block';
-        document.querySelectorAll('.delete-img-btn').forEach(b=>{const img=b.parentElement.querySelector('.img-preview'); b.style.display=(img?.src && img.classList.contains('has-img'))?'inline-block':'none';});
+        document.querySelectorAll('.delete-img-btn').forEach(b=>{const img=b.parentElement.querySelector('.img-preview'); b.style.display=(img?.src && img.classList.contains('show-img'))?'inline-block':'none';});
         const mainImg=document.getElementById('mainMeterImg'); if(mainImg) document.getElementById('deleteMainImgBtn').style.display='inline-block';
     }
 }
