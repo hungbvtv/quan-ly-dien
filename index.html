@@ -323,11 +323,11 @@
                         <div style="display:flex;align-items:center;gap:12px;margin-left:15px">
                             <span style="font-size:11px;color:var(--color-text-dim)">📷 Ảnh Tổng:</span>
                             <div class="img-container">
-                                <!-- FIX: Nút custom thay cho input mặc định và đã xóa chữ K thừa -->
+                                <!-- Nút Up Ảnh: Sẽ ẩn khi đã có ảnh -->
                                 <span class="upload-btn" id="uploadMainBtn" onclick="document.getElementById('fileMain').click()">Up Ảnh</span>
                                 <span class="upload-btn" id="deleteMainImgBtn" style="display:none;background:rgba(220,53,69,.15);color:#ff6b6b;border-color:rgba(220,53,69,.4)" onclick="clearMainImg()">🗑 Xóa</span>
-                                <!-- Input gốc ẩn hoàn toàn 100% -->
-                                <input type="file" id="fileMain" style="display:none" accept="image/*" onchange="previewImg(this,'mainMeterImg')">
+                                <!-- Input gốc ẩn triệt để bằng style -->
+                                <input type="file" id="fileMain" style="position:absolute;width:0;height:0;opacity:0;overflow:hidden" accept="image/*" onchange="previewImg(this,'mainMeterImg')">
                             </div>
                         </div>
                     </div>
@@ -480,11 +480,17 @@ function init(){
     else { const prev=new Date(m+'-01'); prev.setMonth(prev.getMonth()-1); const pk=prev.toISOString().substring(0,7); if(db[pk]?.rows)db[pk].rows.forEach(o=>addRow({name:o.name,before:o.after,after:0,price:o.price,img:''})); else addRow(); }
     document.getElementById('tongDHThang').value=data?.tongDH||0; document.getElementById('footerMonthLabel').value=data?.footerMonthLabel||parts[1];
     
-    // Xử lý ảnh Tổng tháng: Xóa cũ nếu không có dữ liệu
-    const oldMi=document.getElementById('mainMeterImg'); if(oldMi)oldMi.remove(); document.getElementById('deleteMainImgBtn').style.display='none';
+    // Xử lý ảnh Tổng tháng
+    const oldMi=document.getElementById('mainMeterImg'); if(oldMi)oldMi.remove(); 
+    document.getElementById('deleteMainImgBtn').style.display='none';
+    document.getElementById('uploadMainBtn').style.display='inline-block'; // Mặc định hiện nút up
+
     if(data?.mainMeterImg && data.mainMeterImg.startsWith('data:image')){
         const mi=document.createElement('img'); mi.id='mainMeterImg'; mi.src=data.mainMeterImg; mi.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer';
-        mi.onclick=()=>openImg(mi.src); const container=document.getElementById('uploadMainBtn').parentElement; container.insertBefore(mi,container.firstChild); document.getElementById('deleteMainImgBtn').style.display='inline-block';
+        mi.onclick=()=>openImg(mi.src); const container=document.getElementById('uploadMainBtn').parentElement; 
+        container.insertBefore(mi,container.firstChild); 
+        document.getElementById('deleteMainImgBtn').style.display='inline-block';
+        document.getElementById('uploadMainBtn').style.display='none'; // Ẩn nút Up Ảnh khi đã có ảnh để ko bị 2 nút
     }
     applyLockUI(data?.locked||false); updateTotals();
 }
@@ -496,11 +502,10 @@ function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
         <td class="col-stt" onclick="handleRowAction(this)"><span class="stt-num">1</span></td>
         <td class="col-name"><input type="text" value="${data.name||''}" placeholder="Tên hộ..." style="text-align:center"></td>
         <td class="col-img"><div class="img-container">
-            <!-- FIX ẢNH BỂ: Dùng class show-img để ẩn/hiện chính xác -->
             <img src="${data.img||''}" class="img-preview ${hasImg ? 'show-img' : ''}" onclick="openImg(this.src)">
-            <span class="upload-btn" onclick="this.nextElementSibling.nextElementSibling.click()">Up Ảnh</span>
+            <span class="upload-btn" style="display:${hasImg?'none':'inline-block'}" onclick="this.nextElementSibling.nextElementSibling.click()">Up Ảnh</span>
             <span class="upload-btn delete-img-btn" style="display:${hasImg ?'inline-block':'none'};background:rgba(220,53,69,.15);color:#ff6b6b;border-color:rgba(220,53,69,.4)" onclick="clearRowImg(this)">🗑 Xóa</span>
-            <input type="file" style="display:none" accept="image/*" onchange="previewImg(this)">
+            <input type="file" style="position:absolute;width:0;height:0;opacity:0;overflow:hidden" accept="image/*" onchange="previewImg(this)">
         </div></td>
         <td><input type="number" class="before" value="${data.before||0}" oninput="updateTotals()"></td>
         <td><input type="number" class="after" value="${data.after||0}" oninput="updateTotals()"></td>
@@ -518,14 +523,17 @@ function previewImg(input,tid){
         const img=new Image(); img.onload=()=>{
             const c=document.createElement('canvas'),ctx=c.getContext('2d'),mw=400; c.width=mw; c.height=img.height*(mw/img.width); ctx.drawImage(img,0,0,c.width,c.height);
             const b64=c.toDataURL('image/jpeg',.7);
-            if(tid){
+            if(tid){ // Xử lý ảnh Tổng
                 let t=document.getElementById(tid); if(!t){ t=document.createElement('img'); t.id=tid; t.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer'; t.onclick=()=>openImg(t.src); const container=document.getElementById('uploadMainBtn').parentElement; container.insertBefore(t,container.firstChild); }
-                t.src=b64; document.getElementById('deleteMainImgBtn').style.display='inline-block';
+                t.src=b64; 
+                document.getElementById('deleteMainImgBtn').style.display='inline-block';
+                document.getElementById('uploadMainBtn').style.display='none'; // Ẩn nút Up khi đã có ảnh
             }
-            else{
+            else{ // Xử lý ảnh từng hộ
                 const el=input.parentElement.querySelector('.img-preview'); 
                 el.src=b64; 
-                el.classList.add('show-img'); // Hiện ảnh khi đã up thành công
+                el.classList.add('show-img');
+                input.parentElement.querySelector('.upload-btn').style.display='none'; // Ẩn nút Up
                 input.parentElement.querySelector('.delete-img-btn').style.display='inline-block';
             }
         }; img.src=e.target.result;
@@ -534,11 +542,18 @@ function previewImg(input,tid){
 
 function clearRowImg(btn){
     const c=btn.parentElement, i=c.querySelector('.img-preview'), f=c.querySelector('input[type="file"]'); 
-    if(i){i.src=''; i.classList.remove('show-img');} // Ẩn ảnh hoàn toàn
-    if(f)f.value=''; btn.style.display='none';
+    if(i){i.src=''; i.classList.remove('show-img');}
+    if(f)f.value=''; 
+    btn.style.display='none';
+    c.querySelector('.upload-btn').style.display='inline-block'; // Hiện lại nút Up
 }
 
-function clearMainImg(){const i=document.getElementById('mainMeterImg'); if(i)i.remove(); document.getElementById('fileMain').value=''; document.getElementById('deleteMainImgBtn').style.display='none';}
+function clearMainImg(){
+    const i=document.getElementById('mainMeterImg'); if(i)i.remove(); 
+    document.getElementById('fileMain').value=''; 
+    document.getElementById('deleteMainImgBtn').style.display='none';
+    document.getElementById('uploadMainBtn').style.display='inline-block'; // Hiện lại nút Up
+}
 
 function updateTotals(){
     let tkwh=0, tmoney=0;
@@ -566,16 +581,27 @@ function saveToLocal(silent){
 function toggleLock(){ const m=monthInput.value; if(!db[m])saveToLocal(true); db[m].locked=!db[m].locked; localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); init(); }
 function applyLockUI(isLocked){
     const allInputs=document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
-    const upBtns=document.querySelectorAll('.upload-btn:not(.delete-img-btn):not(#deleteMainImgBtn):not(#uploadMainBtn)');
-    const delBtns=document.querySelectorAll('.upload-btn.delete-img-btn, #deleteMainImgBtn');
+    const upBtns = document.querySelectorAll('.upload-btn:not(.delete-img-btn):not(#deleteMainImgBtn)');
+    const delBtns = document.querySelectorAll('.upload-btn.delete-img-btn, #deleteMainImgBtn');
+    
     if(isLocked){
         document.getElementById('lockBtnText').innerText='🔓 Mở Khóa'; document.getElementById('statusArea').innerHTML='<span class="status-badge status-locked">🔒 ĐÃ KHÓA</span>';
-        allInputs.forEach(i=>i.disabled=true); upBtns.forEach(b=>b.style.display='none'); delBtns.forEach(b=>b.style.display='none'); document.getElementById('uploadMainBtn').style.display='none';
+        allInputs.forEach(i=>i.disabled=true); 
+        upBtns.forEach(b=>b.style.display='none'); 
+        delBtns.forEach(b=>b.style.display='none');
     } else {
         document.getElementById('lockBtnText').innerText='🔒 Khóa tháng'; document.getElementById('statusArea').innerHTML='<span class="status-badge status-open">✅ ĐANG MỞ</span>';
-        allInputs.forEach(i=>i.disabled=false); upBtns.forEach(b=>b.style.display='inline-block'); document.getElementById('uploadMainBtn').style.display='inline-block';
-        document.querySelectorAll('.delete-img-btn').forEach(b=>{const img=b.parentElement.querySelector('.img-preview'); b.style.display=(img?.src && img.classList.contains('show-img'))?'inline-block':'none';});
-        const mainImg=document.getElementById('mainMeterImg'); if(mainImg) document.getElementById('deleteMainImgBtn').style.display='inline-block';
+        allInputs.forEach(i=>i.disabled=false);
+        // Kiểm tra nút up cho từng hộ
+        document.querySelectorAll('.data-row').forEach(row => {
+            const hasImg = row.querySelector('.img-preview').classList.contains('show-img');
+            row.querySelector('.upload-btn').style.display = hasImg ? 'none' : 'inline-block';
+            row.querySelector('.delete-img-btn').style.display = hasImg ? 'inline-block' : 'none';
+        });
+        // Kiểm tra nút up tổng
+        const hasMainImg = !!document.getElementById('mainMeterImg');
+        document.getElementById('uploadMainBtn').style.display = hasMainImg ? 'none' : 'inline-block';
+        document.getElementById('deleteMainImgBtn').style.display = hasMainImg ? 'inline-block' : 'none';
     }
 }
 
