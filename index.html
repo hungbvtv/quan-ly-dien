@@ -1060,8 +1060,20 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
         if(!e.target.closest('.img-container')) closeAllImgMenus();
     });
 
-    // Đảm bảo settingsPanel là con trực tiếp của body để fixed hoạt động đúng trên mobile
-    (function(){ const p=document.getElementById('settingsPanel'); if(p&&p.parentElement!==document.body) document.body.appendChild(p); })();
+    // Đảm bảo settingsPanel là con trực tiếp của body
+    (function(){
+        const p = document.getElementById('settingsPanel');
+        if(p && p.parentElement !== document.body) document.body.appendChild(p);
+        // Dùng scroll listener để giữ cố định trên mobile khi fixed bị lỗi
+        function pinPanel() {
+            p.style.position = 'fixed';
+            p.style.bottom = '20px';
+            p.style.right = '16px';
+        }
+        pinPanel();
+        window.addEventListener('scroll', pinPanel, {passive:true});
+        window.addEventListener('resize', pinPanel, {passive:true});
+    })();
 
     function toggleRainbow(){
         rainbowEnabled=!rainbowEnabled;
@@ -1165,7 +1177,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
 
     function showToast(msg,type='success'){
         let tc=document.getElementById('toast-container');
-        if(!tc){ tc=document.createElement('div'); tc.id='toast-container'; tc.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;'; document.body.appendChild(tc); }
+        if(!tc){ tc=document.createElement('div'); tc.id='toast-container'; tc.style.cssText='position:fixed;bottom:24px;left:0;right:0;z-index:99999;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;'; document.body.appendChild(tc); }
         const t=document.createElement('div');
         const bg=type==='error'?'linear-gradient(135deg,#a0000a,#dc3545)':type==='warn'?'linear-gradient(135deg,#a06000,#fd7e14)':'linear-gradient(135deg,#0a6a2a,#28a745)';
         t.style.cssText=`background:${bg};color:white;padding:11px 22px;border-radius:12px;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:sp-pop .3s ease;opacity:1;transition:opacity .4s;`;
