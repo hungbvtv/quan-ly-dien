@@ -95,13 +95,10 @@
         input:focus{border-bottom:1px solid var(--accent)}
         input:disabled{color:var(--color-text);opacity:.85;-webkit-text-fill-color:var(--color-text)}
         .col-name input{text-align:center;font-weight:600}
-        
-        /* FIX ẢNH BỂ: Mặc định ẩn 100%, chỉ hiện khi có class 'show-img' */
-        .img-container{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:44px;justify-content:center}
-        .img-preview{display:none;width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer;transition:border-color .2s,transform .2s}
-        .img-preview.show-img{display:block!important}
-        .img-preview:hover{border-color:var(--accent);transform:scale(1.1)}
-        
+        .img-container{display:flex;flex-direction:column;align-items:center;gap:3px}
+        .img-preview{display:none;cursor:pointer;transition:border-color .2s,transform .2s}
+        .img-preview[style*='block']{width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);display:block!important}
+        .img-preview[style*='block']:hover{border-color:var(--accent);transform:scale(1.1)}
         .upload-btn{font-size:10px;color:var(--accent);cursor:pointer;font-weight:700;background:var(--bg-glass);padding:2px 7px;border-radius:5px;border:1px solid var(--border-color);transition:background .2s;white-space:nowrap}
         .upload-btn:hover{background:var(--bg-glass-hover)}
         tfoot tr td{color:var(--color-text);border-top:1px solid;border-bottom:1px solid;border-right:1px solid;border-color:#ff0000;padding:11px 13px;transition:color .4s;animation:borderRainbow 3s linear infinite}
@@ -320,14 +317,14 @@
                             <input type="text" id="footerMonthLabel" style="width:26px;font-weight:800;border-bottom:1px solid var(--border-accent)">:
                             <input type="number" id="tongDHThang" oninput="updateTotals()" style="width:90px;font-weight:700;border-bottom:1px solid var(--border-accent)"> (kWh)
                         </span>
-                        <div style="display:flex;align-items:center;gap:12px;margin-left:15px">
-                            <span style="font-size:11px;color:var(--color-text-dim)">📷 Ảnh Tổng:</span>
-                            <div class="img-container">
-                                <!-- FIX: Nút custom thay cho input mặc định và đã xóa chữ K thừa -->
-                                <span class="upload-btn" id="uploadMainBtn" onclick="document.getElementById('fileMain').click()">Up Ảnh</span>
-                                <span class="upload-btn" id="deleteMainImgBtn" style="display:none;background:rgba(220,53,69,.15);color:#ff6b6b;border-color:rgba(220,53,69,.4)" onclick="clearMainImg()">🗑 Xóa</span>
-                                <!-- Input gốc ẩn hoàn toàn 100% -->
-                                <input type="file" id="fileMain" style="display:none" accept="image/*" onchange="previewImg(this,'mainMeterImg')">
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span style="font-size:11px;color:var(--color-text-dim)">📷 Ảnh Tổng:</span>
+                                <div class="img-container">
+                                    <span class="upload-btn" id="uploadMainBtn" onclick="document.getElementById('fileMain').click()">Up Ảnh</span>
+                                    <span class="upload-btn" id="deleteMainImgBtn" style="display:none;background:rgba(220,53,69,.15);color:#ff6b6b;border-color:rgba(220,53,69,.4)" onclick="clearMainImg()">🗑 Xóa</span>
+                                    <input type="file" id="fileMain" hidden accept="image/*" onchange="previewImg(this,'mainMeterImg')">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -353,7 +350,7 @@
         <span class="rainbow-text">• Số kí tiêu thụ (kWh): Số ĐH tháng này trừ Số ĐH tháng trước.</span>
         <span class="rainbow-text">• Tiền điện: Số kí tiêu thụ × Giá điện (2.400đ).</span>
         <span class="rainbow-text">• TIỀN PHẢI NỘP: Tiền điện + Tiền điện thất thoát.</span>
-        <span class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trong tháng trừ cho Tổng điện các hộ dùng trong tháng để ra số kí thất thoát.</span>
+        <span class="rainbow-text">• Số kí điện thất thoát: Điện tổng tiêu thụ trừ cho Tổng điện các hộ dùng.</span>
         <span class="rainbow-text">• Tiền điện thất thoát (từng hộ): Chia theo tỉ lệ số kí tiêu thụ.</span>
         <span class="rainbow-text">• Công thức thất thoát: Số kí thất thoát × 2.400đ.</span>
     </div>
@@ -396,6 +393,22 @@
 </style>
 
 <script>
+/* === SAVE POPUP === */
+function showSavePopup(){
+    const m=document.getElementById('currentMonth').value,p=m.split('-');
+    document.getElementById('spMonth').innerText='THÁNG '+p[1]+'/'+p[0];
+    document.getElementById('spRows').innerText=document.querySelectorAll('.data-row').length;
+    document.getElementById('spTotal').innerText=document.getElementById('lblGrandTotal').innerText;
+    document.getElementById('spTime').innerText=new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const bar=document.getElementById('spBar');
+    bar.style.animation='none';void bar.offsetHeight;
+    bar.style.animation='sp-drain 2.8s linear forwards,sp-shimmer 1.2s linear infinite';
+    document.getElementById('savePopup').style.display='flex';
+    clearTimeout(window._spT);window._spT=setTimeout(closeSavePopup,2800);
+}
+function closeSavePopup(){document.getElementById('savePopup').style.display='none';}
+document.getElementById('savePopup').addEventListener('click',function(e){if(e.target===this)closeSavePopup();});
+
 /* === CORE === */
 const TOTAL_THEMES=14;
 const TI=[
@@ -417,14 +430,19 @@ const TI=[
 
 let db=JSON.parse(localStorage.getItem('electricDB_vPhoto'))||{};
 let currentTheme=parseInt(localStorage.getItem('currentTheme')||'1');
+if(isNaN(currentTheme)||currentTheme<1||currentTheme>TOTAL_THEMES)currentTheme=1;
+
 let rainbowOn=localStorage.getItem('rainbowOn')!=='false';
 let autoRandom=false,autoTimer=null,popupTimer=null;
 
 const monthInput=document.getElementById('currentMonth');
 if(!monthInput.value)monthInput.value=new Date().toISOString().substring(0,7);
 
+/* --- RAINBOW TOGGLE --- */
 function toggleRainbow(){
-    rainbowOn=!rainbowOn; localStorage.setItem('rainbowOn',rainbowOn); applyRainbowUI();
+    rainbowOn=!rainbowOn;
+    localStorage.setItem('rainbowOn',rainbowOn);
+    applyRainbowUI();
 }
 function applyRainbowUI(){
     const rw=document.getElementById('rainbowWrapper'),btn=document.getElementById('rainbowToggleBtn');
@@ -432,75 +450,113 @@ function applyRainbowUI(){
     else{rw.classList.add('rainbow-off');btn.className='rb-off';btn.innerHTML='⬜ Viền 7 màu: TẮT';}
 }
 
+/* --- AUTO RANDOM TOGGLE --- */
 function toggleAutoRandom(){
-    autoRandom=!autoRandom; const btn=document.getElementById('randomThemeBtn');
-    if(autoRandom){btn.classList.add('auto-on');btn.innerHTML='⏸️ Dừng tự động đổi';doRandomTheme();autoTimer=setInterval(doRandomTheme,5000);}
-    else{clearInterval(autoTimer);autoTimer=null;btn.classList.remove('auto-on');btn.innerHTML='▶️ Bật tự động đổi';}
+    autoRandom=!autoRandom;
+    const btn=document.getElementById('randomThemeBtn');
+    if(autoRandom){
+        btn.classList.add('auto-on');
+        btn.innerHTML='⏸️ Dừng tự động đổi';
+        doRandomTheme();
+        autoTimer=setInterval(doRandomTheme,5000);
+    } else {
+        clearInterval(autoTimer);autoTimer=null;
+        btn.classList.remove('auto-on');
+        btn.innerHTML='▶️ Bật tự động đổi';
+    }
 }
 function doRandomTheme(){
-    let next; do{next=Math.floor(Math.random()*TOTAL_THEMES)+1;}while(next===currentTheme&&TOTAL_THEMES>1);
+    let next;
+    do{next=Math.floor(Math.random()*TOTAL_THEMES)+1;}while(next===currentTheme&&TOTAL_THEMES>1);
     setTheme(next,true);
 }
 
+/* --- THEME POPUP --- */
 function showThemePopup(n){
-    const info=TI[n-1]; document.getElementById('popupEmoji').textContent=info.e; document.getElementById('popupName').textContent=info.n; document.getElementById('popupNum').textContent='Theme #'+n+' / '+TOTAL_THEMES;
-    const p=document.getElementById('themeNamePopup'); p.classList.remove('show'); void p.offsetHeight; p.classList.add('show');
-    clearTimeout(popupTimer); popupTimer=setTimeout(()=>p.classList.remove('show'),1200);
+    const info=TI[n-1];
+    document.getElementById('popupEmoji').textContent=info.e;
+    document.getElementById('popupName').textContent=info.n;
+    document.getElementById('popupNum').textContent='Theme #'+n+' / '+TOTAL_THEMES;
+    const p=document.getElementById('themeNamePopup');
+    p.classList.remove('show');void p.offsetHeight;p.classList.add('show');
+    clearTimeout(popupTimer);
+    popupTimer=setTimeout(()=>p.classList.remove('show'),1200);
 }
 
+/* --- THEME DOTS --- */
 function buildThemeDots(){
     const c=document.getElementById('themeDotsContainer');c.innerHTML='';
     TI.forEach((t,i)=>{
-        const d=document.createElement('div'); d.className='theme-dot'+(i+1===currentTheme?' active':'');
-        d.style.background=t.bg; d.title=t.n; d.innerText=t.e; d.onclick=()=>setTheme(i+1,true); c.appendChild(d);
+        const d=document.createElement('div');
+        d.className='theme-dot'+(i+1===currentTheme?' active':'');
+        d.style.background=t.bg;d.title=t.n;d.innerText=t.e;
+        d.onclick=()=>setTheme(i+1,true);
+        c.appendChild(d);
     });
 }
 
-function setTheme(n,showP=false){ currentTheme=n; localStorage.setItem('currentTheme',n); applyThemeUI(); if(showP)showThemePopup(n); }
+function setTheme(n,showP=false){
+    currentTheme=n;localStorage.setItem('currentTheme',n);applyThemeUI();
+    if(showP)showThemePopup(n);
+}
 function applyThemeUI(){
-    const b=document.body; for(let i=1;i<=TOTAL_THEMES;i++)b.classList.remove('theme-'+i); b.classList.add('theme-'+currentTheme);
+    const b=document.body;
+    for(let i=1;i<=TOTAL_THEMES;i++)b.classList.remove('theme-'+i);
+    b.classList.add('theme-'+currentTheme);
     const m={1:'#060a18',2:'#eef2ff',3:'#020d05',4:'#100200',5:'#07000f',6:'#001a2e',7:'#1a0a00',8:'#0a0a0a',9:'#001400',10:'#fff8f0',11:'#0d0d1a',12:'#001018',13:'#1a0020',14:'#1a0a1e'};
-    b.style.background=m[currentTheme]; const rbi=document.getElementById('rbInner'); if(rbi)rbi.style.background=m[currentTheme]; buildThemeDots();
+    b.style.background=m[currentTheme];const rbi=document.getElementById('rbInner');if(rbi)rbi.style.background=m[currentTheme];void b.offsetHeight;buildThemeDots();
+    document.querySelectorAll('input').forEach(i=>{i.style.color='';});
 }
 
 function toggleSettingsPanel(){
-    const p=document.getElementById('settingsPopup'), g=document.getElementById('gearBtn');
-    p.classList.toggle('open'); g.classList.toggle('open');
+    const p=document.getElementById('settingsPopup'),g=document.getElementById('gearBtn');
+    p.classList.toggle('open');g.classList.toggle('open');
 }
 document.addEventListener('click',e=>{
-    const panel=document.getElementById('settingsPanel'); if(!panel.contains(e.target)){document.getElementById('settingsPopup').classList.remove('open');document.getElementById('gearBtn').classList.remove('open');}
+    const panel=document.getElementById('settingsPanel');
+    if(!panel.contains(e.target)){document.getElementById('settingsPopup').classList.remove('open');document.getElementById('gearBtn').classList.remove('open');}
 });
 
-/* === INIT & CORE LOGIC === */
+/* === INIT === */
 function init(){
-    applyThemeUI(); applyRainbowUI();
-    const m=monthInput.value, parts=m.split('-'); document.getElementById('displayMonthTag').innerText='THÁNG '+parts[1]+'/'+parts[0]; document.getElementById('titleMonth').innerText='SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG '+parts[1]+'/'+parts[0];
-    const data=db[m]; document.getElementById('tableBody').innerHTML='';
+    applyThemeUI();applyRainbowUI();
+    const m=monthInput.value,prev=new Date(m+'-01');prev.setMonth(prev.getMonth()-1);
+    const pk=prev.toISOString().substring(0,7),data=db[m];
+    document.getElementById('tableBody').innerHTML='';
+    const parts=m.split('-');
+    document.getElementById('displayMonthTag').innerText='THÁNG '+parts[1]+'/'+parts[0];
+    document.getElementById('titleMonth').innerText='SỔ QUẢN LÝ MUA BÁN ĐIỆN - THÁNG '+parts[1]+'/'+parts[0];
     if(data?.rows)data.rows.forEach(r=>addRow(r));
-    else { const prev=new Date(m+'-01'); prev.setMonth(prev.getMonth()-1); const pk=prev.toISOString().substring(0,7); if(db[pk]?.rows)db[pk].rows.forEach(o=>addRow({name:o.name,before:o.after,after:0,price:o.price,img:''})); else addRow(); }
-    document.getElementById('tongDHThang').value=data?.tongDH||0; document.getElementById('footerMonthLabel').value=data?.footerMonthLabel||parts[1];
-    
-    // Xử lý ảnh Tổng tháng: Xóa cũ nếu không có dữ liệu
-    const oldMi=document.getElementById('mainMeterImg'); if(oldMi)oldMi.remove(); document.getElementById('deleteMainImgBtn').style.display='none';
-    if(data?.mainMeterImg && data.mainMeterImg.startsWith('data:image')){
-        const mi=document.createElement('img'); mi.id='mainMeterImg'; mi.src=data.mainMeterImg; mi.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer';
-        mi.onclick=()=>openImg(mi.src); const container=document.getElementById('uploadMainBtn').parentElement; container.insertBefore(mi,container.firstChild); document.getElementById('deleteMainImgBtn').style.display='inline-block';
+    else if(db[pk]?.rows)db[pk].rows.forEach(o=>addRow({name:o.name,before:o.after,after:0,price:o.price,img:''}));
+    else addRow();
+    document.getElementById('tongDHThang').value=data?.tongDH||0;
+    document.getElementById('footerMonthLabel').value=data?.footerMonthLabel||parts[1];
+    // Xóa ảnh tổng cũ nếu có
+    const oldMi=document.getElementById('mainMeterImg');if(oldMi)oldMi.remove();
+    document.getElementById('deleteMainImgBtn').style.display='none';
+    if(data?.mainMeterImg && data.mainMeterImg.includes('data:image')){
+        const mi=document.createElement('img');
+        mi.id='mainMeterImg';mi.src=data.mainMeterImg;
+        mi.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer';
+        mi.onclick=()=>openImg(mi.src);
+        const container=document.getElementById('uploadMainBtn').parentElement;
+        container.insertBefore(mi,container.firstChild);
+        document.getElementById('deleteMainImgBtn').style.display='inline-block';
     }
-    applyLockUI(data?.locked||false); updateTotals();
+    applyLockUI(data?.locked||false);updateTotals();
 }
 
 function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
-    const row=document.getElementById('tableBody').insertRow(); row.className='data-row';
-    const hasImg = (data.img && data.img.startsWith('data:image'));
+    const row=document.getElementById('tableBody').insertRow();
+    row.className='data-row';
     row.innerHTML=`
         <td class="col-stt" onclick="handleRowAction(this)"><span class="stt-num">1</span></td>
         <td class="col-name"><input type="text" value="${data.name||''}" placeholder="Tên hộ..." style="text-align:center"></td>
         <td class="col-img"><div class="img-container">
-            <!-- FIX ẢNH BỂ: Dùng class show-img để ẩn/hiện chính xác -->
-            <img src="${data.img||''}" class="img-preview ${hasImg ? 'show-img' : ''}" onclick="openImg(this.src)">
+            <img src="${data.img||''}" class="img-preview" onclick="openImg(this.src)" style="display:${data.img?'block':'none'}">
             <span class="upload-btn" onclick="this.nextElementSibling.nextElementSibling.click()">Up Ảnh</span>
-            <span class="upload-btn delete-img-btn" style="display:${hasImg ?'inline-block':'none'};background:rgba(220,53,69,.15);color:#ff6b6b;border-color:rgba(220,53,69,.4)" onclick="clearRowImg(this)">🗑 Xóa</span>
-            <input type="file" style="display:none" accept="image/*" onchange="previewImg(this)">
+            <span class="upload-btn delete-img-btn" style="display:${data.img?'inline-block':'none'};background:rgba(220,53,69,.15);color:#ff6b6b;border-color:rgba(220,53,69,.4)" onclick="clearRowImg(this)">🗑 Xóa</span>
+            <input type="file" hidden accept="image/*" onchange="previewImg(this)">
         </div></td>
         <td><input type="number" class="before" value="${data.before||0}" oninput="updateTotals()"></td>
         <td><input type="number" class="after" value="${data.after||0}" oninput="updateTotals()"></td>
@@ -511,113 +567,189 @@ function addRow(data={name:'',before:0,after:0,price:2400,img:''}){
         <td class="col-final" style="text-align:center"><span class="final-total">0đ</span></td>`;
 }
 
+function showToast(msg,type='success'){
+    let tc=document.getElementById('toast-container');
+    if(!tc){tc=document.createElement('div');tc.id='toast-container';tc.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none';document.body.appendChild(tc);}
+    const t=document.createElement('div');
+    const bg=type==='error'?'linear-gradient(135deg,#a0000a,#dc3545)':type==='warn'?'linear-gradient(135deg,#a06000,#fd7e14)':'linear-gradient(135deg,#0a6a2a,#28a745)';
+    t.style.cssText=`background:${bg};color:white;padding:11px 22px;border-radius:12px;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);opacity:1;transition:opacity .4s`;
+    t.innerText=msg;tc.appendChild(t);
+    setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400);},3000);
+}
+
 function previewImg(input,tid){
     if(!input.files[0])return;
     const reader=new FileReader();
     reader.onload=e=>{
-        const img=new Image(); img.onload=()=>{
-            const c=document.createElement('canvas'),ctx=c.getContext('2d'),mw=400; c.width=mw; c.height=img.height*(mw/img.width); ctx.drawImage(img,0,0,c.width,c.height);
+        const img=new Image();
+        img.onload=()=>{
+            const c=document.createElement('canvas'),ctx=c.getContext('2d'),mw=400;
+            c.width=mw;c.height=img.height*(mw/img.width);ctx.drawImage(img,0,0,c.width,c.height);
             const b64=c.toDataURL('image/jpeg',.7);
             if(tid){
-                let t=document.getElementById(tid); if(!t){ t=document.createElement('img'); t.id=tid; t.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer'; t.onclick=()=>openImg(t.src); const container=document.getElementById('uploadMainBtn').parentElement; container.insertBefore(t,container.firstChild); }
-                t.src=b64; document.getElementById('deleteMainImgBtn').style.display='inline-block';
+                let t=document.getElementById(tid);
+                if(!t){
+                    t=document.createElement('img');t.id=tid;
+                    t.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border-color);cursor:pointer';
+                    t.onclick=()=>openImg(t.src);
+                    const container=document.getElementById('uploadMainBtn').parentElement;
+                    container.insertBefore(t,container.firstChild);
+                }
+                t.src=b64;const d=document.getElementById('deleteMainImgBtn');if(d)d.style.display='inline-block';
             }
-            else{
-                const el=input.parentElement.querySelector('.img-preview'); 
-                el.src=b64; 
-                el.classList.add('show-img'); // Hiện ảnh khi đã up thành công
-                input.parentElement.querySelector('.delete-img-btn').style.display='inline-block';
-            }
-        }; img.src=e.target.result;
-    }; reader.readAsDataURL(input.files[0]);
+            else{const el=input.parentElement.querySelector('.img-preview');el.src=b64;el.style.display='block';const d=input.parentElement.querySelector('.delete-img-btn');if(d)d.style.display='inline-block';}
+        };img.src=e.target.result;
+    };reader.readAsDataURL(input.files[0]);
 }
-
-function clearRowImg(btn){
-    const c=btn.parentElement, i=c.querySelector('.img-preview'), f=c.querySelector('input[type="file"]'); 
-    if(i){i.src=''; i.classList.remove('show-img');} // Ẩn ảnh hoàn toàn
-    if(f)f.value=''; btn.style.display='none';
-}
-
-function clearMainImg(){const i=document.getElementById('mainMeterImg'); if(i)i.remove(); document.getElementById('fileMain').value=''; document.getElementById('deleteMainImgBtn').style.display='none';}
+function clearRowImg(btn){const c=btn.parentElement,i=c.querySelector('.img-preview'),f=c.querySelector('input[type="file"]');if(i){i.src='';i.style.display='none';}if(f)f.value='';btn.style.display='none';}
+function clearMainImg(){const i=document.getElementById('mainMeterImg');if(i)i.remove();const f=document.getElementById('fileMain');if(f)f.value='';const d=document.getElementById('deleteMainImgBtn');if(d)d.style.display='none';}
 
 function updateTotals(){
-    let tkwh=0, tmoney=0;
+    let tkwh=0,tmoney=0;
     document.querySelectorAll('.data-row').forEach((row,i)=>{
-        const stt=row.cells[0].querySelector('.stt-num'); if(stt)stt.innerText=i+1; else row.cells[0].innerText=i+1;
-        const b=parseFloat(row.querySelector('.before').value)||0, a=parseFloat(row.querySelector('.after').value)||0, p=parseFloat(row.querySelector('.price').value)||0;
-        const u=Math.max(0,a-b), m=u*p; row.querySelector('.usage').value=u; row.querySelector('.base-money').innerText=Math.round(m).toLocaleString('vi-VN'); row.dataset.u=u; row.dataset.m=m; tkwh+=u; tmoney+=m;
+        const stt=row.cells[0].querySelector('.stt-num');if(stt)stt.innerText=i+1;else row.cells[0].innerText=i+1;
+        const b=parseFloat(row.querySelector('.before').value)||0,a=parseFloat(row.querySelector('.after').value)||0,p=parseFloat(row.querySelector('.price').value)||0;
+        const u=Math.max(0,a-b),m=u*p;
+        row.querySelector('.usage').value=u;row.querySelector('.base-money').innerText=Math.round(m).toLocaleString('vi-VN');
+        row.dataset.u=u;row.dataset.m=m;tkwh+=u;tmoney+=m;
     });
-    const curT=parseFloat(document.getElementById('tongDHThang').value)||0, pk=new Date(monthInput.value+'-01'); pk.setMonth(pk.getMonth()-1);
+    const curT=parseFloat(document.getElementById('tongDHThang').value)||0;
+    const pk=new Date(monthInput.value+'-01');pk.setMonth(pk.getMonth()-1);
     const prevT=db[pk.toISOString().substring(0,7)]?.tongDH||0;
-    const mCons=Math.max(0,curT-prevT), lKwh=Math.max(0,mCons-tkwh), lMoney=lKwh*2400;
+    const mCons=Math.max(0,curT-prevT),lKwh=Math.max(0,mCons-tkwh),lMoney=lKwh*2400;
     document.querySelectorAll('.data-row').forEach(row=>{
-        const u=parseFloat(row.dataset.u)||0, m=parseFloat(row.dataset.m)||0, s=tkwh>0?(u/tkwh)*lMoney:0; row.querySelector('.loss-share').innerText=Math.round(s).toLocaleString('vi-VN');
+        const u=parseFloat(row.dataset.u)||0,m=parseFloat(row.dataset.m)||0,s=tkwh>0?(u/tkwh)*lMoney:0;
+        row.querySelector('.loss-share').innerText=Math.round(s).toLocaleString('vi-VN');
         row.querySelector('.final-total').innerText=(Math.round((m+s)/1000)*1000).toLocaleString('vi-VN')+'đ';
     });
-    document.getElementById('lblTotalKwh').innerText=tkwh; document.getElementById('lblMainConsumption').innerText=mCons; document.getElementById('lblLossKwh').innerText=lKwh; document.getElementById('lblTotalBaseMoney').innerText=Math.round(tmoney).toLocaleString('vi-VN'); document.getElementById('lblLossMoney').innerText=Math.round(lMoney).toLocaleString('vi-VN'); document.getElementById('lblGrandTotal').innerText=Math.round(tmoney+lMoney).toLocaleString('vi-VN')+'đ';
+    document.getElementById('lblTotalKwh').innerText=tkwh;
+    document.getElementById('lblMainConsumption').innerText=mCons;
+    document.getElementById('lblLossKwh').innerText=lKwh;
+    document.getElementById('lblTotalBaseMoney').innerText=Math.round(tmoney).toLocaleString('vi-VN');
+    document.getElementById('lblLossMoney').innerText=Math.round(lMoney).toLocaleString('vi-VN');
+    document.getElementById('lblGrandTotal').innerText=Math.round(tmoney+lMoney).toLocaleString('vi-VN')+'đ';
+}
+
+async function exportToPNG(){
+    const area=document.getElementById('captureArea'),ctrl=document.getElementById('controlsBar'),sw=document.getElementById('tableScrollWrapper'),hdr=document.getElementById('displayHeader'),expRow=document.querySelector('.export-title-row');
+    const imgCells=Array.from(document.querySelectorAll('#mainTable .col-img'));
+    const imgCellData=imgCells.map(cell=>({cell,parent:cell.parentNode,nextSibling:cell.nextSibling}));
+    imgCells.forEach(cell=>cell.remove());
+    const colgroup=document.querySelector('#mainTable colgroup'),allCols=Array.from(colgroup.children),imgCol=allCols[2];imgCol.remove();
+    const cw=[44,210,115,115,115,120,125,155,151];
+    Array.from(colgroup.children).forEach((col,i)=>{col._ow=col.style.width;col.style.width=cw[i]+'px';});
+    area.classList.add('is-capturing');ctrl.classList.add('hide-for-capture');if(hdr)hdr.classList.add('hide-for-capture');
+    expRow.style.display='table-row';sw.style.overflow='visible';area.style.overflow='visible';area.style.borderRadius='0';
+    const wrapper=document.getElementById('rainbowWrapper'),woo=wrapper.style.overflow;wrapper.style.overflow='visible';wrapper.classList.add('is-capturing');
+    document.getElementById('titleMonth').colSpan=9;document.getElementById('footerMain').colSpan=9;
+    document.getElementById('f_col1').colSpan=3;document.getElementById('f_col2').colSpan=3;document.getElementById('f_col3').colSpan=3;
+    document.getElementById('f_col4').colSpan=4;document.getElementById('f_col5').colSpan=5;document.getElementById('f_col6').colSpan=9;
+    window.scrollTo(0,0);
+    const allImgs=area.querySelectorAll('img'),origSrc=[];
+    await Promise.all(Array.from(allImgs).map((img,i)=>new Promise(resolve=>{
+        origSrc[i]=img.src;
+        if(!img.src||!img.src.startsWith('http')||img.style.display==='none')return resolve();
+        const cv=document.createElement('canvas');cv.width=img.naturalWidth||img.width||80;cv.height=img.naturalHeight||img.height||80;
+        const cx=cv.getContext('2d'),im=new Image();im.crossOrigin='anonymous';
+        im.onload=()=>{cx.drawImage(im,0,0);try{img.src=cv.toDataURL('image/jpeg',.9);}catch(e){}resolve();};
+        im.onerror=()=>resolve();im.src=img.src;
+    })));
+    try{
+        const canvas=await html2canvas(area,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',width:1280,windowWidth:1400});
+        const link=document.createElement('a');link.download=`EVN_Pro_${monthInput.value}.png`;link.href=canvas.toDataURL('image/png');link.click();
+    }catch(err){showToast('❌ Lỗi xuất ảnh: '+err.message,'error');}
+    finally{
+        area.querySelectorAll('img').forEach((img,i)=>{if(origSrc[i])img.src=origSrc[i];});
+        area.classList.remove('is-capturing');ctrl.classList.remove('hide-for-capture');if(hdr)hdr.classList.remove('hide-for-capture');
+        expRow.style.display='none';sw.style.overflow='auto';area.style.overflow='';area.style.borderRadius='';
+        wrapper.style.overflow=woo;wrapper.classList.remove('is-capturing');
+        Array.from(colgroup.children).forEach(col=>{col.style.width=col._ow||'';});
+        const refCol=colgroup.children[2];colgroup.insertBefore(imgCol,refCol||null);
+        imgCellData.forEach(({cell,parent,nextSibling})=>{parent.insertBefore(cell,nextSibling);});
+        document.getElementById('titleMonth').colSpan=10;document.getElementById('footerMain').colSpan=10;
+        document.getElementById('f_col1').colSpan=3;document.getElementById('f_col2').colSpan=3;document.getElementById('f_col3').colSpan=4;
+        document.getElementById('f_col4').colSpan=5;document.getElementById('f_col5').colSpan=5;document.getElementById('f_col6').colSpan=10;
+    }
 }
 
 function saveToLocal(silent){
-    const rows=[]; document.querySelectorAll('.data-row').forEach(row=>{rows.push({name:row.querySelector('.col-name input').value,img:row.querySelector('.img-preview').src,before:row.querySelector('.before').value,after:row.querySelector('.after').value,price:row.querySelector('.price').value});});
-    const m=monthInput.value; db[m]={rows,tongDH:document.getElementById('tongDHThang').value,footerMonthLabel:document.getElementById('footerMonthLabel').value,mainMeterImg:(document.getElementById('mainMeterImg')?.src||''),locked:db[m]?.locked||false};
-    localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); if(!silent)showSavePopup();
+    const rows=[];
+    document.querySelectorAll('.data-row').forEach(row=>{rows.push({name:row.querySelector('.col-name input').value,img:row.querySelector('.img-preview').src,before:row.querySelector('.before').value,after:row.querySelector('.after').value,price:row.querySelector('.price').value});});
+    const m=monthInput.value;
+    db[m]={rows,tongDH:document.getElementById('tongDHThang').value,footerMonthLabel:document.getElementById('footerMonthLabel').value,mainMeterImg:(document.getElementById('mainMeterImg')?.src||''),locked:db[m]?.locked||false};
+    try{localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));if(!silent)showSavePopup();}
+    catch(e){showToast('⚠️ Bộ nhớ đầy! Hãy xóa bớt ảnh hoặc backup.','error');}
 }
 
-function toggleLock(){ const m=monthInput.value; if(!db[m])saveToLocal(true); db[m].locked=!db[m].locked; localStorage.setItem('electricDB_vPhoto',JSON.stringify(db)); init(); }
+function toggleLock(){
+    const m=monthInput.value;if(!db[m])saveToLocal(true);
+    db[m].locked=!db[m].locked;
+    try{localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));}
+    catch(e){showToast('⚠️ Không thể lưu trạng thái khóa!','error');}
+    init();
+}
 function applyLockUI(isLocked){
     const allInputs=document.querySelectorAll('input:not(#currentMonth):not(#importFile)');
+    // Chỉ lấy nút "Up Ảnh" (không phải nút xóa ảnh - chúng tự quản lý display)
     const upBtns=document.querySelectorAll('.upload-btn:not(.delete-img-btn):not(#deleteMainImgBtn):not(#uploadMainBtn)');
     const delBtns=document.querySelectorAll('.upload-btn.delete-img-btn, #deleteMainImgBtn');
     if(isLocked){
-        document.getElementById('lockBtnText').innerText='🔓 Mở Khóa'; document.getElementById('statusArea').innerHTML='<span class="status-badge status-locked">🔒 ĐÃ KHÓA</span>';
-        allInputs.forEach(i=>i.disabled=true); upBtns.forEach(b=>b.style.display='none'); delBtns.forEach(b=>b.style.display='none'); document.getElementById('uploadMainBtn').style.display='none';
-    } else {
-        document.getElementById('lockBtnText').innerText='🔒 Khóa tháng'; document.getElementById('statusArea').innerHTML='<span class="status-badge status-open">✅ ĐANG MỞ</span>';
-        allInputs.forEach(i=>i.disabled=false); upBtns.forEach(b=>b.style.display='inline-block'); document.getElementById('uploadMainBtn').style.display='inline-block';
-        document.querySelectorAll('.delete-img-btn').forEach(b=>{const img=b.parentElement.querySelector('.img-preview'); b.style.display=(img?.src && img.classList.contains('show-img'))?'inline-block':'none';});
-        const mainImg=document.getElementById('mainMeterImg'); if(mainImg) document.getElementById('deleteMainImgBtn').style.display='inline-block';
+        document.getElementById('lockBtnText').innerText='🔓 Mở Khóa';
+        document.getElementById('statusArea').innerHTML='<span class="status-badge status-locked">🔒 ĐÃ KHÓA</span>';
+        allInputs.forEach(i=>i.disabled=true);
+        upBtns.forEach(b=>b.style.display='none');
+        delBtns.forEach(b=>b.style.display='none');
+        const ubL=document.getElementById('uploadMainBtn');if(ubL)ubL.style.display='none';
+    }else{
+        document.getElementById('lockBtnText').innerText='🔒 Khóa tháng';
+        document.getElementById('statusArea').innerHTML='<span class="status-badge status-open">✅ ĐANG MỞ</span>';
+        allInputs.forEach(i=>i.disabled=false);
+        upBtns.forEach(b=>b.style.display='inline-block');
+        const ub=document.getElementById('uploadMainBtn');if(ub)ub.style.display='inline-block';
+        // Nút xóa ảnh: chỉ hiện lại nếu ảnh đang có
+        document.querySelectorAll('.upload-btn.delete-img-btn').forEach(b=>{
+            const img=b.parentElement.querySelector('.img-preview');
+            b.style.display=(img&&img.src&&img.src!==window.location.href)?'inline-block':'none';
+        });
+        const mainImg=document.getElementById('mainMeterImg');
+        const delMain=document.getElementById('deleteMainImgBtn');
+        if(delMain) delMain.style.display=(mainImg&&mainImg.src&&mainImg.src!==window.location.href)?'inline-block':'none';
     }
 }
 
 function toggleDeleteMode(){
-    const btn=document.getElementById('deleteModeBtn'); btn.classList.toggle('active'); document.getElementById('captureArea').classList.toggle('delete-active');
-    const on=btn.classList.contains('active'); btn.innerText=on?'❌ Bấm STT để xóa':'🗑 Chế Độ Xóa'; btn.style.background=on?'linear-gradient(135deg,#a0000a,#dc3545)':'linear-gradient(135deg,#4a5568,#6c757d)';
+    const btn=document.getElementById('deleteModeBtn');
+    btn.classList.toggle('active');document.getElementById('captureArea').classList.toggle('delete-active');
+    const on=btn.classList.contains('active');
+    btn.innerText=on?'❌ Bấm STT để xóa':'🗑 Chế Độ Xóa';
+    btn.style.background=on?'linear-gradient(135deg,#a0000a,#dc3545)':'linear-gradient(135deg,#4a5568,#6c757d)';
 }
 
 let _pendingDeleteRow=null;
-function handleRowAction(cell){ if(document.getElementById('captureArea').classList.contains('delete-active')){ _pendingDeleteRow=cell.parentElement; document.getElementById('deleteModalName').innerText='👤 '+(cell.parentElement.querySelector('.col-name input')?.value||'Tên hộ chưa đặt'); document.getElementById('deleteModal').style.display='flex'; } }
-function confirmDeleteYes(){ if(_pendingDeleteRow){_pendingDeleteRow.remove();updateTotals();_pendingDeleteRow=null;}document.getElementById('deleteModal').style.display='none';}
+function handleRowAction(cell){
+    if(document.getElementById('captureArea').classList.contains('delete-active')){
+        _pendingDeleteRow=cell.parentElement;
+        const name=cell.parentElement.querySelector('.col-name input')?.value||'Tên hộ chưa đặt';
+        document.getElementById('deleteModalName').innerText='👤 '+name;
+        document.getElementById('deleteModal').style.display='flex';
+    }
+}
+function confirmDeleteYes(){if(_pendingDeleteRow){_pendingDeleteRow.remove();updateTotals();_pendingDeleteRow=null;}document.getElementById('deleteModal').style.display='none';}
 function confirmDeleteNo(){_pendingDeleteRow=null;document.getElementById('deleteModal').style.display='none';}
-function openImg(s){if(s&&s.startsWith('data:image')){document.getElementById('modalImg').src=s;document.getElementById('imgModal').style.display='flex';}}
+function openImg(s){if(s&&s.includes('data:image')){document.getElementById('modalImg').src=s;document.getElementById('imgModal').style.display='flex';}}
 function changeMonth(){init();}
 
-/* === POPUPS & EXPORTS === */
-function showSavePopup(){
-    const m=document.getElementById('currentMonth').value,p=m.split('-');
-    document.getElementById('spMonth').innerText='THÁNG '+p[1]+'/'+p[0]; document.getElementById('spRows').innerText=document.querySelectorAll('.data-row').length;
-    document.getElementById('spTotal').innerText=document.getElementById('lblGrandTotal').innerText; document.getElementById('spTime').innerText=new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    const bar=document.getElementById('spBar'); bar.style.animation='none'; void bar.offsetHeight; bar.style.animation='sp-drain 2.8s linear forwards,sp-shimmer 1.2s linear infinite';
-    document.getElementById('savePopup').style.display='flex'; clearTimeout(window._spT); window._spT=setTimeout(closeSavePopup,2800);
+function exportData(){
+    saveToLocal(true);
+    const b=new Blob([JSON.stringify(db)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='backup_dien.json';a.click();
 }
-function closeSavePopup(){document.getElementById('savePopup').style.display='none';}
-function exportData(){ saveToLocal(true); const b=new Blob([JSON.stringify(db)],{type:'application/json'}); const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='backup_dien.json';a.click(); }
 function importData(e){
-    const file=e.target.files[0]; if(!file)return; const r=new FileReader();
-    r.onload=ev=>{try{db=JSON.parse(ev.target.result);localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));init();}catch(err){alert('File lỗi!');}}; r.readAsText(file); e.target.value='';
-}
-
-async function exportToPNG(){
-    const area=document.getElementById('captureArea'), sw=document.getElementById('tableScrollWrapper'), hdr=document.getElementById('displayHeader'), expRow=document.querySelector('.export-title-row');
-    const imgCol=document.querySelector('#mainTable colgroup').children[2]; imgCol._ow=imgCol.style.width; imgCol.style.width='0';
-    area.classList.add('is-capturing'); expRow.style.display='table-row'; sw.style.overflow='visible';
-    const wrapper=document.getElementById('rainbowWrapper'); wrapper.classList.add('is-capturing');
-    try{
-        const canvas=await html2canvas(area,{scale:2,useCORS:true,backgroundColor:'#ffffff',width:1280});
-        const link=document.createElement('a'); link.download=`EVN_Pro_${monthInput.value}.png`; link.href=canvas.toDataURL('image/png'); link.click();
-    }catch(err){alert('Lỗi xuất ảnh!');}
-    finally{
-        area.classList.remove('is-capturing'); expRow.style.display='none'; sw.style.overflow='auto'; wrapper.classList.remove('is-capturing'); imgCol.style.width=imgCol._ow;
-    }
+    const file=e.target.files[0];if(!file)return;
+    const r=new FileReader();
+    r.onload=ev=>{try{db=JSON.parse(ev.target.result);localStorage.setItem('electricDB_vPhoto',JSON.stringify(db));init();showToast('✅ Nhập dữ liệu thành công!');}catch(err){showToast('❌ File không hợp lệ!','error');}};
+    r.onerror=()=>showToast('❌ Không đọc được file!','error');
+    r.readAsText(file);e.target.value='';
 }
 
 init();
