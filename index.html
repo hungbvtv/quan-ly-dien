@@ -559,7 +559,7 @@
                     <option value="10">10</option><option value="11">11</option><option value="12">12</option>
                 </select>
                 <strong style="font-size:12px;color:var(--color-text-dim)">/</strong>
-                <select id="selYear" onchange="changeMonth()" style="border:none;background:transparent;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;color:var(--color-title);outline:none;cursor:pointer;" id="selYear"></select>
+                <select id="selYear" onchange="changeMonth()" style="border:none;background:transparent;font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;color:var(--color-title);outline:none;cursor:pointer;"></select>
                 <input type="hidden" id="currentMonth">
             </div>
             <div id="statusArea"></div>
@@ -1347,7 +1347,7 @@ document.getElementById('savePopup').addEventListener('click',function(e){ if(e.
     }
 
     function applyLockUI(isLocked){
-        const allInputs=document.querySelectorAll('input:not(#currentMonth):not(#importFile):not(#loginPassInput)');
+        const allInputs=document.querySelectorAll('input:not(#currentMonth):not(#importFile):not(#loginPassInput):not(#cpOldPass):not(#cpNewPass):not(#cpConfPass):not(#selMonth):not(#selYear)');
         const allUploadBtns=document.querySelectorAll('.upload-btn');
         if(isLocked){
             document.getElementById('lockBtnText').innerText='🔓 Mở Khóa';
